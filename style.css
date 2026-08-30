@@ -391,3 +391,81 @@
   line-height:1.05 !important;
   text-align:right !important;
 }
+
+/* v34: separate name and maintenance zones on compact iPhone tiles */
+.water-cube{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 42px;
+  grid-template-rows:30px minmax(0,1fr) 42px;
+  column-gap:5px;
+  row-gap:2px;
+  padding:8px !important;
+}
+.water-cube .cube-sun{
+  position:static !important;
+  grid-column:1;
+  grid-row:1;
+  justify-self:start;
+  align-self:start;
+}
+.water-cube .cube-status{
+  position:static !important;
+  grid-column:2;
+  grid-row:1;
+  align-self:start;
+  justify-self:end;
+  max-width:none !important;
+}
+.water-cube .cube-soil{
+  position:absolute !important;
+  top:39px !important;
+  right:10px !important;
+}
+.water-cube .cube-name{
+  position:static !important;
+  grid-column:1 / -1;
+  grid-row:2;
+  align-self:center;
+  min-width:0;
+  max-height:46px;
+  margin:0 !important;
+  padding:0 25px 0 1px !important;
+  transform:none !important;
+  text-align:left !important;
+  hyphens:auto;
+  -webkit-hyphens:auto;
+  overflow-wrap:normal;
+  word-break:normal;
+  text-wrap:balance;
+}
+.water-cube .cube-maintenance{
+  position:static !important;
+  grid-column:1;
+  grid-row:3;
+  align-self:end;
+  justify-self:stretch;
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:1px !important;
+  min-width:0;
+  min-height:20px;
+  max-height:none;
+  margin:0 !important;
+  padding:9px 0 1px !important;
+  overflow:visible;
+}
+.water-cube .maintenance-icon{
+  display:inline-block;
+  flex:0 0 auto;
+  font-size:13px !important;
+  line-height:1.15 !important;
+}
+.water-cube .cube-water{
+  position:static !important;
+  grid-column:2;
+  grid-row:3;
+  align-self:end;
+  justify-self:end;
+}
