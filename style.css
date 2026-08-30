@@ -235,3 +235,90 @@
 .legend-swatch.medium-demand{
   background:#e4f2ff !important;
 }
+
+/* v31 Watering Check — restored schedule + droplet, square tile layout */
+.water-cube{
+  position:relative !important;
+  aspect-ratio:1/1 !important;
+  min-height:0 !important;
+  padding:10px !important;
+  display:block !important;
+}
+.water-cube .cube-top,
+.water-cube .cube-sun-stack{display:contents !important}
+.water-cube .cube-sun{
+  position:absolute !important;
+  top:9px !important;
+  left:10px !important;
+  width:auto !important;
+  max-width:none !important;
+  font-size:24px !important;
+  line-height:1 !important;
+}
+.water-cube .cube-status{
+  position:absolute !important;
+  top:9px !important;
+  right:9px !important;
+  max-width:50%;
+  text-align:right !important;
+  font-size:12px !important;
+  line-height:1.05 !important;
+  font-weight:800 !important;
+}
+.water-cube .cube-soil{
+  position:absolute !important;
+  top:42% !important;
+  right:12px !important;
+  font-size:19px !important;
+  line-height:1 !important;
+}
+.water-cube .cube-name{
+  position:absolute !important;
+  left:9px !important;
+  right:9px !important;
+  top:53% !important;
+  transform:translateY(-50%) !important;
+  margin:0 !important;
+  padding:0 !important;
+  text-align:center !important;
+  font-size:14px !important;
+  line-height:1.08 !important;
+  font-weight:800 !important;
+  overflow-wrap:anywhere;
+}
+.water-cube .cube-maintenance{
+  position:absolute !important;
+  left:10px !important;
+  right:54px !important;
+  bottom:13px !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:6px !important;
+  margin:0 !important;
+  padding:0 !important;
+  min-height:22px;
+}
+.water-cube .maintenance-icon{
+  font-size:16px !important;
+  line-height:1 !important;
+}
+.water-cube .cube-water{
+  position:absolute !important;
+  right:8px !important;
+  bottom:8px !important;
+  width:42px !important;
+  height:42px !important;
+  display:grid !important;
+  place-items:center !important;
+  padding:0 !important;
+  font-size:24px !important;
+  border-radius:14px !important;
+}
+#wateringCubes{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+}
+.watering-instruction{
+  display:block !important;
+}

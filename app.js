@@ -232,8 +232,11 @@ function renderWateringCubes(){
   const filter=el('filterSelect').value;
   const list=plants.filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'));
   el('wateringCubes').innerHTML=list.map(p=>`<article class="water-cube ${wateringClass(p)} ${statusFor(p)}">
-    <div class="cube-top"><span class="cube-sun-stack"><span class="cube-sun">${sunlight[p.id]||'⛅️'}</span>${soilPreference[p.id]?`<span class="cube-soil">${soilPreference[p.id]}</span>`:''}<span class="cube-maintenance">${(maintenanceIcons[p.id]||[]).map(icon=>`<span class="maintenance-icon">${icon}</span>`).join('')}</span></span><span class="cube-status">${shortDue(p)}</span></div>
+    <span class="cube-sun">${sunlight[p.id]||'⛅️'}</span>
+    <span class="cube-status">${shortDue(p)}</span>
+    ${soilPreference[p.id]?`<span class="cube-soil">${soilPreference[p.id]}</span>`:''}
     <strong class="cube-name">${p.name}</strong>
+    <span class="cube-maintenance">${(maintenanceIcons[p.id]||[]).map(icon=>`<span class="maintenance-icon">${icon}</span>`).join('')}</span>
     <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today">💧</button>
   </article>`).join('');
   document.querySelectorAll('[data-water]').forEach(btn=>btn.addEventListener('click',()=>{state.watered[btn.dataset.water]=localDateOnly();save();renderAll();if(currentProfile===btn.dataset.water)renderProfile(currentProfile);}));
@@ -330,4 +333,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=30').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=31').catch(()=>{}));}

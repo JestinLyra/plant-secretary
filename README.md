@@ -155,3 +155,10 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Legend descriptions were removed; legends now show centered icons only.
 - Kept accessibility labels/tooltips for each icon.
 - Increased contrast between moisture-loving blue and regular-watering light blue.
+
+## v31
+- Restored the 💧 watering button on every Watering Check tile.
+- Restored “In N days” / “Check today” status.
+- Restored the instruction: “Tap the droplet to record watering. Tile colour shows typical watering demand.”
+- Removed the small WATERING eyebrow.
+- Square tile layout: sun upper-left, soil preference upper-right above the centered name, maintenance icons below the name.
