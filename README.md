@@ -162,3 +162,6 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Restored the instruction: “Tap the droplet to record watering. Tile colour shows typical watering demand.”
 - Removed the small WATERING eyebrow.
 - Square tile layout: sun upper-left, soil preference upper-right above the centered name, maintenance icons below the name.
+
+## v32
+- Removed the duplicate small “WATERING” label above “Watering checks”.
