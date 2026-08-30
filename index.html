@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f6b4f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
+  <link rel="manifest" href="manifest.json?v=1" />
+  <link rel="apple-touch-icon" href="icon.svg?v=1" />
+  <link rel="stylesheet" href="style.css?v=1" />
+  <title>Plant Secretary</title>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Plant Secretary</h1>
+      <p id="todayLabel">Altona, Victoria</p>
+    </div>
+    <button id="refreshBtn" class="icon-btn" aria-label="Refresh recommendations">↻</button>
+  </header>
+
+  <main>
+    <section class="weather-card card">
+      <div>
+        <span class="eyebrow">Altona weather</span>
+        <h2 id="weatherHeadline">Weather-aware watering</h2>
+        <p id="weatherSummary">Enter today’s BOM forecast below to adjust outdoor watering.</p>
+      </div>
+      <details>
+        <summary>Update BOM conditions</summary>
+        <form id="weatherForm" class="weather-form">
+          <label>Maximum temperature °C<input id="tempInput" type="number" min="0" max="50" step="1" inputmode="numeric" /></label>
+          <label>Chance of rain %<input id="rainChanceInput" type="number" min="0" max="100" step="1" inputmode="numeric" /></label>
+          <label>Expected rain mm<input id="rainMmInput" type="number" min="0" max="200" step="0.1" inputmode="decimal" /></label>
+          <button class="primary" type="submit">Apply weather</button>
+        </form>
+        <p class="source-note">Weather source: Bureau of Meteorology, Altona. This version stores the forecast you enter on your phone.</p>
+      </details>
+    </section>
+
+    <section class="stats-grid" aria-label="Watering status summary">
+      <article class="stat"><strong id="dueCount">0</strong><span>Check today</span></article>
+      <article class="stat"><strong id="soonCount">0</strong><span>Due soon</span></article>
+      <article class="stat"><strong id="okCount">0</strong><span>Okay</span></article>
+    </section>
+
+    <section class="section-head">
+      <div><span class="eyebrow">Today</span><h2>Watering checks</h2></div>
+      <select id="filterSelect" aria-label="Filter plants">
+        <option value="all">All plants</option>
+        <option value="indoor">Indoor</option>
+        <option value="outdoor">Outdoor</option>
+        <option value="due">Check today</option>
+      </select>
+    </section>
+
+    <section id="plantList" class="plant-list" aria-live="polite"></section>
+
+    <section class="card references">
+      <span class="eyebrow">Evidence base</span>
+      <h2>Sources used by Plant Secretary</h2>
+      <ul>
+        <li>ABC Gardening Australia — everyday care guidance</li>
+        <li>Royal Botanic Gardens & Australian National Botanic Gardens — identification and botanical requirements</li>
+        <li>Bureau of Meteorology — Altona weather and seasonal watering adjustments</li>
+        <li>APVMA-approved product labels — pest treatment, dilution rates and safety</li>
+      </ul>
+      <p class="source-note">Always follow the product label for pesticides and other regulated garden chemicals.</p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary navigation">
+    <button class="nav-active" data-scroll="top">⌂<span>Home</span></button>
+    <button data-scroll="plantList">💧<span>Water</span></button>
+    <button data-scroll="plantList">🌱<span>Plants</span></button>
+    <button id="resetBtn">↺<span>Reset</span></button>
+  </nav>
+
+  <script src="app.js?v=1" defer></script>
+</body>
+</html>

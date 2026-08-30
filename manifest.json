@@ -1,0 +1,10 @@
+{
+  "name": "Plant Secretary",
+  "short_name": "Plant Secretary",
+  "start_url": "./?v=1",
+  "display": "standalone",
+  "background_color": "#f5f7f3",
+  "theme_color": "#0f6b4f",
+  "description": "Weather-aware plant watering secretary for Altona, Victoria.",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
