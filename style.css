@@ -322,3 +322,72 @@
 .watering-instruction{
   display:block !important;
 }
+
+/* v33 Watering Check cleanup */
+.water-cube{
+  aspect-ratio:1/1 !important;
+  min-height:0 !important;
+  overflow:hidden;
+}
+
+/* sunlight-related icon: slightly larger than droplet */
+.water-cube .cube-sun{
+  font-size:27px !important;
+  line-height:1 !important;
+  top:9px !important;
+  left:10px !important;
+}
+
+/* droplet stays medium */
+.water-cube .cube-water{
+  width:42px !important;
+  height:42px !important;
+  font-size:24px !important;
+  line-height:1 !important;
+}
+
+/* all other icons slightly smaller than droplet */
+.water-cube .cube-soil{
+  font-size:18px !important;
+  top:40% !important;
+  right:12px !important;
+}
+.water-cube .maintenance-icon{
+  font-size:15px !important;
+}
+
+/* keep plant name clear of all icons */
+.water-cube .cube-name{
+  left:12px !important;
+  right:58px !important;
+  top:54% !important;
+  transform:translateY(-50%) !important;
+  text-align:left !important;
+  font-size:13px !important;
+  line-height:1.08 !important;
+  font-weight:800 !important;
+  max-height:44px;
+  overflow:hidden;
+}
+
+/* maintenance sits safely below the name and away from droplet */
+.water-cube .cube-maintenance{
+  left:12px !important;
+  right:58px !important;
+  bottom:12px !important;
+  justify-content:flex-start !important;
+  gap:6px !important;
+  flex-wrap:wrap;
+  max-height:36px;
+  overflow:hidden;
+}
+
+/* watering schedule stays top-right and clear of sunlight */
+.water-cube .cube-status{
+  top:9px !important;
+  right:10px !important;
+  max-width:48% !important;
+  font-size:12px !important;
+  line-height:1.05 !important;
+  text-align:right !important;
+}

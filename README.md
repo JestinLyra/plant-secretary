@@ -165,3 +165,12 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 
 ## v32
 - Removed the duplicate small “WATERING” label above “Watering checks”.
+
+## v33
+- Removed all Watering Check legends above the plant tiles.
+- Preserved the watering instruction text.
+- Fixed icon/name overlap inside Watering Check tiles.
+- Kept tile dimensions unchanged.
+- Sunlight-related icons are now slightly larger than the 💧 button icon.
+- 🍋/🪨 and maintenance icons are now slightly smaller than the 💧 icon.
+- Plant names are constrained to a clear area so they do not cover care icons.
