@@ -191,3 +191,7 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v36
 - Replaced the Gardenia home-page reference photo with the Gardenia photo supplied by the user.
 - The supplied photo is used as the Gardenia reference image only; no generated image was created.
+
+## v37
+- Replaced the Home page Gardenia circular reference photo with the user-supplied Gardenia photo.
+- All other Plant Secretary data and functionality preserved.
