@@ -26,4 +26,9 @@ This first version lets you enter today's BOM Altona max temperature, rain chanc
 A later version can automate BOM/weather ingestion using a scheduled GitHub Action or a small free weather-data bridge while keeping GitHub Pages as the host.
 
 ## Cache busting
-Static files include `?v=1` and the service worker cache is named `plant-secretary-v1`. When publishing a new build, this build uses `v=2` and `plant-secretary-v2`. Increase both again on the next build.
+Static files include `?v=3` and the service worker cache is named `plant-secretary-v1`. When publishing a new build, this build uses `v=3` and `plant-secretary-v3`. Increase both again on the next build.
+
+## Version 3 tile design
+- Chilli plants are excluded from the app only.
+- Home tiles are colour-coded by baseline watering-check frequency: blue = most frequent, light blue = moderate, white = least frequent.
+- Tile icons show sunlight needs only: ☀️ direct, 🌤️ direct to indirect, ⛅️ indirect/direct-sensitive, ☁️ minimal sunlight.

@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
-  <link rel="manifest" href="manifest.json?v=2" />
-  <link rel="apple-touch-icon" href="icon.svg?v=2" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="manifest" href="manifest.json?v=3" />
+  <link rel="apple-touch-icon" href="icon.svg?v=3" />
+  <link rel="stylesheet" href="style.css?v=3" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -26,6 +26,14 @@
       <div class="tiles-head">
         <div><span class="eyebrow">Collection</span><h2 id="plantTilesTitle">My Plants <span id="plantTotal"></span></h2></div>
         <button id="showAllBtn" class="text-btn" type="button">View all</button>
+      </div>
+      <div class="tile-legends" aria-label="Tile colour legend">
+        <span class="legend-item"><span class="legend-swatch legend-high"></span>Most watering</span>
+        <span class="legend-item"><span class="legend-swatch legend-moderate"></span>Moderate</span>
+        <span class="legend-item"><span class="legend-swatch legend-low"></span>Least watering</span>
+      </div>
+      <div class="tile-legends sun-legend" aria-label="Sunlight icon legend">
+        <span>☀️ Direct</span><span>🌤️ Direct–indirect</span><span>⛅️ Indirect / direct-sensitive</span><span>☁️ Minimal</span>
       </div>
       <div id="plantTiles" class="plant-tiles" aria-label="All plants"></div>
     </section>
@@ -86,6 +94,6 @@
     <button id="resetBtn">↺<span>Reset</span></button>
   </nav>
 
-  <script src="app.js?v=2" defer></script>
+  <script src="app.js?v=3" defer></script>
 </body>
 </html>

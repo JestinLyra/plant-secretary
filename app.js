@@ -25,12 +25,7 @@ const plants = [
   {id:'calamansi',name:'Dwarf Calamansi',place:'outdoor',base:4,note:'Keep evenly moist but well drained.'},
   {id:'rosemary',name:'Rosemary — purple flowers',place:'outdoor',base:8,note:'Allow soil to dry between watering; dislikes wet feet.'},
   {id:'mint',name:'Mint',place:'outdoor',base:3,note:'Check frequently; mint prefers consistently moist soil.'},
-  {id:'parsley',name:'Parsley',place:'outdoor',base:3,note:'Keep soil consistently moist during active growth.'},
-  {id:'thai-peppers',name:'Thai Peppers',place:'outdoor',base:3,note:'Check regularly in warm weather; avoid repeated wilting.'},
-  {id:'timble',name:'Chilli ‘Timble’',place:'outdoor',base:3,note:'Check regularly in warm weather; water deeply when needed.'},
-  {id:'firecracker',name:'Chilli ‘Firecracker’',place:'outdoor',base:3,note:'Check regularly in warm weather; water deeply when needed.'},
-  {id:'habanero',name:'Habanero',place:'outdoor',base:3,note:'Check regularly in warm weather; water deeply when needed.'},
-  {id:'jalapeno',name:'Jalapeño',place:'outdoor',base:3,note:'Check regularly in warm weather; water deeply when needed.'}
+  {id:'parsley',name:'Parsley',place:'outdoor',base:3,note:'Keep soil consistently moist during active growth.'}
 ];
 
 const KEY='plantSecretary.v2';
@@ -38,15 +33,20 @@ const state=JSON.parse(localStorage.getItem(KEY)||'{}');
 state.watered=state.watered||{}; state.weather=state.weather||{temp:null,rainChance:null,rainMm:null};
 
 const el=id=>document.getElementById(id);
-const tileIcons={
-  'gardenia-radicans':'🌼','mama-snake':'🪴','baby-snake':'💧','peace-lily':'🤍','golden-pothos':'🌿','marble-queen':'🌿','moon-valley':'🍃',
-  'many':'🌱','konti':'🌱','birkin-green':'🌿','birkin-white':'🌿','zz-thick':'🪴','zz-thin':'🪴','maidenhair':'🌿','begonia':'🍃',
-  'orchid-purple':'💜','orchid-white':'🤍','pink-lady':'🌸','haworthia-retusa':'🌵','string-of-pearls':'🫛','bougainvillea':'🌺',
-  'dwarf-lemon':'🍋','regular-lemon':'🍋','calamansi':'🍊','rosemary':'🌿','mint':'🌱','parsley':'🌿','thai-peppers':'🌶️','timble':'🌶️','firecracker':'🌶️','habanero':'🌶️','jalapeno':'🌶️'
+const sunlight={
+  'gardenia-radicans':'🌤️','mama-snake':'⛅️','baby-snake':'⛅️','peace-lily':'⛅️','golden-pothos':'⛅️','marble-queen':'⛅️','moon-valley':'⛅️',
+  'many':'⛅️','konti':'⛅️','birkin-green':'⛅️','birkin-white':'⛅️','zz-thick':'☁️','zz-thin':'☁️','maidenhair':'⛅️','begonia':'⛅️',
+  'orchid-purple':'⛅️','orchid-white':'⛅️','pink-lady':'🌤️','haworthia-retusa':'🌤️','string-of-pearls':'🌤️','bougainvillea':'☀️',
+  'dwarf-lemon':'☀️','regular-lemon':'☀️','calamansi':'☀️','rosemary':'☀️','mint':'🌤️','parsley':'🌤️'
 };
+function wateringClass(p){
+  if(p.base<=5) return 'water-high';
+  if(p.base<=9) return 'water-moderate';
+  return 'water-low';
+}
 function renderTiles(){
   el('plantTotal').textContent=`(${plants.length})`;
-  el('plantTiles').innerHTML=plants.map(p=>`<button class="plant-tile" type="button" data-tile="${p.id}" aria-label="Open ${p.name}"><span class="tile-icon" aria-hidden="true">${tileIcons[p.id]||'🌱'}</span><span class="tile-name">${p.name}</span><span class="tile-place">${p.place==='indoor'?'Indoor':'Outdoor'}</span></button>`).join('');
+  el('plantTiles').innerHTML=plants.map(p=>`<button class="plant-tile ${wateringClass(p)}" type="button" data-tile="${p.id}" aria-label="Open ${p.name}"><span class="tile-sun" aria-label="Sunlight category">${sunlight[p.id]||'⛅️'}</span><span class="tile-name">${p.name}</span></button>`).join('');
   document.querySelectorAll('[data-tile]').forEach(b=>b.addEventListener('click',()=>{
     el('filterSelect').value='all'; render();
     const card=document.querySelector(`[data-card="${b.dataset.tile}"]`);
@@ -84,4 +84,4 @@ el('resetBtn').addEventListener('click',()=>{if(confirm('Clear all watering hist
 document.querySelectorAll('[data-scroll]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.scroll;if(id==='top')window.scrollTo({top:0,behavior:'smooth'});else el(id).scrollIntoView({behavior:'smooth'});}));
 ['tempInput','rainChanceInput','rainMmInput'].forEach((id,i)=>{const vals=[state.weather.temp,state.weather.rainChance,state.weather.rainMm]; if(vals[i]!=null)el(id).value=vals[i];});
 updateWeatherText();renderTiles();render();
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=2').catch(()=>{}));}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=3').catch(()=>{}));}
