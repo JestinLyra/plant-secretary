@@ -52,10 +52,14 @@ const soilPreference={
   'rosemary':'🪨'
 };
 const sunlight={
-  'gardenia-radicans':'🌤️','mama-snake':'https://media.bunnings.com.au/api/public/content/46629af5b3d046d1bca042b2ad545f5a?t=w700dpr1&v=bc7877a7','baby-snake':'https://media.bunnings.com.au/api/public/content/46629af5b3d046d1bca042b2ad545f5a?t=w700dpr1&v=bc7877a7','peace-lily':'https://media.bunnings.com.au/api/public/content/47053756fb614b38a5122e37725363b9?t=w700dpr1&v=11dec445','golden-pothos':'⛅️','marble-queen':'https://media.bunnings.com.au/api/public/content/3db154f43ccf4c57a0f446eeaad93cec?t=w700dpr1&v=af206a78','moon-valley':'https://media.bunnings.com.au/api/public/content/1c0965db0e4f4517a632160f2eb8994b?t=w700dpr1&v=c4313d82',
-  'many':'https://media.bunnings.com.au/api/public/content/d6165cb7bc284aeb8e9653267794873c?t=w700dpr1&v=422a5b91','konti':'https://media.bunnings.com.au/api/public/content/d6165cb7bc284aeb8e9653267794873c?t=w700dpr1&v=422a5b91','birkin-green':'https://media.bunnings.com.au/api/public/content/7c2e3fdbe7e3420b9626e2c04094119a?t=w700dpr1&v=8bdc0e96','birkin-white':'https://media.bunnings.com.au/api/public/content/7c2e3fdbe7e3420b9626e2c04094119a?t=w700dpr1&v=8bdc0e96','zz-thick':'https://media.bunnings.com.au/api/public/content/a105253ffddd42e4b45e25d9ba5cd675?t=w700dpr1&v=ca45e3ac','zz-thin':'https://media.bunnings.com.au/api/public/content/a105253ffddd42e4b45e25d9ba5cd675?t=w700dpr1&v=ca45e3ac','maidenhair':'https://media.bunnings.com.au/api/public/content/17491f73565248eaa2b777de17087df6?t=w700dpr1&v=bfec5bea','begonia':'https://media.bunnings.com.au/api/public/content/a9020a7db7bd4217ab70708794cddd9c?t=w700dpr1&v=8b440965',
-  'orchid-purple':'⛅️','orchid-white':'⛅️','bougainvillea':'☀️','dwarf-lemon':'https://media.bunnings.com.au/api/public/content/68a6d01e2e7a41c9bb80090faaa1adbd?t=w700dpr1&v=9959700a','regular-lemon':'https://media.bunnings.com.au/api/public/content/68a6d01e2e7a41c9bb80090faaa1adbd?t=w700dpr1&v=9959700a','calamansi':'☀️','rosemary':'☀️',
-  'mint':'🌤️','parsley':'🌤️','thai-peppers':'☀️','chilli-timble':'☀️','chilli-firecracker':'☀️','habanero':'☀️','jalapeno':'☀️'
+  'gardenia-radicans':'🌤️','mama-snake':'⛅️','baby-snake':'⛅️','peace-lily':'⛅️',
+  'golden-pothos':'⛅️','marble-queen':'⛅️','moon-valley':'⛅️',
+  'many':'⛅️','konti':'⛅️','birkin-green':'⛅️','birkin-white':'⛅️',
+  'zz-thick':'☁️','zz-thin':'☁️','maidenhair':'⛅️','begonia':'⛅️',
+  'orchid-purple':'⛅️','orchid-white':'⛅️','pink-lady':'🌤️','string-of-pearls':'🌤️',
+  'bougainvillea':'☀️','dwarf-lemon':'☀️','regular-lemon':'☀️','calamansi':'☀️',
+  'rosemary':'☀️','mint':'🌤️','parsley':'🌤️','thai-peppers':'☀️',
+  'chilli-timble':'☀️','chilli-firecracker':'☀️','habanero':'☀️','jalapeno':'☀️'
 };
 
 const commonProfiles={
@@ -132,22 +136,37 @@ function statusFor(p){const elapsed=daysSince(state.watered[p.id]);const target=
 function shortDue(p){const s=statusFor(p);if(s==='due')return 'Check today';const last=state.watered[p.id];if(!last)return 'Check today';const due=addDays(parseDateOnly(last),targetDays(p));const n=Math.max(0,dayDiff(due,today));return n===1?'In 1 day':`In ${n} days`;}
 
 const plantImages={
-  'pink-lady':'assets/plants/pink-lady.jpg',
-  'string-of-pearls':'https://media.bunnings.com.au/api/public/content/ab45b2da5c7e43f7a6b5d1dcbab988f3?t=w1100dpr1&v=82b03a1b',
+  'begonia':'assets/plants/begonia.jpg',
+  'birkin-green':'assets/plants/birkin-green.jpg',
+  'birkin-white':'assets/plants/birkin-white.jpg',
   'gardenia-radicans':'assets/plants/gardenia-radicans.jpg',
-  'mama-snake':'https://media.bunnings.com.au/api/public/content/46629af5b3d046d1bca042b2ad545f5a?t=w700dpr1&v=bc7877a7','baby-snake':'https://media.bunnings.com.au/api/public/content/46629af5b3d046d1bca042b2ad545f5a?t=w700dpr1&v=bc7877a7',
-  'peace-lily':'https://media.bunnings.com.au/api/public/content/47053756fb614b38a5122e37725363b9?t=w700dpr1&v=11dec445','golden-pothos':'assets/plants/golden-pothos.jpg',
-  'marble-queen':'https://media.bunnings.com.au/api/public/content/3db154f43ccf4c57a0f446eeaad93cec?t=w700dpr1&v=af206a78','moon-valley':'https://media.bunnings.com.au/api/public/content/1c0965db0e4f4517a632160f2eb8994b?t=w700dpr1&v=c4313d82',
-  'many':'https://media.bunnings.com.au/api/public/content/d6165cb7bc284aeb8e9653267794873c?t=w700dpr1&v=422a5b91','konti':'https://media.bunnings.com.au/api/public/content/d6165cb7bc284aeb8e9653267794873c?t=w700dpr1&v=422a5b91',
-  'birkin-green':'https://media.bunnings.com.au/api/public/content/7c2e3fdbe7e3420b9626e2c04094119a?t=w700dpr1&v=8bdc0e96','birkin-white':'https://media.bunnings.com.au/api/public/content/7c2e3fdbe7e3420b9626e2c04094119a?t=w700dpr1&v=8bdc0e96',
-  'zz-thick':'https://media.bunnings.com.au/api/public/content/a105253ffddd42e4b45e25d9ba5cd675?t=w700dpr1&v=ca45e3ac','zz-thin':'https://media.bunnings.com.au/api/public/content/a105253ffddd42e4b45e25d9ba5cd675?t=w700dpr1&v=ca45e3ac',
-  'maidenhair':'https://media.bunnings.com.au/api/public/content/17491f73565248eaa2b777de17087df6?t=w700dpr1&v=bfec5bea','begonia':'https://media.bunnings.com.au/api/public/content/a9020a7db7bd4217ab70708794cddd9c?t=w700dpr1&v=8b440965',
-  'orchid-purple':'assets/plants/orchid-purple.jpg','orchid-white':'assets/plants/orchid-white.jpg',
-  'bougainvillea':'assets/plants/bougainvillea.jpg','dwarf-lemon':'https://media.bunnings.com.au/api/public/content/68a6d01e2e7a41c9bb80090faaa1adbd?t=w700dpr1&v=9959700a',
-  'regular-lemon':'https://media.bunnings.com.au/api/public/content/68a6d01e2e7a41c9bb80090faaa1adbd?t=w700dpr1&v=9959700a','calamansi':'assets/plants/calamansi.svg',
-  'rosemary':'assets/plants/rosemary.jpg','mint':'assets/plants/mint.jpg','parsley':'assets/plants/parsley.jpg',
-  'thai-peppers':'assets/plants/thai-peppers.svg','chilli-timble':'assets/plants/chilli-timble.svg',
-  'chilli-firecracker':'assets/plants/chilli-firecracker.svg','habanero':'assets/plants/habanero.svg','jalapeno':'assets/plants/jalapeno.svg'
+  'golden-pothos':'assets/plants/golden-pothos.jpg',
+  'maidenhair':'assets/plants/maidenhair.jpg',
+  'marble-queen':'assets/plants/marble-queen.jpg',
+  'many':'assets/plants/many.jpg',
+  'konti':'assets/plants/konti.jpg',
+  'moon-valley':'assets/plants/moon-valley.jpg',
+  'orchid-purple':'assets/plants/orchid-purple.jpg',
+  'orchid-white':'assets/plants/orchid-white.jpg',
+  'peace-lily':'assets/plants/peace-lily.jpg',
+  'pink-lady':'assets/plants/pink-lady.jpg',
+  'baby-snake':'assets/plants/baby-snake.jpg',
+  'mama-snake':'assets/plants/mama-snake.jpg',
+  'string-of-pearls':'assets/plants/string-of-pearls.jpg',
+  'zz-thick':'assets/plants/zz-thick.jpg',
+  'zz-thin':'assets/plants/zz-thin.jpg',
+  'bougainvillea':'assets/plants/bougainvillea.jpg',
+  'calamansi':'assets/plants/calamansi.svg',
+  'chilli-firecracker':'assets/plants/chilli-firecracker.svg',
+  'habanero':'assets/plants/habanero.svg',
+  'jalapeno':'assets/plants/jalapeno.svg',
+  'regular-lemon':'assets/plants/lemon.svg',
+  'dwarf-lemon':'assets/plants/dwarf-lemon.svg',
+  'mint':'assets/plants/mint.jpg',
+  'parsley':'assets/plants/parsley.jpg',
+  'rosemary':'assets/plants/rosemary.jpg',
+  'thai-peppers':'assets/plants/thai-peppers.svg',
+  'chilli-timble':'assets/plants/chilli-timble.svg'
 };
 function renderCollection(){
   el('plantTotal').textContent=plants.length;
@@ -311,4 +330,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=27').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=28').catch(()=>{}));}

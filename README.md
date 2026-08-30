@@ -135,3 +135,10 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Added hands-on maintenance icons below the 🍋/🪨 soil-preference icon in Watering Check.
 - ✂️ Pruning · 🤏 Pinching · 🧤 Wiping leaves · 🔄 Rotating plants.
 - Added a legend for the four maintenance icons.
+
+## v28
+- Fixed the Watering Check bug seen in the screen recording where Bunnings image URLs appeared in place of sunlight icons.
+- Restored ☀️ / 🌤️ / ⛅️ / ☁️ sunlight icons for all plants.
+- Removed fragile hotlinked image URLs from the app and restored stable plant-specific local reference assets.
+- Restored the correct Variegated String of Pearls reference image instead of the unrelated room/furniture image.
+- Added safer image-failure handling so broken reference images do not disrupt the Home layout.

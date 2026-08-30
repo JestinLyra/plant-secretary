@@ -114,3 +114,9 @@
 .cube-maintenance{display:flex;gap:2px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:2px;min-height:18px}
 .maintenance-icon{font-size:14px;line-height:1}
 .maintenance-legends{display:flex;gap:8px 14px;flex-wrap:wrap;margin:6px 0 12px;font-size:11px;color:#5d685f}
+
+/* v28 recording fixes */
+.collection-photo-wrap{overflow:hidden}
+.collection-photo-wrap.image-failed .collection-photo{display:none}
+.collection-photo-wrap.image-failed .collection-fallback{display:grid}
+.cube-sun{max-width:28px;overflow:hidden}
