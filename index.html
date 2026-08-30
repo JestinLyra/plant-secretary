@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
-  <link rel="manifest" href="manifest.json?v=3" />
-  <link rel="apple-touch-icon" href="icon.svg?v=3" />
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="manifest" href="manifest.json?v=6" />
+  <link rel="apple-touch-icon" href="icon.svg?v=6" />
+  <link rel="stylesheet" href="style.css?v=6" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -38,28 +38,18 @@
       <div id="plantTiles" class="plant-tiles" aria-label="All plants"></div>
     </section>
 
-    <section class="weather-card card">
-      <div>
-        <span class="eyebrow">Altona weather</span>
-        <h2 id="weatherHeadline">Weather-aware watering</h2>
-        <p id="weatherSummary">Enter today’s BOM forecast below to adjust outdoor watering.</p>
-      </div>
-      <details>
-        <summary>Update BOM conditions</summary>
-        <form id="weatherForm" class="weather-form">
-          <label>Maximum temperature °C<input id="tempInput" type="number" min="0" max="50" step="1" inputmode="numeric" /></label>
-          <label>Chance of rain %<input id="rainChanceInput" type="number" min="0" max="100" step="1" inputmode="numeric" /></label>
-          <label>Expected rain mm<input id="rainMmInput" type="number" min="0" max="200" step="0.1" inputmode="decimal" /></label>
-          <button class="primary" type="submit">Apply weather</button>
-        </form>
-        <p class="source-note">Weather source: Bureau of Meteorology, Altona. This version stores the forecast you enter on your phone.</p>
-      </details>
-    </section>
-
     <section class="stats-grid" aria-label="Watering status summary">
       <article class="stat"><strong id="dueCount">0</strong><span>Check today</span></article>
       <article class="stat"><strong id="soonCount">0</strong><span>Due soon</span></article>
       <article class="stat"><strong id="okCount">0</strong><span>Okay</span></article>
+    </section>
+
+    <section id="fortnightView" class="fortnight-section" aria-labelledby="fortnightTitle">
+      <div class="fortnight-head">
+        <div><span class="eyebrow">Next 14 days</span><h2 id="fortnightTitle">Fortnight watering forecast</h2></div>
+      </div>
+      <p class="fortnight-note">Prediction assumes the soil is not damp when each check is due. If the soil is still damp, delay watering and recheck.</p>
+      <div id="fortnightGrid" class="fortnight-grid" aria-live="polite"></div>
     </section>
 
     <section class="section-head">
@@ -91,9 +81,9 @@
     <button class="nav-active" data-scroll="top">⌂<span>Home</span></button>
     <button data-scroll="plantList">💧<span>Water</span></button>
     <button data-scroll="plantList">🌱<span>Plants</span></button>
-    <button id="resetBtn">↺<span>Reset</span></button>
+    <button data-scroll="fortnightView">14<span>Fortnight</span></button>
   </nav>
 
-  <script src="app.js?v=3" defer></script>
+  <script src="app.js?v=6" defer></script>
 </body>
 </html>

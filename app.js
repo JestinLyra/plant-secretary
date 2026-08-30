@@ -33,6 +33,10 @@ const state=JSON.parse(localStorage.getItem(KEY)||'{}');
 state.watered=state.watered||{}; state.weather=state.weather||{temp:null,rainChance:null,rainMm:null};
 
 const el=id=>document.getElementById(id);
+function localDateOnly(d=new Date()){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`;}
+function parseDateOnly(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12,0,0,0);}
+function addDays(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d;}
+function dayDiff(a,b){const x=new Date(a.getFullYear(),a.getMonth(),a.getDate());const y=new Date(b.getFullYear(),b.getMonth(),b.getDate());return Math.round((x-y)/86400000);}
 const sunlight={
   'gardenia-radicans':'🌤️','mama-snake':'⛅️','baby-snake':'⛅️','peace-lily':'⛅️','golden-pothos':'⛅️','marble-queen':'⛅️','moon-valley':'⛅️',
   'many':'⛅️','konti':'⛅️','birkin-green':'⛅️','birkin-white':'⛅️','zz-thick':'☁️','zz-thin':'☁️','maidenhair':'⛅️','begonia':'⛅️',
@@ -58,7 +62,15 @@ const today=new Date();
 el('todayLabel').textContent=`Altona, Victoria · ${today.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short',year:'numeric'})}`;
 
 function save(){localStorage.setItem(KEY,JSON.stringify(state));}
-function daysSince(dateStr){if(!dateStr)return 999; const d=new Date(dateStr+'T12:00:00'); return Math.floor((today-d)/86400000);}
+function daysSince(dateStr){if(!dateStr)return 999; return dayDiff(today,parseDateOnly(dateStr));}
+function wateredStatusLabel(dateStr){
+  if(!dateStr) return 'No watering recorded';
+  const d=parseDateOnly(dateStr);
+  const ago=Math.max(0,dayDiff(today,d));
+  if(ago===0) return 'Watered today';
+  const when=d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'});
+  return `${when}, ${ago} day${ago===1?'':'s'} ago`;
+}
 function adjustedDays(p){let days=p.base; const w=state.weather; if(p.place==='outdoor'){
   if(Number(w.rainMm)>=5 || Number(w.rainChance)>=80) days+=2;
   if(Number(w.temp)>=30 && Number(w.rainMm)<2) days=Math.max(1,days-1);
@@ -67,21 +79,44 @@ function adjustedDays(p){let days=p.base; const w=state.weather; if(p.place==='o
 }
 function statusFor(p){const elapsed=daysSince(state.watered[p.id]); const target=adjustedDays(p); if(elapsed>=target)return 'due'; if(elapsed>=Math.max(0,target-2))return 'soon'; return 'ok';}
 function reasonFor(p){const w=state.weather; let extra=''; if(p.place==='outdoor' && Number(w.rainMm)>=5) extra=' BOM rain entered: watering check delayed.'; else if(p.place==='outdoor' && Number(w.temp)>=30 && Number(w.rainMm)<2) extra=' Hot/dry conditions entered: check sooner.'; return p.note+extra;}
+function firstForecastDate(p){
+  const interval=p.base;
+  const last=state.watered[p.id];
+  if(!last) return new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);
+  const due=addDays(parseDateOnly(last),interval);
+  const todayNoon=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);
+  return due<todayNoon?todayNoon:due;
+}
+function renderFortnight(){
+  const start=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);
+  const days=Array.from({length:14},(_,i)=>({date:addDays(start,i),plants:[]}));
+  plants.forEach(p=>{
+    const interval=Math.max(1,p.base);
+    let date=firstForecastDate(p);
+    while(dayDiff(date,start)<14){
+      const idx=dayDiff(date,start);
+      if(idx>=0) days[idx].plants.push(p);
+      date=addDays(date,interval);
+    }
+  });
+  el('fortnightGrid').innerHTML=days.map((day,i)=>{
+    const dateLabel=day.date.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
+    const title=i===0?'Today':dateLabel;
+    const chips=day.plants.length?day.plants.map(p=>`<span class="forecast-chip ${wateringClass(p)}"><span class="forecast-sun">${sunlight[p.id]||'⛅️'}</span>${p.name}</span>`).join(''):'<span class="no-water">No watering predicted</span>';
+    return `<article class="forecast-day${i===0?' forecast-today':''}"><div class="forecast-date"><strong>${title}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${chips}</div></article>`;
+  }).join('');
+}
 function render(){
   const filter=el('filterSelect').value; let due=0,soon=0,ok=0;
   plants.forEach(p=>{const s=statusFor(p); if(s==='due')due++; else if(s==='soon')soon++; else ok++;});
   el('dueCount').textContent=due; el('soonCount').textContent=soon; el('okCount').textContent=ok;
   const list=plants.filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'));
-  el('plantList').innerHTML=list.map(p=>{const s=statusFor(p); const labels={due:'Check today',soon:'Due soon',ok:'Okay for now'}; const last=state.watered[p.id]?new Date(state.watered[p.id]+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'Not recorded'; return `<article class="plant-card" data-card="${p.id}"><div class="plant-top"><div><div class="plant-name">${p.name}</div><div class="plant-meta">${p.place==='indoor'?'🪴 Indoor':'☀️ Outdoor'}</div></div><span class="badge ${s}">${labels[s]}</span></div><p class="reason">${reasonFor(p)}</p><div class="actions"><button class="watered" data-water="${p.id}">Watered today</button><button data-damp="${p.id}">Soil still damp</button></div><div class="last-watered">Last watered: ${last}</div></article>`}).join('');
-  document.querySelectorAll('[data-water]').forEach(b=>b.addEventListener('click',()=>{state.watered[b.dataset.water]=new Date().toISOString().slice(0,10);save();render();}));
-  document.querySelectorAll('[data-damp]').forEach(b=>b.addEventListener('click',()=>{state.watered[b.dataset.damp]=new Date(Date.now()-Math.max(0,adjustedDays(plants.find(p=>p.id===b.dataset.damp))-2)*86400000).toISOString().slice(0,10);save();render();}));
+  el('plantList').innerHTML=list.map(p=>{const s=statusFor(p); const labels={due:'Check today',soon:'Due soon',ok:'Okay for now'}; const last=state.watered[p.id]?new Date(state.watered[p.id]+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'Not recorded'; const wateredLabel=wateredStatusLabel(state.watered[p.id]); return `<article class="plant-card ${wateringClass(p)}" data-card="${p.id}"><div class="plant-top"><div><div class="plant-name-row"><div class="plant-name">${p.name}</div><span class="check-sun" aria-label="Sunlight category">${sunlight[p.id]||'⛅️'}</span></div><div class="plant-meta">${p.place==='indoor'?'Indoor':'Outdoor'}</div></div><span class="badge ${s}">${labels[s]}</span></div><p class="reason">${reasonFor(p)}</p><div class="actions"><button class="watered watered-status" data-water="${p.id}" aria-label="Record ${p.name} as watered today. Current status: ${wateredLabel}">💧 ${wateredLabel}</button><button data-damp="${p.id}">Soil still damp</button></div><div class="last-watered">Last watered: ${last}</div></article>`}).join('');
+  document.querySelectorAll('[data-water]').forEach(b=>b.addEventListener('click',()=>{state.watered[b.dataset.water]=localDateOnly();save();render();}));
+  document.querySelectorAll('[data-damp]').forEach(b=>b.addEventListener('click',()=>{const p=plants.find(p=>p.id===b.dataset.damp);const d=addDays(new Date(),-Math.max(0,adjustedDays(p)-2));state.watered[b.dataset.damp]=localDateOnly(d);save();render();}));
+  renderFortnight();
 }
-function updateWeatherText(){const w=state.weather; if(w.temp==null&&w.rainChance==null&&w.rainMm==null){el('weatherSummary').textContent='Enter today’s BOM forecast below to adjust outdoor watering.';return;} el('weatherSummary').textContent=`Max ${w.temp??'—'}°C · Rain chance ${w.rainChance??'—'}% · Expected ${w.rainMm??'—'} mm`;}
-
-el('weatherForm').addEventListener('submit',e=>{e.preventDefault(); state.weather={temp:el('tempInput').value===''?null:Number(el('tempInput').value),rainChance:el('rainChanceInput').value===''?null:Number(el('rainChanceInput').value),rainMm:el('rainMmInput').value===''?null:Number(el('rainMmInput').value)};save();updateWeatherText();renderTiles();render();});
-el('filterSelect').addEventListener('change',render); el('showAllBtn').addEventListener('click',()=>el('plantList').scrollIntoView({behavior:'smooth'})); el('refreshBtn').addEventListener('click',()=>{updateWeatherText();renderTiles();render();});
-el('resetBtn').addEventListener('click',()=>{if(confirm('Clear all watering history and saved weather?')){localStorage.removeItem(KEY);location.reload();}});
+el('filterSelect').addEventListener('change',render); el('showAllBtn').addEventListener('click',()=>el('plantList').scrollIntoView({behavior:'smooth'})); el('refreshBtn').addEventListener('click',()=>{renderTiles();render();});
 document.querySelectorAll('[data-scroll]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.scroll;if(id==='top')window.scrollTo({top:0,behavior:'smooth'});else el(id).scrollIntoView({behavior:'smooth'});}));
-['tempInput','rainChanceInput','rainMmInput'].forEach((id,i)=>{const vals=[state.weather.temp,state.weather.rainChance,state.weather.rainMm]; if(vals[i]!=null)el(id).value=vals[i];});
-updateWeatherText();renderTiles();render();
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=3').catch(()=>{}));}
+renderTiles();render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=6').catch(()=>{}));}

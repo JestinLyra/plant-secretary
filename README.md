@@ -32,3 +32,19 @@ Static files include `?v=3` and the service worker cache is named `plant-secreta
 - Chilli plants are excluded from the app only.
 - Home tiles are colour-coded by baseline watering-check frequency: blue = most frequent, light blue = moderate, white = least frequent.
 - Tile icons show sunlight needs only: ☀️ direct, 🌤️ direct to indirect, ⛅️ indirect/direct-sensitive, ☁️ minimal sunlight.
+
+## Version 4
+- Removed the Weather Aware Watering card from Home.
+- Watering Check cards now use the same blue/light-blue/white watering-need colours as Home tiles.
+- Watering Check cards now show the same sunlight icon as Home tiles.
+
+
+## Fortnight forecast
+The Home page includes a 14-day predicted watering schedule. It assumes soil is dry/not damp when a check is due and repeats each plant using its baseline interval. Always check soil or growing medium before watering.
+
+## Version 6
+- The primary watering button now shows the last watering status for each plant.
+- Same-day watering displays `Watered today`.
+- Older watering records display the weekday, date and relative age, for example `Saturday, 29 August, 1 day ago`.
+- If no record exists, it displays `No watering recorded`.
+- Tapping the button records today and immediately recalculates watering checks and the fortnight forecast.
