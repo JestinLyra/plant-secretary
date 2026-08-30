@@ -76,3 +76,7 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 
 ## v15
 - Removed the duplicate introductory statement under the care-guide tag from every plant profile.
+
+## v16
+- Home plant collection now shows all indoor plants first, alphabetically.
+- Outdoor plants appear after the indoor section, also alphabetically.

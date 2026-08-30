@@ -1,33 +1,34 @@
 const plants = [
-  {id:'gardenia-radicans',name:'Gardenia radicans',place:'indoor',base:5,note:'Keep evenly moist; check before the mix fully dries.'},
-  {id:'mama-snake',name:'Mama Snake Plant — potting soil',place:'indoor',base:18,note:'Allow potting mix to dry well between waterings.'},
-  {id:'baby-snake',name:'Baby Snake Plant — propagated in water',place:'indoor',base:7,note:'Keep roots submerged and refresh the propagation water regularly.'},
-  {id:'peace-lily',name:'Peace Lily',place:'indoor',base:5,note:'Check when the top layer begins to dry; avoid prolonged sogginess.'},
-  {id:'golden-pothos',name:'Golden Pothos',place:'indoor',base:8,note:'Let the top few centimetres dry before watering.'},
-  {id:'marble-queen',name:'Marble Queen Pothos',place:'indoor',base:8,note:'Check topsoil dryness before watering.'},
-  {id:'moon-valley',name:'Pilea ‘Moon Valley’',place:'indoor',base:5,note:'Prefers lightly moist soil, not waterlogged.'},
-  {id:'many',name:'Many — Monstera deliciosa',place:'indoor',base:8,note:'Water after the upper potting mix dries.'},
-  {id:'konti',name:'Konti — Monstera deliciosa',place:'indoor',base:8,note:'Water after the upper potting mix dries.'},
-  {id:'birkin-green',name:'Philodendron ‘Birkin’ — green pot',place:'indoor',base:8,note:'Check upper mix; water when partly dry.'},
-  {id:'birkin-white',name:'Philodendron ‘Birkin’ — white pot',place:'indoor',base:8,note:'Check upper mix; water when partly dry.'},
-  {id:'zz-thick',name:'Thick — ZZ Plant',place:'indoor',base:20,note:'Drought tolerant; let mix dry thoroughly.'},
-  {id:'zz-thin',name:'Thin — ZZ Plant',place:'indoor',base:20,note:'Drought tolerant; let mix dry thoroughly.'},
-  {id:'maidenhair',name:'Maidenhair Fern',place:'indoor',base:3,note:'Do not allow the root zone to dry out completely.'},
-  {id:'begonia',name:'Begonia maculata',place:'indoor',base:6,note:'Water when the surface begins drying; avoid saturated roots.'},
-  {id:'orchid-purple',name:'Purple-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
-  {id:'orchid-white',name:'White-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
-  {id:'bougainvillea',name:'Bougainvillea',place:'outdoor',base:6,note:'Prefer drying slightly between deep waterings.'},
-  {id:'dwarf-lemon',name:'Dwarf Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
-  {id:'regular-lemon',name:'Regular Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
-  {id:'calamansi',name:'Dwarf Calamansi',place:'outdoor',base:4,note:'Keep evenly moist but well drained.'},
-  {id:'rosemary',name:'Rosemary — purple flowers',place:'outdoor',base:8,note:'Allow soil to dry between watering; dislikes wet feet.'},
-  {id:'mint',name:'Mint',place:'outdoor',base:3,note:'Check frequently; mint prefers consistently moist soil.'},
-  {id:'parsley',name:'Parsley',place:'outdoor',base:3,note:'Keep soil consistently moist during active growth.'},
-  {id:'thai-peppers',name:'Thai Peppers',place:'outdoor',base:3,note:'Keep evenly moist during active growth; avoid waterlogging.'},
-  {id:'chilli-timble',name:'Chilli ‘Timble’',place:'outdoor',base:3,note:'Water when the upper soil starts to dry; keep moisture reasonably consistent.'},
-  {id:'chilli-firecracker',name:'Chilli ‘Firecracker’',place:'outdoor',base:3,note:'Water when the upper soil starts to dry; keep moisture reasonably consistent.'},
-  {id:'habanero',name:'Habanero',place:'outdoor',base:3,note:'Keep evenly moist during flowering and fruiting; avoid soggy soil.'},
-  {id:'jalapeno',name:'Jalapeño',place:'outdoor',base:3,note:'Keep evenly moist during flowering and fruiting; avoid soggy soil.'}
+{id:'baby-snake',name:'Baby Snake Plant — propagated in water',place:'indoor',base:7,note:'Keep roots submerged and refresh the propagation water regularly.'},
+{id:'begonia',name:'Begonia maculata',place:'indoor',base:6,note:'Water when the surface begins drying; avoid saturated roots.'},
+{id:'gardenia-radicans',name:'Gardenia radicans',place:'indoor',base:5,note:'Keep evenly moist; check before the mix fully dries.'},
+{id:'golden-pothos',name:'Golden Pothos',place:'indoor',base:8,note:'Let the top few centimetres dry before watering.'},
+{id:'konti',name:'Konti — Monstera deliciosa',place:'indoor',base:8,note:'Water after the upper potting mix dries.'},
+{id:'maidenhair',name:'Maidenhair Fern',place:'indoor',base:3,note:'Do not allow the root zone to dry out completely.'},
+{id:'mama-snake',name:'Mama Snake Plant — potting soil',place:'indoor',base:18,note:'Allow potting mix to dry well between waterings.'},
+{id:'many',name:'Many — Monstera deliciosa',place:'indoor',base:8,note:'Water after the upper potting mix dries.'},
+{id:'marble-queen',name:'Marble Queen Pothos',place:'indoor',base:8,note:'Check topsoil dryness before watering.'},
+{id:'peace-lily',name:'Peace Lily',place:'indoor',base:5,note:'Check when the top layer begins to dry; avoid prolonged sogginess.'},
+{id:'birkin-green',name:'Philodendron ‘Birkin’ — green pot',place:'indoor',base:8,note:'Check upper mix; water when partly dry.'},
+{id:'birkin-white',name:'Philodendron ‘Birkin’ — white pot',place:'indoor',base:8,note:'Check upper mix; water when partly dry.'},
+{id:'moon-valley',name:'Pilea ‘Moon Valley’',place:'indoor',base:5,note:'Prefers lightly moist soil, not waterlogged.'},
+{id:'orchid-purple',name:'Purple-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
+{id:'zz-thick',name:'Thick — ZZ Plant',place:'indoor',base:20,note:'Drought tolerant; let mix dry thoroughly.'},
+{id:'zz-thin',name:'Thin — ZZ Plant',place:'indoor',base:20,note:'Drought tolerant; let mix dry thoroughly.'},
+{id:'orchid-white',name:'White-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
+{id:'bougainvillea',name:'Bougainvillea',place:'outdoor',base:6,note:'Prefer drying slightly between deep waterings.'},
+{id:'chilli-firecracker',name:'Chilli ‘Firecracker’',place:'outdoor',base:3,note:'Water when the upper soil starts to dry; keep moisture reasonably consistent.'},
+{id:'chilli-timble',name:'Chilli ‘Timble’',place:'outdoor',base:3,note:'Water when the upper soil starts to dry; keep moisture reasonably consistent.'},
+{id:'calamansi',name:'Dwarf Calamansi',place:'outdoor',base:4,note:'Keep evenly moist but well drained.'},
+{id:'dwarf-lemon',name:'Dwarf Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
+{id:'habanero',name:'Habanero',place:'outdoor',base:3,note:'Keep evenly moist during flowering and fruiting; avoid soggy soil.'},
+{id:'jalapeno',name:'Jalapeño',place:'outdoor',base:3,note:'Keep evenly moist during flowering and fruiting; avoid soggy soil.'},
+{id:'mint',name:'Mint',place:'outdoor',base:3,note:'Check frequently; mint prefers consistently moist soil.'},
+{id:'parsley',name:'Parsley',place:'outdoor',base:3,note:'Keep soil consistently moist during active growth.'},
+{id:'regular-lemon',name:'Regular Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
+{id:'rosemary',name:'Rosemary — purple flowers',place:'outdoor',base:8,note:'Allow soil to dry between watering; dislikes wet feet.'},
+{id:'thai-peppers',name:'Thai Peppers',place:'outdoor',base:3,note:'Keep evenly moist during active growth; avoid waterlogging.'}
+
 ];
 
 const sunlight={
@@ -232,4 +233,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=15').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=16').catch(()=>{}));}
