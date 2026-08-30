@@ -3,7 +3,7 @@ const plants = [
   {id:'mama-snake',name:'Mama Snake Plant — potting soil',place:'indoor',base:18,note:'Allow potting mix to dry well between waterings.'},
   {id:'baby-snake',name:'Baby Snake Plant — propagated in water',place:'indoor',base:7,note:'Keep roots submerged and refresh the propagation water regularly.'},
   {id:'peace-lily',name:'Peace Lily',place:'indoor',base:5,note:'Check when the top layer begins to dry; avoid prolonged sogginess.'},
-  {id:'golden-pothos',name:'Golden Pothos / Devil’s Ivy',place:'indoor',base:8,note:'Let the top few centimetres dry before watering.'},
+  {id:'golden-pothos',name:'Golden Pothos',place:'indoor',base:8,note:'Let the top few centimetres dry before watering.'},
   {id:'marble-queen',name:'Marble Queen Pothos',place:'indoor',base:8,note:'Check topsoil dryness before watering.'},
   {id:'moon-valley',name:'Pilea ‘Moon Valley’',place:'indoor',base:5,note:'Prefers lightly moist soil, not waterlogged.'},
   {id:'many',name:'Many — Monstera deliciosa',place:'indoor',base:8,note:'Water after the upper potting mix dries.'},
@@ -156,7 +156,7 @@ function renderFortnight(){
     const label=group[0].place==='indoor'?'All indoor plants':'All outdoor plants';
     if(due.length===group.length)return label;
     const excluded=group.filter(p=>!due.some(d=>d.id===p.id));
-    if(due.length>excluded.length)return `${label}, except ${excluded.map(p=>p.name).join(', ')}`;
+    if(due.length>excluded.length)return `${label}<span class="forecast-except">, except ${excluded.map(p=>p.name).join(', ')}</span>`;
     return due.map(p=>p.name).join(', ');
   }
 
@@ -167,7 +167,8 @@ function renderFortnight(){
       groupText(outdoor,day.plants.filter(p=>p.place==='outdoor'))
     ].filter(Boolean);
     const content=lines.length?lines.map(x=>`<div class="forecast-summary">${x}</div>`).join(''):'<span class="no-water">No watering predicted</span>';
-    return `<article class="forecast-day${i===0?' forecast-today':''}"><div class="forecast-date"><strong>${i===0?'Today':dateLabel}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${content}</div></article>`;
+    const emptyClass = day.plants.length ? '' : ' forecast-empty';
+    return `<article class="forecast-day${i===0?' forecast-today':''}${emptyClass}"><div class="forecast-date"><strong>${i===0?'Today':dateLabel}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${content}</div></article>`;
   }).join('');
 }
 
@@ -232,4 +233,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=12').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=14').catch(()=>{}));}

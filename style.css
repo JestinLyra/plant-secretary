@@ -50,3 +50,35 @@
 }
 
 .forecast-summary{font-size:.88rem;line-height:1.35;padding:4px 0;color:var(--ink)}
+
+.forecast-except{
+  color:#8a8f8b;
+  font-style:italic;
+  font-weight:400;
+}
+.forecast-day.forecast-empty{
+  min-height:0;
+  padding-top:8px;
+  padding-bottom:8px;
+}
+.forecast-day.forecast-empty .forecast-plants{
+  margin-top:2px;
+}
+.forecast-day.forecast-empty .no-water{
+  font-size:.78rem;
+  line-height:1.15;
+}
+
+/* v14 plant collection image framing */
+.collection-photo-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f8f7f2;
+}
+.collection-photo{
+  object-fit:contain !important;
+  object-position:center center !important;
+  width:100% !important;
+  height:100% !important;
+}

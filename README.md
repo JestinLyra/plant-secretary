@@ -65,3 +65,11 @@ Home is now My Plant Collection with circular plant photos and the confirmed 29-
 
 ## v12
 Fortnight View condenses long lists with “All indoor plants, except …” and “All outdoor plants, except …”.
+
+## v13
+- “except …” text in Fortnight View is now grey and italic.
+- Days with no watering scheduled use a smaller, more compact card.
+
+## v14
+- Plant collection photos are centred and use contain-fit so the full image stays visible inside each circle.
+- Home label changed from “Golden Pothos / Devil’s Ivy” to “Golden Pothos”.
