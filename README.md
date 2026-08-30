@@ -174,3 +174,20 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Sunlight-related icons are now slightly larger than the 💧 button icon.
 - 🍋/🪨 and maintenance icons are now slightly smaller than the 💧 icon.
 - Plant names are constrained to a clear area so they do not cover care icons.
+
+## v34
+- Removed any remaining Moisture-loving / Regular watering / Drought tolerant legend.
+- Moved maintenance icons lower into a dedicated row.
+- Prevented maintenance emojis from clipping or sitting underneath plant names.
+- Improved plant-name wrapping: names stay on one line when they fit and otherwise wrap at natural word/syllable boundaries.
+- Preserved square tile size, watering schedule and droplet controls.
+
+## v35
+- 🍋 and 🪨 now match the maintenance emoji size.
+- Moved the pH icon closer to the maintenance row with no overlap.
+- Kept the white 💧 cube the same size.
+- Made the 💧 icon slightly larger and rounder while keeping it fully inside the cube.
+
+## v36
+- Replaced the Gardenia home-page reference photo with the Gardenia photo supplied by the user.
+- The supplied photo is used as the Gardenia reference image only; no generated image was created.

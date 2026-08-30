@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
-  <link rel="manifest" href="manifest.json?v=33" />
-  <link rel="apple-touch-icon" href="icon.svg?v=33" />
-  <link rel="stylesheet" href="style.css?v=33" />
+  <link rel="manifest" href="manifest.json?v=36" />
+  <link rel="apple-touch-icon" href="icon.svg?v=36" />
+  <link rel="stylesheet" href="style.css?v=36" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -46,7 +46,10 @@
           <option value="due">Check today</option>
         </select>
       </div>
-      <p class="section-note">Tap the droplet to record watering.</p>
+      <p class="section-note">Tap the droplet to record watering. Tile colour shows typical watering demand.</p>
+      <div class="tile-legends" aria-label="Watering tile colour legend">
+        <span class="legend-item"><span class="legend-swatch legend-high">
+      </div>
       <div id="wateringCubes" class="watering-cubes" aria-live="polite"></div>
     </section>
 
@@ -76,6 +79,6 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=33" defer></script>
+  <script src="app.js?v=36" defer></script>
 </body>
 </html>
