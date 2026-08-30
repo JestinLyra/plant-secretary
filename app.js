@@ -28,95 +28,139 @@ const plants = [
   {id:'parsley',name:'Parsley',place:'outdoor',base:3,note:'Keep soil consistently moist during active growth.'}
 ];
 
-const KEY='plantSecretary.v2';
-const state=JSON.parse(localStorage.getItem(KEY)||'{}');
-state.watered=state.watered||{}; state.weather=state.weather||{temp:null,rainChance:null,rainMm:null};
-
-const el=id=>document.getElementById(id);
-function localDateOnly(d=new Date()){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`;}
-function parseDateOnly(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12,0,0,0);}
-function addDays(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d;}
-function dayDiff(a,b){const x=new Date(a.getFullYear(),a.getMonth(),a.getDate());const y=new Date(b.getFullYear(),b.getMonth(),b.getDate());return Math.round((x-y)/86400000);}
 const sunlight={
   'gardenia-radicans':'🌤️','mama-snake':'⛅️','baby-snake':'⛅️','peace-lily':'⛅️','golden-pothos':'⛅️','marble-queen':'⛅️','moon-valley':'⛅️',
   'many':'⛅️','konti':'⛅️','birkin-green':'⛅️','birkin-white':'⛅️','zz-thick':'☁️','zz-thin':'☁️','maidenhair':'⛅️','begonia':'⛅️',
   'orchid-purple':'⛅️','orchid-white':'⛅️','pink-lady':'🌤️','haworthia-retusa':'🌤️','string-of-pearls':'🌤️','bougainvillea':'☀️',
   'dwarf-lemon':'☀️','regular-lemon':'☀️','calamansi':'☀️','rosemary':'☀️','mint':'🌤️','parsley':'🌤️'
 };
-function wateringClass(p){
-  if(p.base<=5) return 'water-high';
-  if(p.base<=9) return 'water-moderate';
-  return 'water-low';
-}
-function renderTiles(){
-  el('plantTotal').textContent=`(${plants.length})`;
-  el('plantTiles').innerHTML=plants.map(p=>`<button class="plant-tile ${wateringClass(p)}" type="button" data-tile="${p.id}" aria-label="Open ${p.name}"><span class="tile-sun" aria-label="Sunlight category">${sunlight[p.id]||'⛅️'}</span><span class="tile-name">${p.name}</span></button>`).join('');
-  document.querySelectorAll('[data-tile]').forEach(b=>b.addEventListener('click',()=>{
-    el('filterSelect').value='all'; render();
-    const card=document.querySelector(`[data-card="${b.dataset.tile}"]`);
-    if(card) card.scrollIntoView({behavior:'smooth',block:'center'});
-  }));
+
+const commonProfiles={
+  pothos:{tag:'Easy • trailing • forgiving',light:'Bright indirect light is best. Avoid harsh direct sun.',water:'Water when the top 2–3 cm of mix is dry.',soil:'Well-draining indoor potting mix with added perlite.',temp:'18–30°C; protect from cold drafts.',humidity:'Average indoor humidity is usually suitable.',fertiliser:'Balanced liquid feed monthly in spring and summer.',pruning:'Trim long vines above a node to encourage fuller growth.',propagation:['Cut below a node with at least one healthy leaf.','Place the node in water or moist propagation mix.','Pot up once roots are well developed.'],tips:['Wipe leaves occasionally.','Yellow leaves often suggest excess moisture.','Rotate for even growth.']},
+  monstera:{tag:'Bold • climbing • tropical',light:'Bright indirect light; gentle morning sun is usually tolerated.',water:'Water after the upper few centimetres of mix dry.',soil:'Chunky, airy potting mix with bark and perlite.',temp:'18–30°C; avoid cold drafts.',humidity:'Moderate humidity; higher humidity can support lush growth.',fertiliser:'Feed monthly during active spring–summer growth.',pruning:'Remove damaged leaves and guide aerial growth onto support.',propagation:['Take a cutting with a node.','Root in water or a moist airy medium.','Pot once several roots are established.'],tips:['Give climbing support as it matures.','Do not keep the mix constantly wet.','Clean broad leaves to improve light capture.']},
+  succulent:{tag:'Dry-loving • compact • resilient',light:'Bright light; acclimatise gradually to stronger direct sun.',water:'Water thoroughly, then let the mix dry well before watering again.',soil:'Very free-draining succulent mix.',temp:'Generally comfortable in normal indoor temperatures.',humidity:'Prefers drier air and good airflow.',fertiliser:'Light feeding only during active growth.',pruning:'Remove dead or damaged growth with clean tools.',propagation:['Take a healthy offset or cutting if the species allows.','Allow cut surfaces to dry before placing in mix.','Water sparingly until established.'],tips:['Avoid waterlogged soil.','Use a pot with drainage.','More light usually means sturdier growth.']},
+  citrus:{tag:'Sunny • productive • thirsty in growth',light:'Direct sun is best; aim for a bright outdoor position.',water:'Water deeply when the upper soil begins to dry; do not let roots stay soggy.',soil:'Free-draining, fertile potting mix suited to citrus.',temp:'Best outdoors in Melbourne conditions with protection from severe frost.',humidity:'Normal outdoor humidity is suitable.',fertiliser:'Use a citrus fertiliser according to the label during active growth.',pruning:'Remove dead, crossing or congested growth; avoid excessive pruning.',propagation:['Seed is possible but may not come true to type.','Named citrus is commonly grafted or budded.','For reliable fruit quality, maintain the existing grafted plant.'],tips:['Full sun supports flowering and fruiting.','Do not let pots dry out completely in hot weather.','Watch for citrus pests and follow registered label directions.']}
+};
+
+function profileFor(p){
+  const base={
+    intro:`${p.name} is part of your Plant Secretary collection. Use soil moisture and plant response as the final check before watering.`,
+    light:'Bright filtered light is generally suitable.',water:p.note,soil:'Use a well-draining mix suited to the plant type.',temp:'Protect from temperature extremes.',humidity:'Normal household or outdoor humidity is usually suitable.',fertiliser:'Feed only during active growth and follow the product label.',pruning:'Remove damaged growth with clean tools.',toxicity:'Non-toxic',propagation:['Use a healthy section of the plant.','Root using the method suited to the species.','Pot up once new roots or growth are established.'],tips:['Check moisture before watering.','Use a pot with drainage where appropriate.','Watch new growth for signs of stress.'],tag:'Care guide'};
+
+  if(['golden-pothos','marble-queen'].includes(p.id)) Object.assign(base,commonProfiles.pothos,{toxicity:'Toxic — Humans, Dogs & Cats'});
+  if(['many','konti'].includes(p.id)) Object.assign(base,commonProfiles.monstera,{toxicity:'Toxic — Humans, Dogs & Cats'});
+  if(['haworthia-retusa','string-of-pearls'].includes(p.id)) Object.assign(base,commonProfiles.succulent,{toxicity:p.id==='string-of-pearls'?'Toxic — Humans, Dogs & Cats':'Non-toxic'});
+  if(['dwarf-lemon','regular-lemon','calamansi'].includes(p.id)) Object.assign(base,commonProfiles.citrus,{toxicity:'Toxic — Dogs & Cats'});
+
+  const overrides={
+    'gardenia-radicans':{tag:'Fragrant • acid-loving • moisture-sensitive',light:'Bright light with gentle direct sun; protect from harsh afternoon sun.',water:'Keep evenly moist but never waterlogged.',soil:'Acidic, organic, free-draining mix.',temp:'Mild temperatures; protect from cold and hot drying winds.',humidity:'Moderate humidity is helpful.',fertiliser:'Use an acid-loving plant fertiliser according to label directions.',pruning:'Shape lightly after flowering and remove dead growth.',toxicity:'Non-toxic',propagation:['Take a healthy semi-ripe cutting.','Root in a humid, free-draining propagation mix.','Pot on once roots are established.'],tips:['Avoid alkaline conditions.','Consistent moisture helps prevent bud drop.','Yellowing may indicate root or nutrient stress.']},
+    'mama-snake':{tag:'Tough • upright • drought-tolerant',light:'Indirect light is ideal; tolerates lower light.',water:'Allow the potting mix to dry well between waterings.',soil:'Very free-draining indoor mix.',temp:'Normal indoor temperatures; protect from cold.',humidity:'Average indoor humidity.',fertiliser:'Feed lightly during active growth.',pruning:'Remove damaged leaves at the base.',toxicity:'Toxic — Humans, Dogs & Cats',propagation:['Divide offsets, or cut a healthy leaf section.','Allow cut surfaces to dry briefly.','Root in free-draining mix.'],tips:['Overwatering is the main risk.','Do not leave standing in water.','Lower light means slower drying.']},
+    'baby-snake':{tag:'Water propagation • young • developing',light:'Bright indirect light.',water:'Keep established roots in clean water; refresh regularly.',soil:'Not in soil yet — currently a water propagation.',temp:'Normal indoor temperatures.',humidity:'Average indoor humidity.',fertiliser:'No routine fertiliser while newly rooting in water.',pruning:'Remove only damaged tissue.',toxicity:'Toxic — Humans, Dogs & Cats',propagation:['Keep the rooted section upright in clean water.','Refresh water regularly.','Move to a free-draining mix once roots are robust.'],tips:['Keep leaves above the water line.','Watch for soft or rotting tissue.','Transition gradually when potting into soil.']},
+    'peace-lily':{tag:'Lush • shade-tolerant • moisture-loving',light:'Bright indirect light; avoid harsh direct sun.',water:'Water when the upper layer begins to dry.',soil:'Moisture-retentive but free-draining indoor mix.',temp:'Warm indoor temperatures; avoid cold drafts.',humidity:'Moderate to higher humidity is helpful.',fertiliser:'Feed lightly in active growth.',pruning:'Cut spent flowers and yellow leaves at the base.',toxicity:'Toxic — Humans, Dogs & Cats',propagation:['Divide a mature clump during repotting.','Keep several roots and leaves on each division.','Replant into moist, free-draining mix.'],tips:['Drooping can indicate thirst but check soil first.','Avoid constantly saturated soil.','Wipe broad leaves clean.']},
+    'moon-valley':{tag:'Textured • compact • humidity-loving',light:'Bright indirect light; avoid strong direct sun.',water:'Keep lightly moist, allowing the surface to begin drying.',soil:'Light, organic and free-draining mix.',temp:'Warm indoor temperatures.',humidity:'Moderate to higher humidity.',fertiliser:'Feed lightly during spring and summer.',pruning:'Pinch tips to encourage bushier growth.',toxicity:'Non-toxic',propagation:['Take a healthy stem cutting.','Root in water or moist propagation mix.','Pot once roots are established.'],tips:['Avoid letting it dry completely.','Keep away from hot direct sun.','Pinching helps maintain a compact shape.']},
+    'birkin-green':{tag:'Striped • compact • tropical',light:'Bright indirect light.',water:'Water when the upper mix is partly dry.',soil:'Airy indoor aroid mix.',temp:'Warm indoor temperatures.',humidity:'Moderate humidity.',fertiliser:'Feed monthly in active growth.',pruning:'Remove damaged leaves at the base.',toxicity:'Toxic — Humans, Dogs & Cats',propagation:['Propagate by division or stem cutting when a node is available.','Root in water or airy mix.','Pot once roots establish.'],tips:['Variegation may vary between leaves.','Avoid saturated soil.','Rotate for even growth.']},
+    'birkin-white':{tag:'Striped • compact • tropical',light:'Bright indirect light.',water:'Water when the upper mix is partly dry.',soil:'Airy indoor aroid mix.',temp:'Warm indoor temperatures.',humidity:'Moderate humidity.',fertiliser:'Feed monthly in active growth.',pruning:'Remove damaged leaves at the base.',toxicity:'Toxic — Humans, Dogs & Cats',propagation:['Propagate by division or stem cutting when a node is available.','Root in water or airy mix.','Pot once roots establish.'],tips:['Variegation may vary between leaves.','Avoid saturated soil.','Rotate for even growth.']},
+    'zz-thick':{tag:'Tough • glossy • drought-tolerant',light:'Indirect light; tolerates lower light.',water:'Let the mix dry thoroughly before watering again.',soil:'Very free-draining indoor mix.',temp:'Normal indoor temperatures.',humidity:'Average indoor humidity.',fertiliser:'Feed lightly during active growth.',pruning:'Remove yellow or damaged stems at soil level.',toxicity:'Toxic — Humans, Dogs & Cats',propagation:['Divide rhizomes during repotting or use leaf/stem cuttings.','Root patiently in a free-draining medium.','Avoid keeping propagation material wet.'],tips:['Overwatering is the main risk.','Rhizomes store water.','Lower light means even less frequent watering.']},
+    'zz-thin':{tag:'Tough • glossy • drought-tolerant',light:'Indirect light; tolerates lower light.',water:'Let the mix dry thoroughly before watering again.',soil:'Very free-draining indoor mix.',temp:'Normal indoor temperatures.',humidity:'Average indoor humidity.',fertiliser:'Feed lightly during active growth.',pruning:'Remove yellow or damaged stems at soil level.',toxicity:'Toxic — Humans, Dogs & Cats',propagation:['Divide rhizomes during repotting or use leaf/stem cuttings.','Root patiently in a free-draining medium.','Avoid keeping propagation material wet.'],tips:['Overwatering is the main risk.','Rhizomes store water.','Lower light means even less frequent watering.']},
+    'maidenhair':{tag:'Delicate • airy • moisture-loving',light:'Bright indirect light; protect from direct sun.',water:'Keep the root zone consistently moist; do not let it fully dry.',soil:'Moisture-retentive, organic but free-draining mix.',temp:'Cool to mild indoor temperatures.',humidity:'Prefers higher humidity.',fertiliser:'Feed lightly in active growth.',pruning:'Trim brown fronds at the base.',toxicity:'Non-toxic',propagation:['Divide a healthy established clump.','Keep roots moist during division.','Replant promptly into moist mix.'],tips:['Drying out can quickly damage fronds.','Avoid hot air from heaters.','Consistent humidity helps.']},
+    'begonia':{tag:'Spotted • decorative • humidity-friendly',light:'Bright indirect light; gentle morning sun may be tolerated.',water:'Water when the surface begins to dry.',soil:'Airy, free-draining mix.',temp:'Warm indoor temperatures.',humidity:'Moderate humidity with airflow.',fertiliser:'Feed lightly during active growth.',pruning:'Pinch or trim leggy stems to encourage branching.',toxicity:'Toxic — Dogs & Cats',propagation:['Take a healthy stem cutting with a node.','Root in water or moist propagation mix.','Pot once roots are established.'],tips:['Avoid wet leaves staying stagnant.','Do not keep roots waterlogged.','Bright indirect light supports leaf pattern.']},
+    'orchid-purple':{tag:'Elegant • epiphytic • airy-rooted',light:'Bright indirect light; protect from harsh direct sun.',water:'Water when roots/bark approach dryness; drain completely.',soil:'Orchid bark or another airy orchid medium.',temp:'Typical indoor temperatures suit Phalaenopsis-type orchids.',humidity:'Moderate humidity with airflow.',fertiliser:'Use an orchid fertiliser according to label directions.',pruning:'Remove dead roots and spent flower spikes as appropriate.',toxicity:'Non-toxic',propagation:['Home propagation is usually by keiki/offshoot where produced.','Allow a keiki to develop roots before separation.','Pot into fresh orchid bark.'],tips:['Green roots usually indicate moisture.','Never leave the crown full of water.','Good airflow reduces rot risk.']},
+    'orchid-white':{tag:'Elegant • epiphytic • airy-rooted',light:'Bright indirect light; protect from harsh direct sun.',water:'Water when roots/bark approach dryness; drain completely.',soil:'Orchid bark or another airy orchid medium.',temp:'Typical indoor temperatures suit Phalaenopsis-type orchids.',humidity:'Moderate humidity with airflow.',fertiliser:'Use an orchid fertiliser according to label directions.',pruning:'Remove dead roots and spent flower spikes as appropriate.',toxicity:'Non-toxic',propagation:['Home propagation is usually by keiki/offshoot where produced.','Allow a keiki to develop roots before separation.','Pot into fresh orchid bark.'],tips:['Green roots usually indicate moisture.','Never leave the crown full of water.','Good airflow reduces rot risk.']},
+    'pink-lady':{tag:'Trailing • pink-variegated • compact',light:'Bright light with some gentle direct sun to support colour.',water:'Allow the upper mix to begin drying before watering.',soil:'Light, free-draining potting mix.',temp:'Warm indoor temperatures.',humidity:'Average to moderate humidity.',fertiliser:'Feed lightly in active growth.',pruning:'Pinch stems to encourage a fuller plant.',toxicity:'Non-toxic',propagation:['Take a healthy stem cutting.','Root in water or moist mix.','Pinch new growth after establishment.'],tips:['More light can improve pink colour.','Avoid prolonged sogginess.','Pinch regularly for a dense habit.']},
+    'bougainvillea':{tag:'Sun-loving • flowering • vigorous',light:'Direct sun is essential for best flowering.',water:'Water deeply, then allow some drying between waterings.',soil:'Very free-draining outdoor potting mix.',temp:'Warm sunny conditions; protect from severe frost.',humidity:'Normal outdoor humidity.',fertiliser:'Feed for flowering according to label directions.',pruning:'Prune after flowering flushes and train long shoots.',toxicity:'Non-toxic',propagation:['Take a semi-hardwood cutting.','Root in a free-draining propagation medium.','Keep warm and bright while roots form.'],tips:['Too much water can reduce flowering.','Full sun drives blooms.','Wear gloves around thorns.']},
+    'rosemary':{tag:'Aromatic • Mediterranean • sun-loving',light:'Direct sun is best.',water:'Allow soil to dry between waterings.',soil:'Very free-draining mix.',temp:'Handles a broad outdoor temperature range once established.',humidity:'Prefers good airflow and drier conditions.',fertiliser:'Light feeding only; avoid excessive nitrogen.',pruning:'Trim lightly to maintain shape; avoid cutting hard into old bare wood.',toxicity:'Non-toxic',propagation:['Take a non-flowering stem cutting.','Strip lower leaves and place in propagation mix.','Pot once rooted.'],tips:['Wet feet are a major risk.','Full sun keeps growth dense.','Good airflow helps prevent disease.']},
+    'mint':{tag:'Fresh • vigorous • moisture-loving',light:'Direct to indirect light; some sun supports strong growth.',water:'Keep soil consistently moist, especially in pots.',soil:'Rich, moisture-retentive but free-draining mix.',temp:'Performs well outdoors in mild conditions.',humidity:'Normal outdoor humidity.',fertiliser:'Feed lightly during active leafy growth.',pruning:'Harvest or pinch often to keep it bushy.',toxicity:'Non-toxic',propagation:['Take a healthy stem cutting.','Root in water or moist soil.','Plant out once roots are established.'],tips:['Pots help control spreading.','Do not let containers dry completely.','Frequent harvesting encourages fresh growth.']},
+    'parsley':{tag:'Edible • leafy • cool-season friendly',light:'Direct to indirect sun; protect from extreme heat.',water:'Keep soil consistently moist but not saturated.',soil:'Fertile, free-draining potting mix.',temp:'Prefers mild growing conditions.',humidity:'Normal outdoor humidity.',fertiliser:'Use a suitable edible-plant fertiliser according to label.',pruning:'Harvest outer stems from the base.',toxicity:'Non-toxic',propagation:['Grow from seed.','Keep seedbed evenly moist during germination.','Thin seedlings for airflow and space.'],tips:['Harvest outer stems first.','Consistent moisture supports tender leaves.','Replace when plants become old or bolt.']}
+  };
+  if(overrides[p.id]) Object.assign(base,overrides[p.id]);
+  base.intro=`${p.name} — ${base.tag.toLowerCase()}.`;
+  return base;
 }
 
+const KEY='plantSecretary.v2';
+const state=JSON.parse(localStorage.getItem(KEY)||'{}');
+state.watered=state.watered||{};
+const el=id=>document.getElementById(id);
+function localDateOnly(d=new Date()){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`;}
+function parseDateOnly(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12,0,0,0);}
+function addDays(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d;}
+function dayDiff(a,b){const x=new Date(a.getFullYear(),a.getMonth(),a.getDate());const y=new Date(b.getFullYear(),b.getMonth(),b.getDate());return Math.round((x-y)/86400000);}
+function wateringClass(p){if(p.base<=5)return 'water-high';if(p.base<=9)return 'water-moderate';return 'water-low';}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));}
 const today=new Date();
 el('todayLabel').textContent=`Altona, Victoria · ${today.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short',year:'numeric'})}`;
+function daysSince(dateStr){if(!dateStr)return 999;return dayDiff(today,parseDateOnly(dateStr));}
+function wateredStatusLabel(dateStr){if(!dateStr)return 'No watering recorded';const d=parseDateOnly(dateStr);const ago=Math.max(0,dayDiff(today,d));if(ago===0)return 'Watered today';const when=d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'});return `${when}, ${ago} day${ago===1?'':'s'} ago`;}
+function targetDays(p){return p.base;}
+function statusFor(p){const elapsed=daysSince(state.watered[p.id]);const target=targetDays(p);if(elapsed>=target)return 'due';if(elapsed>=Math.max(0,target-2))return 'soon';return 'ok';}
+function shortDue(p){const s=statusFor(p);if(s==='due')return 'Check today';const last=state.watered[p.id];if(!last)return 'Check today';const due=addDays(parseDateOnly(last),targetDays(p));const n=Math.max(0,dayDiff(due,today));return n===1?'In 1 day':`In ${n} days`;}
 
-function save(){localStorage.setItem(KEY,JSON.stringify(state));}
-function daysSince(dateStr){if(!dateStr)return 999; return dayDiff(today,parseDateOnly(dateStr));}
-function wateredStatusLabel(dateStr){
-  if(!dateStr) return 'No watering recorded';
-  const d=parseDateOnly(dateStr);
-  const ago=Math.max(0,dayDiff(today,d));
-  if(ago===0) return 'Watered today';
-  const when=d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'});
-  return `${when}, ${ago} day${ago===1?'':'s'} ago`;
+function renderTiles(){
+  el('plantTotal').textContent=`(${plants.length})`;
+  el('plantTiles').innerHTML=plants.map(p=>`<button class="plant-tile ${wateringClass(p)}" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile"><span class="tile-sun">${sunlight[p.id]||'⛅️'}</span><span class="tile-name">${p.name}</span></button>`).join('');
+  document.querySelectorAll('[data-profile]').forEach(btn=>btn.addEventListener('click',()=>openProfile(btn.dataset.profile)));
 }
-function adjustedDays(p){let days=p.base; const w=state.weather; if(p.place==='outdoor'){
-  if(Number(w.rainMm)>=5 || Number(w.rainChance)>=80) days+=2;
-  if(Number(w.temp)>=30 && Number(w.rainMm)<2) days=Math.max(1,days-1);
-  if(Number(w.temp)>=35 && Number(w.rainMm)<2) days=Math.max(1,days-2);
- } else if(Number(w.temp)>=35){days=Math.max(2,days-1);} return days;
+
+function renderWateringCubes(){
+  const filter=el('filterSelect').value;
+  const list=plants.filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'));
+  el('wateringCubes').innerHTML=list.map(p=>`<article class="water-cube ${wateringClass(p)} ${statusFor(p)}">
+    <div class="cube-top"><span class="cube-sun">${sunlight[p.id]||'⛅️'}</span><span class="cube-status">${shortDue(p)}</span></div>
+    <strong class="cube-name">${p.name}</strong>
+    <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today">💧</button>
+  </article>`).join('');
+  document.querySelectorAll('[data-water]').forEach(btn=>btn.addEventListener('click',()=>{state.watered[btn.dataset.water]=localDateOnly();save();renderAll();if(currentProfile===btn.dataset.water)renderProfile(currentProfile);}));
 }
-function statusFor(p){const elapsed=daysSince(state.watered[p.id]); const target=adjustedDays(p); if(elapsed>=target)return 'due'; if(elapsed>=Math.max(0,target-2))return 'soon'; return 'ok';}
-function reasonFor(p){const w=state.weather; let extra=''; if(p.place==='outdoor' && Number(w.rainMm)>=5) extra=' BOM rain entered: watering check delayed.'; else if(p.place==='outdoor' && Number(w.temp)>=30 && Number(w.rainMm)<2) extra=' Hot/dry conditions entered: check sooner.'; return p.note+extra;}
-function firstForecastDate(p){
-  const interval=p.base;
-  const last=state.watered[p.id];
-  if(!last) return new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);
-  const due=addDays(parseDateOnly(last),interval);
-  const todayNoon=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);
-  return due<todayNoon?todayNoon:due;
-}
+
+function firstForecastDate(p){const last=state.watered[p.id];if(!last)return new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);const due=addDays(parseDateOnly(last),p.base);const t=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);return due<t?t:due;}
 function renderFortnight(){
   const start=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);
   const days=Array.from({length:14},(_,i)=>({date:addDays(start,i),plants:[]}));
-  plants.forEach(p=>{
-    const interval=Math.max(1,p.base);
-    let date=firstForecastDate(p);
-    while(dayDiff(date,start)<14){
-      const idx=dayDiff(date,start);
-      if(idx>=0) days[idx].plants.push(p);
-      date=addDays(date,interval);
-    }
-  });
-  el('fortnightGrid').innerHTML=days.map((day,i)=>{
-    const dateLabel=day.date.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
-    const title=i===0?'Today':dateLabel;
-    const chips=day.plants.length?day.plants.map(p=>`<span class="forecast-chip ${wateringClass(p)}"><span class="forecast-sun">${sunlight[p.id]||'⛅️'}</span>${p.name}</span>`).join(''):'<span class="no-water">No watering predicted</span>';
-    return `<article class="forecast-day${i===0?' forecast-today':''}"><div class="forecast-date"><strong>${title}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${chips}</div></article>`;
-  }).join('');
+  plants.forEach(p=>{let date=firstForecastDate(p);while(dayDiff(date,start)<14){const idx=dayDiff(date,start);if(idx>=0)days[idx].plants.push(p);date=addDays(date,Math.max(1,p.base));}});
+  el('fortnightGrid').innerHTML=days.map((day,i)=>{const dateLabel=day.date.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});const chips=day.plants.length?day.plants.map(p=>`<span class="forecast-chip ${wateringClass(p)}"><span>${sunlight[p.id]||'⛅️'}</span>${p.name}</span>`).join(''):'<span class="no-water">No watering predicted</span>';return `<article class="forecast-day${i===0?' forecast-today':''}"><div class="forecast-date"><strong>${i===0?'Today':dateLabel}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${chips}</div></article>`;}).join('');
 }
-function render(){
-  const filter=el('filterSelect').value; let due=0,soon=0,ok=0;
-  plants.forEach(p=>{const s=statusFor(p); if(s==='due')due++; else if(s==='soon')soon++; else ok++;});
-  el('dueCount').textContent=due; el('soonCount').textContent=soon; el('okCount').textContent=ok;
-  const list=plants.filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'));
-  el('plantList').innerHTML=list.map(p=>{const s=statusFor(p); const labels={due:'Check today',soon:'Due soon',ok:'Okay for now'}; const last=state.watered[p.id]?new Date(state.watered[p.id]+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'Not recorded'; const wateredLabel=wateredStatusLabel(state.watered[p.id]); return `<article class="plant-card ${wateringClass(p)}" data-card="${p.id}"><div class="plant-top"><div><div class="plant-name-row"><div class="plant-name">${p.name}</div><span class="check-sun" aria-label="Sunlight category">${sunlight[p.id]||'⛅️'}</span></div><div class="plant-meta">${p.place==='indoor'?'Indoor':'Outdoor'}</div></div><span class="badge ${s}">${labels[s]}</span></div><p class="reason">${reasonFor(p)}</p><div class="actions"><button class="watered watered-status" data-water="${p.id}" aria-label="Record ${p.name} as watered today. Current status: ${wateredLabel}">💧 ${wateredLabel}</button><button data-damp="${p.id}">Soil still damp</button></div><div class="last-watered">Last watered: ${last}</div></article>`}).join('');
-  document.querySelectorAll('[data-water]').forEach(b=>b.addEventListener('click',()=>{state.watered[b.dataset.water]=localDateOnly();save();render();}));
-  document.querySelectorAll('[data-damp]').forEach(b=>b.addEventListener('click',()=>{const p=plants.find(p=>p.id===b.dataset.damp);const d=addDays(new Date(),-Math.max(0,adjustedDays(p)-2));state.watered[b.dataset.damp]=localDateOnly(d);save();render();}));
-  renderFortnight();
+
+function renderStats(){let due=0,soon=0,ok=0;plants.forEach(p=>{const s=statusFor(p);if(s==='due')due++;else if(s==='soon')soon++;else ok++;});el('dueCount').textContent=due;el('soonCount').textContent=soon;el('okCount').textContent=ok;}
+function renderAll(){renderTiles();renderStats();renderWateringCubes();renderFortnight();}
+
+let currentProfile=null;
+function careCard(icon,title,text){return `<article class="care-mini"><span class="care-icon">${icon}</span><div><span class="care-label">${title}</span><p>${text}</p></div></article>`;}
+function renderProfile(id){
+  const p=plants.find(x=>x.id===id);if(!p)return;
+  const q=profileFor(p);const watered=wateredStatusLabel(state.watered[p.id]);
+  el('profileContent').innerHTML=`
+    <article class="profile-hero ${wateringClass(p)}">
+      <span class="profile-eyebrow">CARE GUIDE</span>
+      <h2 id="profileName">${p.name}</h2>
+      <span class="profile-tag">${q.tag}</span>
+      <div class="hero-botanical" aria-hidden="true"><span class="leaf leaf-a"></span><span class="leaf leaf-b"></span><span class="leaf leaf-c"></span><span class="leaf leaf-d"></span><span class="stem"></span></div>
+      <p>${q.intro}</p>
+    </article>
+    <section class="profile-core">
+      ${careCard('◉','LIGHT',q.light)}
+      ${careCard('💧','WATER',q.water)}
+      ${careCard('♧','SOIL',q.soil)}
+    </section>
+    <section class="profile-grid">
+      ${careCard('🌡️','TEMPERATURE',q.temp)}
+      ${careCard('◯','HUMIDITY',q.humidity)}
+      ${careCard('▣','FERTILISER',q.fertiliser)}
+      ${careCard('✂︎','PRUNING',q.pruning)}
+      ${careCard('🐶','TOXICITY',q.toxicity)}
+    </section>
+    <section class="profile-lower">
+      <article class="profile-panel"><span class="care-label">PROPAGATE & GROW MORE</span><ol>${q.propagation.map(x=>`<li>${x}</li>`).join('')}</ol></article>
+      <article class="profile-panel"><span class="care-label">QUICK TIPS</span><ul>${q.tips.map(x=>`<li>${x}</li>`).join('')}</ul></article>
+    </section>
+    <button id="profileWaterBtn" class="profile-water-btn" type="button">💧 ${watered}</button>
+  `;
+  el('profileWaterBtn').addEventListener('click',()=>{state.watered[p.id]=localDateOnly();save();renderAll();renderProfile(p.id);});
 }
-el('filterSelect').addEventListener('change',render); el('showAllBtn').addEventListener('click',()=>el('plantList').scrollIntoView({behavior:'smooth'})); el('refreshBtn').addEventListener('click',()=>{renderTiles();render();});
-document.querySelectorAll('[data-scroll]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.scroll;if(id==='top')window.scrollTo({top:0,behavior:'smooth'});else el(id).scrollIntoView({behavior:'smooth'});}));
-renderTiles();render();
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=6').catch(()=>{}));}
+function openProfile(id){currentProfile=id;renderProfile(id);el('profileScreen').classList.add('open');el('profileScreen').setAttribute('aria-hidden','false');document.body.classList.add('profile-open');}
+function closeProfile(){el('profileScreen').classList.remove('open');el('profileScreen').setAttribute('aria-hidden','true');document.body.classList.remove('profile-open');currentProfile=null;}
+el('profileBack').addEventListener('click',closeProfile);
+el('filterSelect').addEventListener('change',renderWateringCubes);
+el('refreshBtn').addEventListener('click',renderAll);
+document.querySelectorAll('[data-scroll]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('nav-active'));btn.classList.add('nav-active');const id=btn.dataset.scroll;const target=id==='top'?document.body:el(id);if(target)target.scrollIntoView({behavior:'smooth',block:'start'});}));
+renderAll();
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7').catch(()=>{}));}

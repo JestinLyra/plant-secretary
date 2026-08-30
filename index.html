@@ -7,13 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
-  <link rel="manifest" href="manifest.json?v=6" />
-  <link rel="apple-touch-icon" href="icon.svg?v=6" />
-  <link rel="stylesheet" href="style.css?v=6" />
+  <link rel="manifest" href="manifest.json?v=7" />
+  <link rel="apple-touch-icon" href="icon.svg?v=7" />
+  <link rel="stylesheet" href="style.css?v=7" />
   <title>Plant Secretary</title>
 </head>
 <body>
-  <header class="topbar">
+  <header class="topbar" id="top">
     <div>
       <h1>Plant Secretary</h1>
       <p id="todayLabel">Altona, Victoria</p>
@@ -25,7 +25,6 @@
     <section class="plant-tiles-section" aria-labelledby="plantTilesTitle">
       <div class="tiles-head">
         <div><span class="eyebrow">Collection</span><h2 id="plantTilesTitle">My Plants <span id="plantTotal"></span></h2></div>
-        <button id="showAllBtn" class="text-btn" type="button">View all</button>
       </div>
       <div class="tile-legends" aria-label="Tile colour legend">
         <span class="legend-item"><span class="legend-swatch legend-high"></span>Most watering</span>
@@ -44,6 +43,20 @@
       <article class="stat"><strong id="okCount">0</strong><span>Okay</span></article>
     </section>
 
+    <section id="wateringChecks" class="watering-cubes-section" aria-labelledby="wateringChecksTitle">
+      <div class="section-title-row">
+        <div><span class="eyebrow">Today</span><h2 id="wateringChecksTitle">Watering checks</h2></div>
+        <select id="filterSelect" aria-label="Filter watering checks">
+          <option value="all">All plants</option>
+          <option value="indoor">Indoor</option>
+          <option value="outdoor">Outdoor</option>
+          <option value="due">Check today</option>
+        </select>
+      </div>
+      <p class="section-note">Compact watering tiles are separate from plant profiles. Tap the droplet to record watering.</p>
+      <div id="wateringCubes" class="watering-cubes" aria-live="polite"></div>
+    </section>
+
     <section id="fortnightView" class="fortnight-section" aria-labelledby="fortnightTitle">
       <div class="fortnight-head">
         <div><span class="eyebrow">Next 14 days</span><h2 id="fortnightTitle">Fortnight watering forecast</h2></div>
@@ -51,18 +64,6 @@
       <p class="fortnight-note">Prediction assumes the soil is not damp when each check is due. If the soil is still damp, delay watering and recheck.</p>
       <div id="fortnightGrid" class="fortnight-grid" aria-live="polite"></div>
     </section>
-
-    <section class="section-head">
-      <div><span class="eyebrow">Today</span><h2>Watering checks</h2></div>
-      <select id="filterSelect" aria-label="Filter plants">
-        <option value="all">All plants</option>
-        <option value="indoor">Indoor</option>
-        <option value="outdoor">Outdoor</option>
-        <option value="due">Check today</option>
-      </select>
-    </section>
-
-    <section id="plantList" class="plant-list" aria-live="polite"></section>
 
     <section class="card references">
       <span class="eyebrow">Evidence base</span>
@@ -79,11 +80,20 @@
 
   <nav class="bottom-nav" aria-label="Primary navigation">
     <button class="nav-active" data-scroll="top">⌂<span>Home</span></button>
-    <button data-scroll="plantList">💧<span>Water</span></button>
-    <button data-scroll="plantList">🌱<span>Plants</span></button>
+    <button data-scroll="wateringChecks">💧<span>Water</span></button>
+    <button data-scroll="plantTiles">🌱<span>Plants</span></button>
     <button data-scroll="fortnightView">14<span>Fortnight</span></button>
   </nav>
 
-  <script src="app.js?v=6" defer></script>
+  <section id="profileScreen" class="profile-screen" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="profileName">
+    <div class="profile-topbar">
+      <button id="profileBack" class="profile-back" type="button" aria-label="Back to Plant Secretary">‹ <span>Back</span></button>
+      <strong>Plant Profile</strong>
+      <span class="profile-spacer" aria-hidden="true"></span>
+    </div>
+    <div id="profileContent" class="profile-content"></div>
+  </section>
+
+  <script src="app.js?v=7" defer></script>
 </body>
 </html>
