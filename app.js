@@ -185,7 +185,6 @@ function renderProfile(id){
       <h2 id="profileName">${p.name}</h2>
       <span class="profile-tag">${q.tag}</span>
       <div class="hero-botanical" aria-hidden="true"><span class="leaf leaf-a"></span><span class="leaf leaf-b"></span><span class="leaf leaf-c"></span><span class="leaf leaf-d"></span><span class="stem"></span></div>
-      <p>${q.intro}</p>
     </article>
     <section class="profile-core">
       ${careCard('◉','LIGHT',q.light)}
@@ -233,4 +232,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=14').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=15').catch(()=>{}));}

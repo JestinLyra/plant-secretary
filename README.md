@@ -73,3 +73,6 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v14
 - Plant collection photos are centred and use contain-fit so the full image stays visible inside each circle.
 - Home label changed from “Golden Pothos / Devil’s Ivy” to “Golden Pothos”.
+
+## v15
+- Removed the duplicate introductory statement under the care-guide tag from every plant profile.
