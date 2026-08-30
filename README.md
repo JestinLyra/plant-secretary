@@ -59,3 +59,9 @@ Home is now My Plant Collection with circular plant photos and the confirmed 29-
 - Restored Fortnight shortcut tap handling.
 - Plant collection photos now have visible loading/error fallbacks.
 - Cache bumped to v10 for iPhone/GitHub Pages.
+
+## v11
+- Changed the Fortnight navigation icon to a calendar icon (📅).
+
+## v12
+Fortnight View condenses long lists with “All indoor plants, except …” and “All outdoor plants, except …”.

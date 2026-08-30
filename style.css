@@ -48,3 +48,5 @@
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
+
+.forecast-summary{font-size:.88rem;line-height:1.35;padding:4px 0;color:var(--ink)}

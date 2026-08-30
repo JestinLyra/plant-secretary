@@ -148,7 +148,27 @@ function renderFortnight(){
   const start=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);
   const days=Array.from({length:14},(_,i)=>({date:addDays(start,i),plants:[]}));
   plants.forEach(p=>{let date=firstForecastDate(p);while(dayDiff(date,start)<14){const idx=dayDiff(date,start);if(idx>=0)days[idx].plants.push(p);date=addDays(date,Math.max(1,p.base));}});
-  el('fortnightGrid').innerHTML=days.map((day,i)=>{const dateLabel=day.date.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});const chips=day.plants.length?day.plants.map(p=>`<span class="forecast-chip ${wateringClass(p)}"><span>${sunlight[p.id]||'⛅️'}</span>${p.name}</span>`).join(''):'<span class="no-water">No watering predicted</span>';return `<article class="forecast-day${i===0?' forecast-today':''}"><div class="forecast-date"><strong>${i===0?'Today':dateLabel}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${chips}</div></article>`;}).join('');
+
+  const indoor=plants.filter(p=>p.place==='indoor');
+  const outdoor=plants.filter(p=>p.place==='outdoor');
+  function groupText(group,due){
+    if(!due.length)return '';
+    const label=group[0].place==='indoor'?'All indoor plants':'All outdoor plants';
+    if(due.length===group.length)return label;
+    const excluded=group.filter(p=>!due.some(d=>d.id===p.id));
+    if(due.length>excluded.length)return `${label}, except ${excluded.map(p=>p.name).join(', ')}`;
+    return due.map(p=>p.name).join(', ');
+  }
+
+  el('fortnightGrid').innerHTML=days.map((day,i)=>{
+    const dateLabel=day.date.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
+    const lines=[
+      groupText(indoor,day.plants.filter(p=>p.place==='indoor')),
+      groupText(outdoor,day.plants.filter(p=>p.place==='outdoor'))
+    ].filter(Boolean);
+    const content=lines.length?lines.map(x=>`<div class="forecast-summary">${x}</div>`).join(''):'<span class="no-water">No watering predicted</span>';
+    return `<article class="forecast-day${i===0?' forecast-today':''}"><div class="forecast-date"><strong>${i===0?'Today':dateLabel}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${content}</div></article>`;
+  }).join('');
 }
 
 function renderAll(){renderCollection();renderWateringCubes();renderFortnight();}
@@ -212,4 +232,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=10').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=12').catch(()=>{}));}
