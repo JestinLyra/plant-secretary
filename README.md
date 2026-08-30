@@ -80,16 +80,3 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v16
 - Home plant collection now shows all indoor plants first, alphabetically.
 - Outdoor plants appear after the indoor section, also alphabetically.
-
-## v17
-- Removed the Plants icon/button from the bottom navigation.
-
-## v18
-- Added String of Pearls to the indoor plant collection.
-- Indoor plants remain alphabetically ordered, followed by outdoor plants alphabetically.
-- Plant collection count updated to 30.
-
-## v19
-- Added Pink Lady — Callisia repens to the indoor plant collection.
-- Indoor collection remains alphabetically ordered.
-- Collection total updated to 31 plants.
