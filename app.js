@@ -12,7 +12,9 @@ const plants = [
 {id:'birkin-green',name:'Philodendron ‘Birkin’ — green pot',place:'indoor',base:8,note:'Check upper mix; water when partly dry.'},
 {id:'birkin-white',name:'Philodendron ‘Birkin’ — white pot',place:'indoor',base:8,note:'Check upper mix; water when partly dry.'},
 {id:'moon-valley',name:'Pilea ‘Moon Valley’',place:'indoor',base:5,note:'Prefers lightly moist soil, not waterlogged.'},
+{id:'pink-lady',name:'Pink Lady — Callisia repens',place:'indoor',base:7,sun:'🌤️'},
 {id:'orchid-purple',name:'Purple-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
+{id:'string-of-pearls',name:'String of Pearls',place:'indoor',base:12,sun:'🌤️'},
 {id:'zz-thick',name:'Thick — ZZ Plant',place:'indoor',base:20,note:'Drought tolerant; let mix dry thoroughly.'},
 {id:'zz-thin',name:'Thin — ZZ Plant',place:'indoor',base:20,note:'Drought tolerant; let mix dry thoroughly.'},
 {id:'orchid-white',name:'White-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
@@ -46,6 +48,19 @@ const commonProfiles={
 };
 
 function profileFor(p){
+  if(p.name==='String of Pearls') return {
+    kicker:'Trailing succulent • bright light • drought-tolerant',
+    light:'Bright indirect light with some gentle morning sun.',
+    water:'Let the potting mix dry well between waterings; avoid keeping it constantly moist.',
+    soil:'Very free-draining succulent/cactus mix.',
+    temperature:'Protect from frost and prolonged cold.',
+    humidity:'Normal indoor humidity is suitable.',
+    fertiliser:'Feed lightly in spring and summer with a diluted balanced fertiliser.',
+    pruning:'Trim long or sparse strands to encourage fuller growth.',
+    propagation:'Lay stem cuttings on moist free-draining mix or root cuttings in soil.',
+    tips:'Use a pot with drainage and avoid burying the pearl-like leaves.',
+    toxicity:'Toxic — Humans, Dogs & Cats'
+  };
   const base={
     intro:`${p.name} is part of your Plant Secretary collection. Use soil moisture and plant response as the final check before watering.`,
     light:'Bright filtered light is generally suitable.',water:p.note,soil:'Use a well-draining mix suited to the plant type.',temp:'Protect from temperature extremes.',humidity:'Normal household or outdoor humidity is usually suitable.',fertiliser:'Feed only during active growth and follow the product label.',pruning:'Remove damaged growth with clean tools.',toxicity:'Non-toxic',propagation:['Use a healthy section of the plant.','Root using the method suited to the species.','Pot up once new roots or growth are established.'],tips:['Check moisture before watering.','Use a pot with drainage where appropriate.','Watch new growth for signs of stress.'],tag:'Care guide'};
@@ -99,6 +114,8 @@ function statusFor(p){const elapsed=daysSince(state.watered[p.id]);const target=
 function shortDue(p){const s=statusFor(p);if(s==='due')return 'Check today';const last=state.watered[p.id];if(!last)return 'Check today';const due=addDays(parseDateOnly(last),targetDays(p));const n=Math.max(0,dayDiff(due,today));return n===1?'In 1 day':`In ${n} days`;}
 
 const plantImages={
+  'pink-lady':'assets/plants/pink-lady.jpg',
+  'string-of-pearls':'assets/plants/string-of-pearls.jpg',
   'gardenia-radicans':'assets/plants/gardenia-radicans.jpg',
   'mama-snake':'assets/plants/mama-snake.jpg','baby-snake':'assets/plants/baby-snake.jpg',
   'peace-lily':'assets/plants/peace-lily.jpg','golden-pothos':'assets/plants/golden-pothos.jpg',
@@ -233,4 +250,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=16').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=21').catch(()=>{}));}

@@ -82,3 +82,8 @@
   width:100% !important;
   height:100% !important;
 }
+
+/* v21: Home includes the plant collection/profile function; 3-item nav */
+.bottom-nav{
+  grid-template-columns:repeat(3,1fr);
+}
