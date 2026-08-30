@@ -120,3 +120,85 @@
 .collection-photo-wrap.image-failed .collection-photo{display:none}
 .collection-photo-wrap.image-failed .collection-fallback{display:grid}
 .cube-sun{max-width:28px;overflow:hidden}
+
+/* v29 Watering Check visual refinements */
+.plant-cube{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:176px;
+  padding:12px 12px 10px;
+}
+.cube-top{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:start;
+  gap:8px;
+  min-height:96px;
+}
+.cube-sun-stack{
+  display:grid;
+  grid-template-columns:34px 1fr;
+  grid-template-rows:auto auto;
+  align-items:start;
+  column-gap:8px;
+  row-gap:7px;
+  width:100%;
+  min-width:0;
+}
+.cube-sun{
+  grid-column:1;
+  grid-row:1;
+  font-size:26px !important;
+  line-height:1;
+  width:34px;
+  max-width:34px;
+  text-align:center;
+}
+.cube-soil{
+  grid-column:1;
+  grid-row:2;
+  font-size:20px;
+  line-height:1;
+  text-align:center;
+}
+.cube-maintenance{
+  grid-column:2;
+  grid-row:1 / span 2;
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(22px,1fr));
+  justify-items:center;
+  align-content:start;
+  gap:8px 8px;
+  margin:0 !important;
+  min-height:56px;
+  padding-top:3px;
+}
+.maintenance-icon{
+  font-size:19px !important;
+  line-height:1;
+}
+.cube-status{
+  justify-self:end;
+  text-align:right;
+  font-size:14px;
+  line-height:1.05;
+  font-weight:750;
+}
+.cube-name{
+  display:block;
+  margin-top:auto;
+  padding-right:48px;
+  color:#174d2a;
+  font-size:17px !important;
+  line-height:1.08 !important;
+  font-weight:850 !important;
+  letter-spacing:-.01em;
+  overflow-wrap:anywhere;
+}
+.plant-cube .water-btn{
+  position:absolute;
+  right:10px;
+  bottom:10px;
+}
