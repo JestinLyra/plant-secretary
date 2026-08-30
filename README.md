@@ -195,3 +195,11 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v37
 - Replaced the Home page Gardenia circular reference photo with the user-supplied Gardenia photo.
 - All other Plant Secretary data and functionality preserved.
+
+## v38
+- Gardenia Home reference photo now fills the entire circular frame with no white space.
+- Only the Gardenia Home-page crop/fitting was changed.
+
+## v39
+- Home page only: centered/cropped all plant reference photos so the plant is the focus inside each circular frame.
+- Other app pages and functionality are unchanged.

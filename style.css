@@ -489,3 +489,65 @@
   display:grid !important;
   place-items:center !important;
 }
+
+/* v38 — Gardenia Home photo fills its circular frame edge-to-edge */
+.collection-item[data-profile="gardenia-radicans"] .collection-photo-wrap{
+  padding:0 !important;
+  background:transparent !important;
+}
+.collection-item[data-profile="gardenia-radicans"] .collection-photo{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  background:transparent !important;
+  border-radius:50% !important;
+}
+
+/* v39 — Home page only: center/focus every plant reference photo inside its circle. */
+#homeView .collection-photo-wrap{
+  padding:0 !important;
+  overflow:hidden !important;
+  border-radius:50% !important;
+}
+#homeView .collection-photo{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  border-radius:50% !important;
+}
+/* Crop source images that include printed labels/extra white space so the plant is the focus. */
+#homeView .collection-item[data-profile="begonia"] .collection-photo,
+#homeView .collection-item[data-profile="birkin-green"] .collection-photo,
+#homeView .collection-item[data-profile="birkin-white"] .collection-photo,
+#homeView .collection-item[data-profile="golden-pothos"] .collection-photo,
+#homeView .collection-item[data-profile="maidenhair"] .collection-photo,
+#homeView .collection-item[data-profile="marble-queen"] .collection-photo,
+#homeView .collection-item[data-profile="moon-valley"] .collection-photo,
+#homeView .collection-item[data-profile="orchid-purple"] .collection-photo,
+#homeView .collection-item[data-profile="orchid-white"] .collection-photo,
+#homeView .collection-item[data-profile="peace-lily"] .collection-photo,
+#homeView .collection-item[data-profile="pink-lady"] .collection-photo,
+#homeView .collection-item[data-profile="string-of-pearls"] .collection-photo{
+  transform:scale(1.24);
+  transform-origin:center center;
+  object-position:center 36% !important;
+}
+#homeView .collection-item[data-profile="baby-snake"] .collection-photo,
+#homeView .collection-item[data-profile="mama-snake"] .collection-photo,
+#homeView .collection-item[data-profile="zz-thick"] .collection-photo,
+#homeView .collection-item[data-profile="zz-thin"] .collection-photo{
+  transform:scale(1.08);
+  transform-origin:center center;
+  object-position:center 42% !important;
+}
+#homeView .collection-item[data-profile="many"] .collection-photo,
+#homeView .collection-item[data-profile="konti"] .collection-photo{
+  transform:scale(1.06);
+  transform-origin:center center;
+}
+#homeView .collection-item[data-profile="gardenia-radicans"] .collection-photo{
+  transform:none !important;
+  object-position:center center !important;
+}
