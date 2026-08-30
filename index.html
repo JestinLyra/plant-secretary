@@ -3,49 +3,42 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0f6b4f" />
+  <meta name="theme-color" content="#174d2d" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
-  <link rel="manifest" href="manifest.json?v=7" />
-  <link rel="apple-touch-icon" href="icon.svg?v=7" />
-  <link rel="stylesheet" href="style.css?v=7" />
+  <link rel="manifest" href="manifest.json?v=9" />
+  <link rel="apple-touch-icon" href="icon.svg?v=9" />
+  <link rel="stylesheet" href="style.css?v=9" />
   <title>Plant Secretary</title>
 </head>
 <body>
   <header class="topbar" id="top">
-    <div>
-      <h1>Plant Secretary</h1>
-      <p id="todayLabel">Altona, Victoria</p>
+    <div class="brand-row">
+      <span class="brand-mark" aria-hidden="true">🌿</span>
+      <div><h1>Plant Secretary</h1><p id="todayLabel">Altona, Victoria</p></div>
     </div>
-    <button id="refreshBtn" class="icon-btn" aria-label="Refresh recommendations">↻</button>
   </header>
 
   <main>
-    <section class="plant-tiles-section" aria-labelledby="plantTilesTitle">
-      <div class="tiles-head">
-        <div><span class="eyebrow">Collection</span><h2 id="plantTilesTitle">My Plants <span id="plantTotal"></span></h2></div>
+    <section id="homeView" class="app-view active-view" aria-labelledby="collectionTitle">
+      <div class="collection-heading">
+        <span class="collection-leaf" aria-hidden="true">❧</span>
+        <div><h2 id="collectionTitle">MY PLANT COLLECTION</h2><p><strong id="plantTotal">29</strong> plants</p></div>
+        <span class="collection-leaf mirror" aria-hidden="true">❧</span>
       </div>
-      <div class="tile-legends" aria-label="Tile colour legend">
-        <span class="legend-item"><span class="legend-swatch legend-high"></span>Most watering</span>
-        <span class="legend-item"><span class="legend-swatch legend-moderate"></span>Moderate</span>
-        <span class="legend-item"><span class="legend-swatch legend-low"></span>Least watering</span>
-      </div>
-      <div class="tile-legends sun-legend" aria-label="Sunlight icon legend">
-        <span>☀️ Direct</span><span>🌤️ Direct–indirect</span><span>⛅️ Indirect / direct-sensitive</span><span>☁️ Minimal</span>
-      </div>
-      <div id="plantTiles" class="plant-tiles" aria-label="All plants"></div>
+      <div id="plantCollection" class="plant-collection" aria-label="My plants"></div>
+
+      <button id="fortnightShortcut" class="fortnight-shortcut" type="button">
+        <span class="shortcut-icon" aria-hidden="true">▦</span>
+        <span><strong>FORTNIGHT VIEW</strong><small>See the next 14 days watering schedule</small></span>
+        <span class="shortcut-arrow" aria-hidden="true">›</span>
+      </button>
     </section>
 
-    <section class="stats-grid" aria-label="Watering status summary">
-      <article class="stat"><strong id="dueCount">0</strong><span>Check today</span></article>
-      <article class="stat"><strong id="soonCount">0</strong><span>Due soon</span></article>
-      <article class="stat"><strong id="okCount">0</strong><span>Okay</span></article>
-    </section>
-
-    <section id="wateringChecks" class="watering-cubes-section" aria-labelledby="wateringChecksTitle">
+    <section id="wateringView" class="app-view" aria-labelledby="wateringChecksTitle" hidden>
       <div class="section-title-row">
-        <div><span class="eyebrow">Today</span><h2 id="wateringChecksTitle">Watering checks</h2></div>
+        <div><span class="eyebrow">Watering</span><h2 id="wateringChecksTitle">Watering checks</h2></div>
         <select id="filterSelect" aria-label="Filter watering checks">
           <option value="all">All plants</option>
           <option value="indoor">Indoor</option>
@@ -53,36 +46,27 @@
           <option value="due">Check today</option>
         </select>
       </div>
-      <p class="section-note">Compact watering tiles are separate from plant profiles. Tap the droplet to record watering.</p>
+      <p class="section-note">Tap the droplet to record watering. Tile colour shows typical watering demand.</p>
+      <div class="tile-legends" aria-label="Watering tile colour legend">
+        <span class="legend-item"><span class="legend-swatch legend-high"></span>Most</span>
+        <span class="legend-item"><span class="legend-swatch legend-moderate"></span>Moderate</span>
+        <span class="legend-item"><span class="legend-swatch legend-low"></span>Least</span>
+      </div>
       <div id="wateringCubes" class="watering-cubes" aria-live="polite"></div>
     </section>
 
-    <section id="fortnightView" class="fortnight-section" aria-labelledby="fortnightTitle">
-      <div class="fortnight-head">
-        <div><span class="eyebrow">Next 14 days</span><h2 id="fortnightTitle">Fortnight watering forecast</h2></div>
-      </div>
+    <section id="fortnightView" class="app-view" aria-labelledby="fortnightTitle" hidden>
+      <div class="fortnight-head"><div><span class="eyebrow">Next 14 days</span><h2 id="fortnightTitle">Fortnight watering forecast</h2></div></div>
       <p class="fortnight-note">Prediction assumes the soil is not damp when each check is due. If the soil is still damp, delay watering and recheck.</p>
       <div id="fortnightGrid" class="fortnight-grid" aria-live="polite"></div>
-    </section>
-
-    <section class="card references">
-      <span class="eyebrow">Evidence base</span>
-      <h2>Sources used by Plant Secretary</h2>
-      <ul>
-        <li>ABC Gardening Australia — everyday care guidance</li>
-        <li>Royal Botanic Gardens & Australian National Botanic Gardens — identification and botanical requirements</li>
-        <li>Bureau of Meteorology — Altona weather and seasonal watering adjustments</li>
-        <li>APVMA-approved product labels — pest treatment, dilution rates and safety</li>
-      </ul>
-      <p class="source-note">Always follow the product label for pesticides and other regulated garden chemicals.</p>
     </section>
   </main>
 
   <nav class="bottom-nav" aria-label="Primary navigation">
-    <button class="nav-active" data-scroll="top">⌂<span>Home</span></button>
-    <button data-scroll="wateringChecks">💧<span>Water</span></button>
-    <button data-scroll="plantTiles">🌱<span>Plants</span></button>
-    <button data-scroll="fortnightView">14<span>Fortnight</span></button>
+    <button class="nav-active" data-view="homeView" type="button"><span class="nav-icon">⌂</span><span>Home</span></button>
+    <button data-view="wateringView" type="button"><span class="nav-icon">◉</span><span>Watering Check</span></button>
+    <button data-view="homeView" type="button"><span class="nav-icon">♧</span><span>Plants</span></button>
+    <button data-view="fortnightView" type="button"><span class="nav-icon">▦</span><span>Fortnight</span></button>
   </nav>
 
   <section id="profileScreen" class="profile-screen" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="profileName">
@@ -94,6 +78,6 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=7" defer></script>
+  <script src="app.js?v=9" defer></script>
 </body>
 </html>

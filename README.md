@@ -48,3 +48,7 @@ The Home page includes a 14-day predicted watering schedule. It assumes soil is 
 - Older watering records display the weekday, date and relative age, for example `Saturday, 29 August, 1 day ago`.
 - If no record exists, it displays `No watering recorded`.
 - Tapping the button records today and immediately recalculates watering checks and the fortnight forecast.
+
+
+## v9
+Home is now My Plant Collection with circular plant photos and the confirmed 29-plant list (17 indoor, 12 outdoor).

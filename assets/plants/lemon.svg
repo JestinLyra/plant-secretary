@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
+<rect width='200' height='200' rx='100' fill='#f4f4ea'/>
+<path d='M100 160V78' stroke='#6d7d3a' stroke-width='10' stroke-linecap='round'/>
+<path d='M100 112C70 92 56 72 62 51c27 4 41 20 40 47M100 126c28-18 44-37 40-60-27 1-44 18-45 45M99 92C86 65 87 43 101 28c21 18 24 39 9 61M100 145c-29-7-48-1-57 18 23 11 44 6 57-18M102 144c31-4 50 4 57 24-25 8-45 1-57-24' fill='#4f8a3f'/>
+<ellipse cx='67' cy='85' rx='16' ry='21' fill='#f3c928'/><ellipse cx='135' cy='103' rx='16' ry='21' fill='#f3c928'/><ellipse cx='105' cy='68' rx='15' ry='20' fill='#ffd84c'/><ellipse cx='83' cy='133' rx='15' ry='20' fill='#ffd84c'/><ellipse cx='132' cy='145' rx='15' ry='20' fill='#ffd84c'/>
+<rect x='70' y='158' width='60' height='22' rx='5' fill='#b77b4a'/>
+</svg>

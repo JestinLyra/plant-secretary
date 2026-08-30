@@ -1,7 +1,7 @@
 const plants = [
   {id:'gardenia-radicans',name:'Gardenia radicans',place:'indoor',base:5,note:'Keep evenly moist; check before the mix fully dries.'},
-  {id:'mama-snake',name:'Mama Snake Plant',place:'indoor',base:18,note:'Allow potting mix to dry well between waterings.'},
-  {id:'baby-snake',name:'Baby Snake Plant',place:'indoor',base:7,note:'Water propagation: keep roots submerged and refresh water regularly.'},
+  {id:'mama-snake',name:'Mama Snake Plant — potting soil',place:'indoor',base:18,note:'Allow potting mix to dry well between waterings.'},
+  {id:'baby-snake',name:'Baby Snake Plant — propagated in water',place:'indoor',base:7,note:'Keep roots submerged and refresh the propagation water regularly.'},
   {id:'peace-lily',name:'Peace Lily',place:'indoor',base:5,note:'Check when the top layer begins to dry; avoid prolonged sogginess.'},
   {id:'golden-pothos',name:'Golden Pothos / Devil’s Ivy',place:'indoor',base:8,note:'Let the top few centimetres dry before watering.'},
   {id:'marble-queen',name:'Marble Queen Pothos',place:'indoor',base:8,note:'Check topsoil dryness before watering.'},
@@ -16,23 +16,25 @@ const plants = [
   {id:'begonia',name:'Begonia maculata',place:'indoor',base:6,note:'Water when the surface begins drying; avoid saturated roots.'},
   {id:'orchid-purple',name:'Purple-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
   {id:'orchid-white',name:'White-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
-  {id:'pink-lady',name:'Pink Lady',place:'indoor',base:6,note:'Check when the upper mix begins to dry; avoid prolonged sogginess.'},
-  {id:'haworthia-retusa',name:'Haworthia retusa',place:'indoor',base:14,note:'Allow the mix to dry well between waterings; avoid water sitting in the rosette.'},
-  {id:'string-of-pearls',name:'String of Pearls',place:'indoor',base:12,note:'Let the potting mix dry substantially between waterings; avoid constantly damp soil.'},
   {id:'bougainvillea',name:'Bougainvillea',place:'outdoor',base:6,note:'Prefer drying slightly between deep waterings.'},
   {id:'dwarf-lemon',name:'Dwarf Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
   {id:'regular-lemon',name:'Regular Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
   {id:'calamansi',name:'Dwarf Calamansi',place:'outdoor',base:4,note:'Keep evenly moist but well drained.'},
   {id:'rosemary',name:'Rosemary — purple flowers',place:'outdoor',base:8,note:'Allow soil to dry between watering; dislikes wet feet.'},
   {id:'mint',name:'Mint',place:'outdoor',base:3,note:'Check frequently; mint prefers consistently moist soil.'},
-  {id:'parsley',name:'Parsley',place:'outdoor',base:3,note:'Keep soil consistently moist during active growth.'}
+  {id:'parsley',name:'Parsley',place:'outdoor',base:3,note:'Keep soil consistently moist during active growth.'},
+  {id:'thai-peppers',name:'Thai Peppers',place:'outdoor',base:3,note:'Keep evenly moist during active growth; avoid waterlogging.'},
+  {id:'chilli-timble',name:'Chilli ‘Timble’',place:'outdoor',base:3,note:'Water when the upper soil starts to dry; keep moisture reasonably consistent.'},
+  {id:'chilli-firecracker',name:'Chilli ‘Firecracker’',place:'outdoor',base:3,note:'Water when the upper soil starts to dry; keep moisture reasonably consistent.'},
+  {id:'habanero',name:'Habanero',place:'outdoor',base:3,note:'Keep evenly moist during flowering and fruiting; avoid soggy soil.'},
+  {id:'jalapeno',name:'Jalapeño',place:'outdoor',base:3,note:'Keep evenly moist during flowering and fruiting; avoid soggy soil.'}
 ];
 
 const sunlight={
   'gardenia-radicans':'🌤️','mama-snake':'⛅️','baby-snake':'⛅️','peace-lily':'⛅️','golden-pothos':'⛅️','marble-queen':'⛅️','moon-valley':'⛅️',
   'many':'⛅️','konti':'⛅️','birkin-green':'⛅️','birkin-white':'⛅️','zz-thick':'☁️','zz-thin':'☁️','maidenhair':'⛅️','begonia':'⛅️',
-  'orchid-purple':'⛅️','orchid-white':'⛅️','pink-lady':'🌤️','haworthia-retusa':'🌤️','string-of-pearls':'🌤️','bougainvillea':'☀️',
-  'dwarf-lemon':'☀️','regular-lemon':'☀️','calamansi':'☀️','rosemary':'☀️','mint':'🌤️','parsley':'🌤️'
+  'orchid-purple':'⛅️','orchid-white':'⛅️','bougainvillea':'☀️','dwarf-lemon':'☀️','regular-lemon':'☀️','calamansi':'☀️','rosemary':'☀️',
+  'mint':'🌤️','parsley':'🌤️','thai-peppers':'☀️','chilli-timble':'☀️','chilli-firecracker':'☀️','habanero':'☀️','jalapeno':'☀️'
 };
 
 const commonProfiles={
@@ -95,10 +97,29 @@ function targetDays(p){return p.base;}
 function statusFor(p){const elapsed=daysSince(state.watered[p.id]);const target=targetDays(p);if(elapsed>=target)return 'due';if(elapsed>=Math.max(0,target-2))return 'soon';return 'ok';}
 function shortDue(p){const s=statusFor(p);if(s==='due')return 'Check today';const last=state.watered[p.id];if(!last)return 'Check today';const due=addDays(parseDateOnly(last),targetDays(p));const n=Math.max(0,dayDiff(due,today));return n===1?'In 1 day':`In ${n} days`;}
 
-function renderTiles(){
-  el('plantTotal').textContent=`(${plants.length})`;
-  el('plantTiles').innerHTML=plants.map(p=>`<button class="plant-tile ${wateringClass(p)}" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile"><span class="tile-sun">${sunlight[p.id]||'⛅️'}</span><span class="tile-name">${p.name}</span></button>`).join('');
-  document.querySelectorAll('[data-profile]').forEach(btn=>btn.addEventListener('click',()=>openProfile(btn.dataset.profile)));
+const plantImages={
+  'gardenia-radicans':'assets/plants/gardenia-radicans.jpg',
+  'mama-snake':'assets/plants/mama-snake.jpg','baby-snake':'assets/plants/baby-snake.jpg',
+  'peace-lily':'assets/plants/peace-lily.jpg','golden-pothos':'assets/plants/golden-pothos.jpg',
+  'marble-queen':'assets/plants/marble-queen.jpg','moon-valley':'assets/plants/moon-valley.jpg',
+  'many':'assets/plants/many.jpg','konti':'assets/plants/konti.jpg',
+  'birkin-green':'assets/plants/birkin-green.jpg','birkin-white':'assets/plants/birkin-white.jpg',
+  'zz-thick':'assets/plants/zz-thick.jpg','zz-thin':'assets/plants/zz-thin.jpg',
+  'maidenhair':'assets/plants/maidenhair.jpg','begonia':'assets/plants/begonia.jpg',
+  'orchid-purple':'assets/plants/orchid-purple.jpg','orchid-white':'assets/plants/orchid-white.jpg',
+  'bougainvillea':'assets/plants/bougainvillea.jpg','dwarf-lemon':'assets/plants/dwarf-lemon.svg',
+  'regular-lemon':'assets/plants/regular-lemon.svg','calamansi':'assets/plants/calamansi.svg',
+  'rosemary':'assets/plants/rosemary.jpg','mint':'assets/plants/mint.jpg','parsley':'assets/plants/parsley.jpg',
+  'thai-peppers':'assets/plants/thai-peppers.svg','chilli-timble':'assets/plants/chilli-timble.svg',
+  'chilli-firecracker':'assets/plants/chilli-firecracker.svg','habanero':'assets/plants/habanero.svg','jalapeno':'assets/plants/jalapeno.svg'
+};
+function renderCollection(){
+  el('plantTotal').textContent=plants.length;
+  el('plantCollection').innerHTML=plants.map(p=>`<button class="collection-item" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile">
+    <span class="collection-photo-wrap"><img class="collection-photo" src="${plantImages[p.id]}" alt="" loading="lazy"></span>
+    <span class="collection-name">${p.name}</span>
+  </button>`).join('');
+  document.querySelectorAll('#plantCollection [data-profile]').forEach(btn=>btn.addEventListener('click',()=>openProfile(btn.dataset.profile)));
 }
 
 function renderWateringCubes(){
@@ -120,8 +141,7 @@ function renderFortnight(){
   el('fortnightGrid').innerHTML=days.map((day,i)=>{const dateLabel=day.date.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});const chips=day.plants.length?day.plants.map(p=>`<span class="forecast-chip ${wateringClass(p)}"><span>${sunlight[p.id]||'⛅️'}</span>${p.name}</span>`).join(''):'<span class="no-water">No watering predicted</span>';return `<article class="forecast-day${i===0?' forecast-today':''}"><div class="forecast-date"><strong>${i===0?'Today':dateLabel}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${chips}</div></article>`;}).join('');
 }
 
-function renderStats(){let due=0,soon=0,ok=0;plants.forEach(p=>{const s=statusFor(p);if(s==='due')due++;else if(s==='soon')soon++;else ok++;});el('dueCount').textContent=due;el('soonCount').textContent=soon;el('okCount').textContent=ok;}
-function renderAll(){renderTiles();renderStats();renderWateringCubes();renderFortnight();}
+function renderAll(){renderCollection();renderWateringCubes();renderFortnight();}
 
 let currentProfile=null;
 function careCard(icon,title,text){return `<article class="care-mini"><span class="care-icon">${icon}</span><div><span class="care-label">${title}</span><p>${text}</p></div></article>`;}
@@ -160,7 +180,5 @@ function openProfile(id){currentProfile=id;renderProfile(id);el('profileScreen')
 function closeProfile(){el('profileScreen').classList.remove('open');el('profileScreen').setAttribute('aria-hidden','true');document.body.classList.remove('profile-open');currentProfile=null;}
 el('profileBack').addEventListener('click',closeProfile);
 el('filterSelect').addEventListener('change',renderWateringCubes);
-el('refreshBtn').addEventListener('click',renderAll);
-document.querySelectorAll('[data-scroll]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('nav-active'));btn.classList.add('nav-active');const id=btn.dataset.scroll;const target=id==='top'?document.body:el(id);if(target)target.scrollIntoView({behavior:'smooth',block:'start'});}));
-renderAll();
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=7').catch(()=>{}));}
+
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=9').catch(()=>{}));}

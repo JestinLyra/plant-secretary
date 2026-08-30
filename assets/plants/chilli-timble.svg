@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+<rect width="240" height="240" fill="#f7f5ee"/><ellipse cx="120" cy="210" rx="55" ry="12" fill="#d8d1c2"/>
+<path d="M120 205V72M120 105L77 76M120 125L166 91M120 148L72 133M120 158L171 142" stroke="#2f7d32" stroke-width="9" stroke-linecap="round"/>
+<g fill="#2f7d32"><ellipse cx="70" cy="70" rx="30" ry="16" transform="rotate(28 70 70)"/><ellipse cx="173" cy="84" rx="31" ry="16" transform="rotate(-28 173 84)"/><ellipse cx="65" cy="128" rx="29" ry="15" transform="rotate(18 65 128)"/><ellipse cx="177" cy="136" rx="30" ry="15" transform="rotate(-20 177 136)"/></g>
+<g fill="#d94b3d"><path d="M92 104c20 3 24 23 5 49-6-23-17-31-5-49z"/><path d="M148 119c21 3 25 24 5 52-6-25-18-33-5-52z"/><path d="M110 143c20 3 23 22 5 48-6-23-17-31-5-48z"/></g>
+<rect x="85" y="192" width="70" height="30" rx="8" fill="#b58d63"/><text x="120" y="232" text-anchor="middle" font-family="Arial" font-size="10" fill="#36523e">Timble</text>
+</svg>

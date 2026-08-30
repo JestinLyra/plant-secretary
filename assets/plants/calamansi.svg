@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
+<rect width='200' height='200' rx='100' fill='#f4f4ea'/>
+<path d='M100 160V72' stroke='#657439' stroke-width='9' stroke-linecap='round'/>
+<g fill='#3f7f3e'><ellipse cx='72' cy='70' rx='30' ry='16' transform='rotate(35 72 70)'/><ellipse cx='128' cy='71' rx='30' ry='16' transform='rotate(-34 128 71)'/><ellipse cx='65' cy='112' rx='31' ry='16' transform='rotate(-15 65 112)'/><ellipse cx='136' cy='114' rx='31' ry='16' transform='rotate(12 136 114)'/><ellipse cx='101' cy='45' rx='26' ry='14' transform='rotate(88 101 45)'/></g>
+<g fill='#f0a92e'><circle cx='73' cy='86' r='12'/><circle cx='126' cy='89' r='12'/><circle cx='92' cy='117' r='12'/><circle cx='141' cy='128' r='11'/><circle cx='60' cy='132' r='11'/><circle cx='108' cy='64' r='11'/></g>
+<rect x='71' y='158' width='58' height='22' rx='5' fill='#b77b4a'/>
+</svg>
