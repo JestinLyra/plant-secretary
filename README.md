@@ -17,10 +17,13 @@ A free, mobile-first Progressive Web App for iPhone, designed for plant watering
 6. Open the GitHub Pages URL on iPhone Safari.
 7. Tap **Share → Add to Home Screen**.
 
+## Home page
+The Home page now starts with square tiles for all plants, followed by the Weather Aware Watering card. Tapping a tile jumps to that plant’s watering card.
+
 ## Current weather behaviour
 This first version lets you enter today's BOM Altona max temperature, rain chance and expected rainfall. The values are stored only on the device and adjust outdoor watering-check intervals.
 
 A later version can automate BOM/weather ingestion using a scheduled GitHub Action or a small free weather-data bridge while keeping GitHub Pages as the host.
 
 ## Cache busting
-Static files include `?v=1` and the service worker cache is named `plant-secretary-v1`. When publishing a new build, increase both version numbers (for example `v=2` and `plant-secretary-v2`).
+Static files include `?v=1` and the service worker cache is named `plant-secretary-v1`. When publishing a new build, this build uses `v=2` and `plant-secretary-v2`. Increase both again on the next build.

@@ -16,6 +16,9 @@ const plants = [
   {id:'begonia',name:'Begonia maculata',place:'indoor',base:6,note:'Water when the surface begins drying; avoid saturated roots.'},
   {id:'orchid-purple',name:'Purple-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
   {id:'orchid-white',name:'White-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
+  {id:'pink-lady',name:'Pink Lady',place:'indoor',base:6,note:'Check when the upper mix begins to dry; avoid prolonged sogginess.'},
+  {id:'haworthia-retusa',name:'Haworthia retusa',place:'indoor',base:14,note:'Allow the mix to dry well between waterings; avoid water sitting in the rosette.'},
+  {id:'string-of-pearls',name:'String of Pearls',place:'indoor',base:12,note:'Let the potting mix dry substantially between waterings; avoid constantly damp soil.'},
   {id:'bougainvillea',name:'Bougainvillea',place:'outdoor',base:6,note:'Prefer drying slightly between deep waterings.'},
   {id:'dwarf-lemon',name:'Dwarf Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
   {id:'regular-lemon',name:'Regular Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
@@ -30,11 +33,27 @@ const plants = [
   {id:'jalapeno',name:'Jalapeño',place:'outdoor',base:3,note:'Check regularly in warm weather; water deeply when needed.'}
 ];
 
-const KEY='plantSecretary.v1';
+const KEY='plantSecretary.v2';
 const state=JSON.parse(localStorage.getItem(KEY)||'{}');
 state.watered=state.watered||{}; state.weather=state.weather||{temp:null,rainChance:null,rainMm:null};
 
 const el=id=>document.getElementById(id);
+const tileIcons={
+  'gardenia-radicans':'🌼','mama-snake':'🪴','baby-snake':'💧','peace-lily':'🤍','golden-pothos':'🌿','marble-queen':'🌿','moon-valley':'🍃',
+  'many':'🌱','konti':'🌱','birkin-green':'🌿','birkin-white':'🌿','zz-thick':'🪴','zz-thin':'🪴','maidenhair':'🌿','begonia':'🍃',
+  'orchid-purple':'💜','orchid-white':'🤍','pink-lady':'🌸','haworthia-retusa':'🌵','string-of-pearls':'🫛','bougainvillea':'🌺',
+  'dwarf-lemon':'🍋','regular-lemon':'🍋','calamansi':'🍊','rosemary':'🌿','mint':'🌱','parsley':'🌿','thai-peppers':'🌶️','timble':'🌶️','firecracker':'🌶️','habanero':'🌶️','jalapeno':'🌶️'
+};
+function renderTiles(){
+  el('plantTotal').textContent=`(${plants.length})`;
+  el('plantTiles').innerHTML=plants.map(p=>`<button class="plant-tile" type="button" data-tile="${p.id}" aria-label="Open ${p.name}"><span class="tile-icon" aria-hidden="true">${tileIcons[p.id]||'🌱'}</span><span class="tile-name">${p.name}</span><span class="tile-place">${p.place==='indoor'?'Indoor':'Outdoor'}</span></button>`).join('');
+  document.querySelectorAll('[data-tile]').forEach(b=>b.addEventListener('click',()=>{
+    el('filterSelect').value='all'; render();
+    const card=document.querySelector(`[data-card="${b.dataset.tile}"]`);
+    if(card) card.scrollIntoView({behavior:'smooth',block:'center'});
+  }));
+}
+
 const today=new Date();
 el('todayLabel').textContent=`Altona, Victoria · ${today.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short',year:'numeric'})}`;
 
@@ -53,16 +72,16 @@ function render(){
   plants.forEach(p=>{const s=statusFor(p); if(s==='due')due++; else if(s==='soon')soon++; else ok++;});
   el('dueCount').textContent=due; el('soonCount').textContent=soon; el('okCount').textContent=ok;
   const list=plants.filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'));
-  el('plantList').innerHTML=list.map(p=>{const s=statusFor(p); const labels={due:'Check today',soon:'Due soon',ok:'Okay for now'}; const last=state.watered[p.id]?new Date(state.watered[p.id]+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'Not recorded'; return `<article class="plant-card"><div class="plant-top"><div><div class="plant-name">${p.name}</div><div class="plant-meta">${p.place==='indoor'?'🪴 Indoor':'☀️ Outdoor'}</div></div><span class="badge ${s}">${labels[s]}</span></div><p class="reason">${reasonFor(p)}</p><div class="actions"><button class="watered" data-water="${p.id}">Watered today</button><button data-damp="${p.id}">Soil still damp</button></div><div class="last-watered">Last watered: ${last}</div></article>`}).join('');
+  el('plantList').innerHTML=list.map(p=>{const s=statusFor(p); const labels={due:'Check today',soon:'Due soon',ok:'Okay for now'}; const last=state.watered[p.id]?new Date(state.watered[p.id]+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'Not recorded'; return `<article class="plant-card" data-card="${p.id}"><div class="plant-top"><div><div class="plant-name">${p.name}</div><div class="plant-meta">${p.place==='indoor'?'🪴 Indoor':'☀️ Outdoor'}</div></div><span class="badge ${s}">${labels[s]}</span></div><p class="reason">${reasonFor(p)}</p><div class="actions"><button class="watered" data-water="${p.id}">Watered today</button><button data-damp="${p.id}">Soil still damp</button></div><div class="last-watered">Last watered: ${last}</div></article>`}).join('');
   document.querySelectorAll('[data-water]').forEach(b=>b.addEventListener('click',()=>{state.watered[b.dataset.water]=new Date().toISOString().slice(0,10);save();render();}));
   document.querySelectorAll('[data-damp]').forEach(b=>b.addEventListener('click',()=>{state.watered[b.dataset.damp]=new Date(Date.now()-Math.max(0,adjustedDays(plants.find(p=>p.id===b.dataset.damp))-2)*86400000).toISOString().slice(0,10);save();render();}));
 }
 function updateWeatherText(){const w=state.weather; if(w.temp==null&&w.rainChance==null&&w.rainMm==null){el('weatherSummary').textContent='Enter today’s BOM forecast below to adjust outdoor watering.';return;} el('weatherSummary').textContent=`Max ${w.temp??'—'}°C · Rain chance ${w.rainChance??'—'}% · Expected ${w.rainMm??'—'} mm`;}
 
-el('weatherForm').addEventListener('submit',e=>{e.preventDefault(); state.weather={temp:el('tempInput').value===''?null:Number(el('tempInput').value),rainChance:el('rainChanceInput').value===''?null:Number(el('rainChanceInput').value),rainMm:el('rainMmInput').value===''?null:Number(el('rainMmInput').value)};save();updateWeatherText();render();});
-el('filterSelect').addEventListener('change',render); el('refreshBtn').addEventListener('click',()=>{updateWeatherText();render();});
+el('weatherForm').addEventListener('submit',e=>{e.preventDefault(); state.weather={temp:el('tempInput').value===''?null:Number(el('tempInput').value),rainChance:el('rainChanceInput').value===''?null:Number(el('rainChanceInput').value),rainMm:el('rainMmInput').value===''?null:Number(el('rainMmInput').value)};save();updateWeatherText();renderTiles();render();});
+el('filterSelect').addEventListener('change',render); el('showAllBtn').addEventListener('click',()=>el('plantList').scrollIntoView({behavior:'smooth'})); el('refreshBtn').addEventListener('click',()=>{updateWeatherText();renderTiles();render();});
 el('resetBtn').addEventListener('click',()=>{if(confirm('Clear all watering history and saved weather?')){localStorage.removeItem(KEY);location.reload();}});
 document.querySelectorAll('[data-scroll]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.scroll;if(id==='top')window.scrollTo({top:0,behavior:'smooth'});else el(id).scrollIntoView({behavior:'smooth'});}));
 ['tempInput','rainChanceInput','rainMmInput'].forEach((id,i)=>{const vals=[state.weather.temp,state.weather.rainChance,state.weather.rainMm]; if(vals[i]!=null)el(id).value=vals[i];});
-updateWeatherText();render();
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=1').catch(()=>{}));}
+updateWeatherText();renderTiles();render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=2').catch(()=>{}));}
