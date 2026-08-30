@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
-  <link rel="manifest" href="manifest.json?v=28" />
-  <link rel="apple-touch-icon" href="icon.svg?v=28" />
-  <link rel="stylesheet" href="style.css?v=28" />
+  <link rel="manifest" href="manifest.json?v=30" />
+  <link rel="apple-touch-icon" href="icon.svg?v=30" />
+  <link rel="stylesheet" href="style.css?v=30" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -52,21 +52,21 @@
         <span class="legend-item"><span class="legend-swatch legend-moderate"></span>Regular watering</span>
         <span class="legend-item"><span class="legend-swatch legend-low"></span>Drought tolerant</span>
       </div>
-      <div class="sun-legends" aria-label="Sunlight icon legend">
-        <span>☀️ Direct sun</span>
-        <span>🌤️ In-/direct sun</span>
-        <span>⛅️ Sun sensitive</span>
-        <span>☁️ No sunlight</span>
+      <div class="sun-legends icon-only-legends" aria-label="Sunlight legend">
+        <span aria-label="Direct sun" title="Direct sun">☀️</span>
+        <span aria-label="In-/direct sun" title="In-/direct sun">🌤️</span>
+        <span aria-label="Sun sensitive" title="Sun sensitive">⛅️</span>
+        <span aria-label="No sunlight" title="No sunlight">☁️</span>
       </div>
-      <div class="soil-legends" aria-label="Soil preference icon legend">
-        <span>🍋 Acid-loving</span>
-        <span>🪨 Alkaline-tolerant</span>
+      <div class="soil-legends icon-only-legends" aria-label="Soil preference legend">
+        <span aria-label="Acid-loving" title="Acid-loving">🍋</span>
+        <span aria-label="Alkaline-tolerant" title="Alkaline-tolerant">🪨</span>
       </div>
-      <div class="maintenance-legends" aria-label="Hands-on maintenance icon legend">
-        <span>✂️ Pruning</span>
-        <span>🤏 Pinching</span>
-        <span>🧤 Wiping leaves</span>
-        <span>🔄 Rotating plants</span>
+      <div class="maintenance-legends icon-only-legends" aria-label="Maintenance legend">
+        <span aria-label="Pruning" title="Pruning">✂️</span>
+        <span aria-label="Pinching" title="Pinching">🤏</span>
+        <span aria-label="Wiping leaves" title="Wiping leaves">🧤</span>
+        <span aria-label="Rotating plants" title="Rotating plants">🔄</span>
       </div>
       <div id="wateringCubes" class="watering-cubes" aria-live="polite"></div>
     </section>
@@ -97,6 +97,6 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=28" defer></script>
+  <script src="app.js?v=30" defer></script>
 </body>
 </html>

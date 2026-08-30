@@ -142,3 +142,16 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Removed fragile hotlinked image URLs from the app and restored stable plant-specific local reference assets.
 - Restored the correct Variegated String of Pearls reference image instead of the unrelated room/furniture image.
 - Added safer image-failure handling so broken reference images do not disrupt the Home layout.
+
+## v29
+- Watering Check plant names are larger, darker and easier to read.
+- Sunlight emoji is slightly larger than the other care icons.
+- Care icons are spaced more evenly within each tile.
+- Maintenance icons are grouped toward the right side of each plant tile.
+- Water button position is preserved at the lower-right of the tile.
+
+## v30
+- Removed the extra “WATERING” eyebrow above Watering checks.
+- Legend descriptions were removed; legends now show centered icons only.
+- Kept accessibility labels/tooltips for each icon.
+- Increased contrast between moisture-loving blue and regular-watering light blue.
