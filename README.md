@@ -203,3 +203,9 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v39
 - Home page only: centered/cropped all plant reference photos so the plant is the focus inside each circular frame.
 - Other app pages and functionality are unchanged.
+
+## v40
+- Corrected only Home-page circular plant photo crops.
+- Reframed Begonia, both Birkins, Golden Pothos, Maidenhair Fern, Marble Queen Pothos, both Orchids, Peace Lily, Pink Lady, and Variegated String of Pearls to focus on foliage/flowers and reduce source-image labels/white space.
+- Preserved the Gardenia crop and other already plant-focused images.
+- No Watering Check, Fortnight, profile, navigation, or watering logic changes.
