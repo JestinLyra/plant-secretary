@@ -52,3 +52,10 @@ The Home page includes a 14-day predicted watering schedule. It assumes soil is 
 
 ## v9
 Home is now My Plant Collection with circular plant photos and the confirmed 29-plant list (17 indoor, 12 outdoor).
+
+## v10 bug fix
+- Restored initial app rendering, so the Home plant collection appears immediately.
+- Restored bottom-navigation tap handlers.
+- Restored Fortnight shortcut tap handling.
+- Plant collection photos now have visible loading/error fallbacks.
+- Cache bumped to v10 for iPhone/GitHub Pages.

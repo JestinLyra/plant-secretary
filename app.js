@@ -116,10 +116,20 @@ const plantImages={
 function renderCollection(){
   el('plantTotal').textContent=plants.length;
   el('plantCollection').innerHTML=plants.map(p=>`<button class="collection-item" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile">
-    <span class="collection-photo-wrap"><img class="collection-photo" src="${plantImages[p.id]}" alt="" loading="lazy"></span>
+    <span class="collection-photo-wrap">
+      <img class="collection-photo" src="${plantImages[p.id]}" alt="${p.name}" loading="lazy">
+      <span class="collection-fallback" aria-hidden="true">${p.name.split(/[ —/]/)[0].slice(0,2).toUpperCase()}</span>
+    </span>
     <span class="collection-name">${p.name}</span>
   </button>`).join('');
-  document.querySelectorAll('#plantCollection [data-profile]').forEach(btn=>btn.addEventListener('click',()=>openProfile(btn.dataset.profile)));
+  document.querySelectorAll('#plantCollection img').forEach(img=>{
+    img.addEventListener('load',()=>img.closest('.collection-photo-wrap')?.classList.add('image-ok'),{once:true});
+    img.addEventListener('error',()=>img.closest('.collection-photo-wrap')?.classList.add('image-failed'),{once:true});
+    if(img.complete && img.naturalWidth>0) img.closest('.collection-photo-wrap')?.classList.add('image-ok');
+  });
+  document.querySelectorAll('#plantCollection [data-profile]').forEach(btn=>{
+    btn.addEventListener('click',()=>openProfile(btn.dataset.profile));
+  });
 }
 
 function renderWateringCubes(){
@@ -181,4 +191,25 @@ function closeProfile(){el('profileScreen').classList.remove('open');el('profile
 el('profileBack').addEventListener('click',closeProfile);
 el('filterSelect').addEventListener('change',renderWateringCubes);
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=9').catch(()=>{}));}
+
+function showView(viewId){
+  document.querySelectorAll('.app-view').forEach(v=>{
+    const active=v.id===viewId;
+    v.hidden=!active;
+    v.classList.toggle('active-view',active);
+  });
+  document.querySelectorAll('.bottom-nav [data-view]').forEach(b=>{
+    b.classList.toggle('nav-active',b.dataset.view===viewId);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.querySelectorAll('.bottom-nav [data-view]').forEach(btn=>{
+  btn.addEventListener('click',()=>showView(btn.dataset.view));
+});
+
+el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
+
+renderAll();
+
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=10').catch(()=>{}));}
