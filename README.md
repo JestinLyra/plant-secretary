@@ -104,3 +104,34 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Home is now the single place for the full plant collection and plant profiles.
 - Removed the separate Plants icon from the bottom navigation.
 - Bottom navigation now contains Home, Watering Check, and Fortnight.
+
+## v22
+- Updated plant names to the latest user-provided list.
+- Indoor plants: 19, kept together and listed first.
+- Outdoor plants: 12, kept together and listed after indoor plants.
+- Total collection: 31 plants.
+
+## v23
+- Saturday forecast tiles are sage.
+- Sunday forecast tiles are sky blue.
+
+## v24
+- Fortnight Watering Forecast now uses the latest exact indoor and outdoor plant names.
+- Stable plant IDs remain unchanged so existing watering records are preserved.
+
+## v25
+- Home redesigned from the supplied plant-gallery inspiration.
+- Indoor and outdoor plants are shown as separate groups.
+- Bunnings Australia reference imagery is used for exact/closest matching plants where available.
+- Home images are reference-only and do not indicate the condition or health of the user's plants.
+- Existing profiles, watering history, Watering Check and Fortnight features remain intact.
+
+## v26
+- Watering Check legend renamed to Moisture-loving, Regular watering, and Drought tolerant.
+- Added sunlight icon legend: direct sun, in-/direct sun, sun sensitive, and no sunlight.
+- Added 🍋 acid-loving and 🪨 alkaline-tolerant icons beneath sun icons on relevant plant tiles.
+
+## v27
+- Added hands-on maintenance icons below the 🍋/🪨 soil-preference icon in Watering Check.
+- ✂️ Pruning · 🤏 Pinching · 🧤 Wiping leaves · 🔄 Rotating plants.
+- Added a legend for the four maintenance icons.

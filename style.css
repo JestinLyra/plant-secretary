@@ -87,3 +87,30 @@
 .bottom-nav{
   grid-template-columns:repeat(3,1fr);
 }
+
+/* v23 weekend colours */
+.forecast-day.forecast-saturday{background:#dfe8d7;}
+.forecast-day.forecast-sunday{background:#dceefa;}
+
+/* v25 home: clean reference-photo gallery inspired by supplied screenshot */
+.plant-collection-groups{display:grid;gap:28px}
+.collection-group{min-width:0}
+.collection-group-title{display:flex;align-items:center;justify-content:space-between;margin:0 2px 14px;padding-bottom:8px;border-bottom:1px solid #e7e8e1;color:var(--accent);font-size:14px;font-weight:850;letter-spacing:.02em}
+.collection-group-title small{display:grid;place-items:center;min-width:27px;height:27px;padding:0 7px;border-radius:999px;background:#edf3ea;color:#48634e;font-size:11px}
+.collection-group .plant-collection{gap:18px 9px}
+.collection-group .collection-photo-wrap{width:min(100%,82px);padding:2px;background:#fff;border:1px solid #e1e3dc;box-shadow:0 2px 8px rgba(24,55,34,.05)}
+.collection-group .collection-photo{object-fit:contain !important;object-position:center center !important;background:#fff}
+.collection-group .collection-name{font-size:11px;line-height:1.18;font-weight:720}
+@media(min-width:430px){.collection-group .plant-collection{grid-template-columns:repeat(5,minmax(0,1fr));gap:20px 8px}.collection-group .collection-photo-wrap{width:min(100%,76px)}.collection-group .collection-name{font-size:10.5px}}
+
+/* v26 Watering Check legends and plant preference icons */
+.sun-legends,.soil-legends{display:flex;gap:7px 12px;flex-wrap:wrap;margin:8px 0 10px;font-size:11px;color:var(--muted)}
+.sun-legends span,.soil-legends span{display:inline-flex;align-items:center;gap:4px}
+.soil-legends{margin-top:-2px;margin-bottom:14px}
+.cube-sun-stack{display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1}
+.cube-soil{font-size:14px;line-height:1}
+
+/* v27 hands-on plant maintenance */
+.cube-maintenance{display:flex;gap:2px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:2px;min-height:18px}
+.maintenance-icon{font-size:14px;line-height:1}
+.maintenance-legends{display:flex;gap:8px 14px;flex-wrap:wrap;margin:6px 0 12px;font-size:11px;color:#5d685f}

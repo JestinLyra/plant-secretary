@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
-  <link rel="manifest" href="manifest.json?v=21" />
-  <link rel="apple-touch-icon" href="icon.svg?v=21" />
-  <link rel="stylesheet" href="style.css?v=21" />
+  <link rel="manifest" href="manifest.json?v=27" />
+  <link rel="apple-touch-icon" href="icon.svg?v=27" />
+  <link rel="stylesheet" href="style.css?v=27" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -27,7 +27,7 @@
         <div><h2 id="collectionTitle">MY PLANT COLLECTION</h2><p><strong id="plantTotal">29</strong> plants</p></div>
         <span class="collection-leaf mirror" aria-hidden="true">❧</span>
       </div>
-      <div id="plantCollection" class="plant-collection" aria-label="My plants"></div>
+      <div id="plantCollection" class="plant-collection-groups" aria-label="My plants"></div>
 
       <button id="fortnightShortcut" class="fortnight-shortcut" type="button">
         <span class="shortcut-icon" aria-hidden="true">📅</span>
@@ -48,9 +48,25 @@
       </div>
       <p class="section-note">Tap the droplet to record watering. Tile colour shows typical watering demand.</p>
       <div class="tile-legends" aria-label="Watering tile colour legend">
-        <span class="legend-item"><span class="legend-swatch legend-high"></span>Most</span>
-        <span class="legend-item"><span class="legend-swatch legend-moderate"></span>Moderate</span>
-        <span class="legend-item"><span class="legend-swatch legend-low"></span>Least</span>
+        <span class="legend-item"><span class="legend-swatch legend-high"></span>Moisture-loving</span>
+        <span class="legend-item"><span class="legend-swatch legend-moderate"></span>Regular watering</span>
+        <span class="legend-item"><span class="legend-swatch legend-low"></span>Drought tolerant</span>
+      </div>
+      <div class="sun-legends" aria-label="Sunlight icon legend">
+        <span>☀️ Direct sun</span>
+        <span>🌤️ In-/direct sun</span>
+        <span>⛅️ Sun sensitive</span>
+        <span>☁️ No sunlight</span>
+      </div>
+      <div class="soil-legends" aria-label="Soil preference icon legend">
+        <span>🍋 Acid-loving</span>
+        <span>🪨 Alkaline-tolerant</span>
+      </div>
+      <div class="maintenance-legends" aria-label="Hands-on maintenance icon legend">
+        <span>✂️ Pruning</span>
+        <span>🤏 Pinching</span>
+        <span>🧤 Wiping leaves</span>
+        <span>🔄 Rotating plants</span>
       </div>
       <div id="wateringCubes" class="watering-cubes" aria-live="polite"></div>
     </section>
@@ -81,6 +97,6 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=21" defer></script>
+  <script src="app.js?v=27" defer></script>
 </body>
 </html>

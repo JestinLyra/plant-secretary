@@ -1,5 +1,5 @@
-const CACHE='plant-secretary-v21';
-const ASSETS=['./','./index.html','./style.css?v=21','./app.js?v=21','./manifest.json?v=21','./icon.svg?v=21'];
+const CACHE='plant-secretary-v27';
+const ASSETS=['./','./index.html','./style.css?v=27','./app.js?v=27','./manifest.json?v=27','./icon.svg?v=27'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r;}).catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html'))));});

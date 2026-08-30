@@ -1,42 +1,60 @@
-const plants = [
-{id:'baby-snake',name:'Baby Snake Plant — propagated in water',place:'indoor',base:7,note:'Keep roots submerged and refresh the propagation water regularly.'},
-{id:'begonia',name:'Begonia maculata',place:'indoor',base:6,note:'Water when the surface begins drying; avoid saturated roots.'},
-{id:'gardenia-radicans',name:'Gardenia radicans',place:'indoor',base:5,note:'Keep evenly moist; check before the mix fully dries.'},
-{id:'golden-pothos',name:'Golden Pothos',place:'indoor',base:8,note:'Let the top few centimetres dry before watering.'},
-{id:'konti',name:'Konti — Monstera deliciosa',place:'indoor',base:8,note:'Water after the upper potting mix dries.'},
-{id:'maidenhair',name:'Maidenhair Fern',place:'indoor',base:3,note:'Do not allow the root zone to dry out completely.'},
-{id:'mama-snake',name:'Mama Snake Plant — potting soil',place:'indoor',base:18,note:'Allow potting mix to dry well between waterings.'},
-{id:'many',name:'Many — Monstera deliciosa',place:'indoor',base:8,note:'Water after the upper potting mix dries.'},
-{id:'marble-queen',name:'Marble Queen Pothos',place:'indoor',base:8,note:'Check topsoil dryness before watering.'},
-{id:'peace-lily',name:'Peace Lily',place:'indoor',base:5,note:'Check when the top layer begins to dry; avoid prolonged sogginess.'},
-{id:'birkin-green',name:'Philodendron ‘Birkin’ — green pot',place:'indoor',base:8,note:'Check upper mix; water when partly dry.'},
-{id:'birkin-white',name:'Philodendron ‘Birkin’ — white pot',place:'indoor',base:8,note:'Check upper mix; water when partly dry.'},
-{id:'moon-valley',name:'Pilea ‘Moon Valley’',place:'indoor',base:5,note:'Prefers lightly moist soil, not waterlogged.'},
-{id:'pink-lady',name:'Pink Lady — Callisia repens',place:'indoor',base:7,sun:'🌤️'},
-{id:'orchid-purple',name:'Purple-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
-{id:'string-of-pearls',name:'String of Pearls',place:'indoor',base:12,sun:'🌤️'},
-{id:'zz-thick',name:'Thick — ZZ Plant',place:'indoor',base:20,note:'Drought tolerant; let mix dry thoroughly.'},
-{id:'zz-thin',name:'Thin — ZZ Plant',place:'indoor',base:20,note:'Drought tolerant; let mix dry thoroughly.'},
-{id:'orchid-white',name:'White-flowered Orchid',place:'indoor',base:8,note:'Check bark/root moisture; do not leave standing in water.'},
-{id:'bougainvillea',name:'Bougainvillea',place:'outdoor',base:6,note:'Prefer drying slightly between deep waterings.'},
-{id:'chilli-firecracker',name:'Chilli ‘Firecracker’',place:'outdoor',base:3,note:'Water when the upper soil starts to dry; keep moisture reasonably consistent.'},
-{id:'chilli-timble',name:'Chilli ‘Timble’',place:'outdoor',base:3,note:'Water when the upper soil starts to dry; keep moisture reasonably consistent.'},
-{id:'calamansi',name:'Dwarf Calamansi',place:'outdoor',base:4,note:'Keep evenly moist but well drained.'},
-{id:'dwarf-lemon',name:'Dwarf Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
-{id:'habanero',name:'Habanero',place:'outdoor',base:3,note:'Keep evenly moist during flowering and fruiting; avoid soggy soil.'},
-{id:'jalapeno',name:'Jalapeño',place:'outdoor',base:3,note:'Keep evenly moist during flowering and fruiting; avoid soggy soil.'},
-{id:'mint',name:'Mint',place:'outdoor',base:3,note:'Check frequently; mint prefers consistently moist soil.'},
-{id:'parsley',name:'Parsley',place:'outdoor',base:3,note:'Keep soil consistently moist during active growth.'},
-{id:'regular-lemon',name:'Regular Lemon',place:'outdoor',base:4,note:'Citrus needs consistent moisture during active growth.'},
-{id:'rosemary',name:'Rosemary — purple flowers',place:'outdoor',base:8,note:'Allow soil to dry between watering; dislikes wet feet.'},
-{id:'thai-peppers',name:'Thai Peppers',place:'outdoor',base:3,note:'Keep evenly moist during active growth; avoid waterlogging.'}
-
+const plants=[
+{id:'begonia',name:'Begonia',place:'indoor',base:6,sun:'⛅️'},
+{id:'birkin-green',name:'Birkin — green pot',place:'indoor',base:8,sun:'⛅️'},
+{id:'birkin-white',name:'Birkin — white pot',place:'indoor',base:8,sun:'⛅️'},
+{id:'gardenia-radicans',name:'Gardenia',place:'indoor',base:5,sun:'🌤️'},
+{id:'golden-pothos',name:'Golden Pothos',place:'indoor',base:8,sun:'⛅️'},
+{id:'maidenhair',name:'Maidenhair Fern',place:'indoor',base:3,sun:'⛅️'},
+{id:'marble-queen',name:'Marble Queen Pothos',place:'indoor',base:8,sun:'⛅️'},
+{id:'many',name:'Monstera — thick',place:'indoor',base:8,sun:'⛅️'},
+{id:'konti',name:'Monstera — thin',place:'indoor',base:8,sun:'⛅️'},
+{id:'moon-valley',name:'Moon Valley',place:'indoor',base:5,sun:'⛅️'},
+{id:'orchid-purple',name:'Orchids — Purple',place:'indoor',base:8,sun:'⛅️'},
+{id:'orchid-white',name:'Orchids — White',place:'indoor',base:8,sun:'⛅️'},
+{id:'peace-lily',name:'Peace Lily',place:'indoor',base:5,sun:'⛅️'},
+{id:'pink-lady',name:'Pink Lady',place:'indoor',base:7,sun:'🌤️'},
+{id:'baby-snake',name:'Snake Plant — Bub',place:'indoor',base:7,sun:'⛅️'},
+{id:'mama-snake',name:'Snake Plant — Mum',place:'indoor',base:18,sun:'⛅️'},
+{id:'string-of-pearls',name:'Variegated String of Pearls',place:'indoor',base:12,sun:'🌤️'},
+{id:'zz-thick',name:'ZZ Plant — Thick',place:'indoor',base:20,sun:'☁️'},
+{id:'zz-thin',name:'ZZ Plant — Thin',place:'indoor',base:20,sun:'☁️'},
+{id:'bougainvillea',name:'Bougainvillea — White',place:'outdoor',base:6,sun:'☀️'},
+{id:'calamansi',name:'Calamansi — Dwarf',place:'outdoor',base:4,sun:'☀️'},
+{id:'chilli-firecracker',name:'Firecracker — Chilli',place:'outdoor',base:3,sun:'☀️'},
+{id:'habanero',name:'Habanero',place:'outdoor',base:3,sun:'☀️'},
+{id:'jalapeno',name:'Jalapeño',place:'outdoor',base:3,sun:'☀️'},
+{id:'regular-lemon',name:'Lemon',place:'outdoor',base:4,sun:'☀️'},
+{id:'dwarf-lemon',name:'Lemon — Dwarf',place:'outdoor',base:4,sun:'☀️'},
+{id:'mint',name:'Mint',place:'outdoor',base:3,sun:'🌤️'},
+{id:'parsley',name:'Parsley',place:'outdoor',base:3,sun:'🌤️'},
+{id:'rosemary',name:'Rosemary — purple flowers',place:'outdoor',base:8,sun:'☀️'},
+{id:'thai-peppers',name:'Thai Peppers',place:'outdoor',base:3,sun:'☀️'},
+{id:'chilli-timble',name:'Timble — Chilli',place:'outdoor',base:3,sun:'☀️'}
 ];
 
+
+const soilPreference={
+  'gardenia-radicans':'🍋',
+  'begonia':'🍋',
+  'golden-pothos':'🍋',
+  'marble-queen':'🍋',
+  'many':'🍋',
+  'konti':'🍋',
+  'moon-valley':'🍋',
+  'peace-lily':'🍋',
+  'birkin-green':'🍋',
+  'birkin-white':'🍋',
+  'orchid-purple':'🍋',
+  'orchid-white':'🍋',
+  'calamansi':'🍋',
+  'regular-lemon':'🍋',
+  'dwarf-lemon':'🍋',
+  'rosemary':'🪨'
+};
 const sunlight={
-  'gardenia-radicans':'🌤️','mama-snake':'⛅️','baby-snake':'⛅️','peace-lily':'⛅️','golden-pothos':'⛅️','marble-queen':'⛅️','moon-valley':'⛅️',
-  'many':'⛅️','konti':'⛅️','birkin-green':'⛅️','birkin-white':'⛅️','zz-thick':'☁️','zz-thin':'☁️','maidenhair':'⛅️','begonia':'⛅️',
-  'orchid-purple':'⛅️','orchid-white':'⛅️','bougainvillea':'☀️','dwarf-lemon':'☀️','regular-lemon':'☀️','calamansi':'☀️','rosemary':'☀️',
+  'gardenia-radicans':'🌤️','mama-snake':'https://media.bunnings.com.au/api/public/content/46629af5b3d046d1bca042b2ad545f5a?t=w700dpr1&v=bc7877a7','baby-snake':'https://media.bunnings.com.au/api/public/content/46629af5b3d046d1bca042b2ad545f5a?t=w700dpr1&v=bc7877a7','peace-lily':'https://media.bunnings.com.au/api/public/content/47053756fb614b38a5122e37725363b9?t=w700dpr1&v=11dec445','golden-pothos':'⛅️','marble-queen':'https://media.bunnings.com.au/api/public/content/3db154f43ccf4c57a0f446eeaad93cec?t=w700dpr1&v=af206a78','moon-valley':'https://media.bunnings.com.au/api/public/content/1c0965db0e4f4517a632160f2eb8994b?t=w700dpr1&v=c4313d82',
+  'many':'https://media.bunnings.com.au/api/public/content/d6165cb7bc284aeb8e9653267794873c?t=w700dpr1&v=422a5b91','konti':'https://media.bunnings.com.au/api/public/content/d6165cb7bc284aeb8e9653267794873c?t=w700dpr1&v=422a5b91','birkin-green':'https://media.bunnings.com.au/api/public/content/7c2e3fdbe7e3420b9626e2c04094119a?t=w700dpr1&v=8bdc0e96','birkin-white':'https://media.bunnings.com.au/api/public/content/7c2e3fdbe7e3420b9626e2c04094119a?t=w700dpr1&v=8bdc0e96','zz-thick':'https://media.bunnings.com.au/api/public/content/a105253ffddd42e4b45e25d9ba5cd675?t=w700dpr1&v=ca45e3ac','zz-thin':'https://media.bunnings.com.au/api/public/content/a105253ffddd42e4b45e25d9ba5cd675?t=w700dpr1&v=ca45e3ac','maidenhair':'https://media.bunnings.com.au/api/public/content/17491f73565248eaa2b777de17087df6?t=w700dpr1&v=bfec5bea','begonia':'https://media.bunnings.com.au/api/public/content/a9020a7db7bd4217ab70708794cddd9c?t=w700dpr1&v=8b440965',
+  'orchid-purple':'⛅️','orchid-white':'⛅️','bougainvillea':'☀️','dwarf-lemon':'https://media.bunnings.com.au/api/public/content/68a6d01e2e7a41c9bb80090faaa1adbd?t=w700dpr1&v=9959700a','regular-lemon':'https://media.bunnings.com.au/api/public/content/68a6d01e2e7a41c9bb80090faaa1adbd?t=w700dpr1&v=9959700a','calamansi':'☀️','rosemary':'☀️',
   'mint':'🌤️','parsley':'🌤️','thai-peppers':'☀️','chilli-timble':'☀️','chilli-firecracker':'☀️','habanero':'☀️','jalapeno':'☀️'
 };
 
@@ -48,7 +66,7 @@ const commonProfiles={
 };
 
 function profileFor(p){
-  if(p.name==='String of Pearls') return {
+  if(p.id==='string-of-pearls') return {
     kicker:'Trailing succulent • bright light • drought-tolerant',
     light:'Bright indirect light with some gentle morning sun.',
     water:'Let the potting mix dry well between waterings; avoid keeping it constantly moist.',
@@ -115,31 +133,38 @@ function shortDue(p){const s=statusFor(p);if(s==='due')return 'Check today';cons
 
 const plantImages={
   'pink-lady':'assets/plants/pink-lady.jpg',
-  'string-of-pearls':'assets/plants/string-of-pearls.jpg',
+  'string-of-pearls':'https://media.bunnings.com.au/api/public/content/ab45b2da5c7e43f7a6b5d1dcbab988f3?t=w1100dpr1&v=82b03a1b',
   'gardenia-radicans':'assets/plants/gardenia-radicans.jpg',
-  'mama-snake':'assets/plants/mama-snake.jpg','baby-snake':'assets/plants/baby-snake.jpg',
-  'peace-lily':'assets/plants/peace-lily.jpg','golden-pothos':'assets/plants/golden-pothos.jpg',
-  'marble-queen':'assets/plants/marble-queen.jpg','moon-valley':'assets/plants/moon-valley.jpg',
-  'many':'assets/plants/many.jpg','konti':'assets/plants/konti.jpg',
-  'birkin-green':'assets/plants/birkin-green.jpg','birkin-white':'assets/plants/birkin-white.jpg',
-  'zz-thick':'assets/plants/zz-thick.jpg','zz-thin':'assets/plants/zz-thin.jpg',
-  'maidenhair':'assets/plants/maidenhair.jpg','begonia':'assets/plants/begonia.jpg',
+  'mama-snake':'https://media.bunnings.com.au/api/public/content/46629af5b3d046d1bca042b2ad545f5a?t=w700dpr1&v=bc7877a7','baby-snake':'https://media.bunnings.com.au/api/public/content/46629af5b3d046d1bca042b2ad545f5a?t=w700dpr1&v=bc7877a7',
+  'peace-lily':'https://media.bunnings.com.au/api/public/content/47053756fb614b38a5122e37725363b9?t=w700dpr1&v=11dec445','golden-pothos':'assets/plants/golden-pothos.jpg',
+  'marble-queen':'https://media.bunnings.com.au/api/public/content/3db154f43ccf4c57a0f446eeaad93cec?t=w700dpr1&v=af206a78','moon-valley':'https://media.bunnings.com.au/api/public/content/1c0965db0e4f4517a632160f2eb8994b?t=w700dpr1&v=c4313d82',
+  'many':'https://media.bunnings.com.au/api/public/content/d6165cb7bc284aeb8e9653267794873c?t=w700dpr1&v=422a5b91','konti':'https://media.bunnings.com.au/api/public/content/d6165cb7bc284aeb8e9653267794873c?t=w700dpr1&v=422a5b91',
+  'birkin-green':'https://media.bunnings.com.au/api/public/content/7c2e3fdbe7e3420b9626e2c04094119a?t=w700dpr1&v=8bdc0e96','birkin-white':'https://media.bunnings.com.au/api/public/content/7c2e3fdbe7e3420b9626e2c04094119a?t=w700dpr1&v=8bdc0e96',
+  'zz-thick':'https://media.bunnings.com.au/api/public/content/a105253ffddd42e4b45e25d9ba5cd675?t=w700dpr1&v=ca45e3ac','zz-thin':'https://media.bunnings.com.au/api/public/content/a105253ffddd42e4b45e25d9ba5cd675?t=w700dpr1&v=ca45e3ac',
+  'maidenhair':'https://media.bunnings.com.au/api/public/content/17491f73565248eaa2b777de17087df6?t=w700dpr1&v=bfec5bea','begonia':'https://media.bunnings.com.au/api/public/content/a9020a7db7bd4217ab70708794cddd9c?t=w700dpr1&v=8b440965',
   'orchid-purple':'assets/plants/orchid-purple.jpg','orchid-white':'assets/plants/orchid-white.jpg',
-  'bougainvillea':'assets/plants/bougainvillea.jpg','dwarf-lemon':'assets/plants/dwarf-lemon.svg',
-  'regular-lemon':'assets/plants/regular-lemon.svg','calamansi':'assets/plants/calamansi.svg',
+  'bougainvillea':'assets/plants/bougainvillea.jpg','dwarf-lemon':'https://media.bunnings.com.au/api/public/content/68a6d01e2e7a41c9bb80090faaa1adbd?t=w700dpr1&v=9959700a',
+  'regular-lemon':'https://media.bunnings.com.au/api/public/content/68a6d01e2e7a41c9bb80090faaa1adbd?t=w700dpr1&v=9959700a','calamansi':'assets/plants/calamansi.svg',
   'rosemary':'assets/plants/rosemary.jpg','mint':'assets/plants/mint.jpg','parsley':'assets/plants/parsley.jpg',
   'thai-peppers':'assets/plants/thai-peppers.svg','chilli-timble':'assets/plants/chilli-timble.svg',
   'chilli-firecracker':'assets/plants/chilli-firecracker.svg','habanero':'assets/plants/habanero.svg','jalapeno':'assets/plants/jalapeno.svg'
 };
 function renderCollection(){
   el('plantTotal').textContent=plants.length;
-  el('plantCollection').innerHTML=plants.map(p=>`<button class="collection-item" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile">
+  const card=p=>`<button class="collection-item" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile">
     <span class="collection-photo-wrap">
-      <img class="collection-photo" src="${plantImages[p.id]}" alt="${p.name}" loading="lazy">
+      <img class="collection-photo" src="${plantImages[p.id]}" alt="${p.name} reference photo" loading="lazy">
       <span class="collection-fallback" aria-hidden="true">${p.name.split(/[ —/]/)[0].slice(0,2).toUpperCase()}</span>
     </span>
     <span class="collection-name">${p.name}</span>
-  </button>`).join('');
+  </button>`;
+  const section=(title,list)=>`<section class="collection-group">
+    <div class="collection-group-title"><span>${title}</span><small>${list.length}</small></div>
+    <div class="plant-collection">${list.map(card).join('')}</div>
+  </section>`;
+  const indoor=plants.filter(p=>p.place==='indoor');
+  const outdoor=plants.filter(p=>p.place==='outdoor');
+  el('plantCollection').innerHTML=section('Indoor plants',indoor)+section('Outdoor plants',outdoor);
   document.querySelectorAll('#plantCollection img').forEach(img=>{
     img.addEventListener('load',()=>img.closest('.collection-photo-wrap')?.classList.add('image-ok'),{once:true});
     img.addEventListener('error',()=>img.closest('.collection-photo-wrap')?.classList.add('image-failed'),{once:true});
@@ -150,11 +175,45 @@ function renderCollection(){
   });
 }
 
+const maintenanceIcons={
+  'begonia':["✂️", "🤏", "🔄"],
+  'birkin-green':["🧤", "🔄"],
+  'birkin-white':["🧤", "🔄"],
+  'gardenia-radicans':["✂️", "🤏", "🧤", "🔄"],
+  'golden-pothos':["✂️", "🤏", "🧤", "🔄"],
+  'maidenhair':["✂️", "🔄"],
+  'marble-queen':["✂️", "🤏", "🧤", "🔄"],
+  'many':["✂️", "🧤", "🔄"],
+  'konti':["✂️", "🧤", "🔄"],
+  'moon-valley':["✂️", "🤏", "🔄"],
+  'orchid-purple':["✂️", "🧤", "🔄"],
+  'orchid-white':["✂️", "🧤", "🔄"],
+  'peace-lily':["✂️", "🧤", "🔄"],
+  'pink-lady':["✂️", "🤏", "🔄"],
+  'baby-snake':["🧤", "🔄"],
+  'mama-snake':["🧤", "🔄"],
+  'string-of-pearls':["✂️", "🔄"],
+  'zz-thick':["🧤", "🔄"],
+  'zz-thin':["🧤", "🔄"],
+  'bougainvillea':["✂️", "🤏"],
+  'calamansi':["✂️"],
+  'chilli-firecracker':["✂️", "🤏"],
+  'habanero':["✂️", "🤏"],
+  'jalapeno':["✂️", "🤏"],
+  'regular-lemon':["✂️"],
+  'dwarf-lemon':["✂️"],
+  'mint':["✂️", "🤏"],
+  'parsley':["✂️"],
+  'rosemary':["✂️", "🤏"],
+  'thai-peppers':["✂️", "🤏"],
+  'chilli-timble':["✂️", "🤏"]
+};
+
 function renderWateringCubes(){
   const filter=el('filterSelect').value;
   const list=plants.filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'));
   el('wateringCubes').innerHTML=list.map(p=>`<article class="water-cube ${wateringClass(p)} ${statusFor(p)}">
-    <div class="cube-top"><span class="cube-sun">${sunlight[p.id]||'⛅️'}</span><span class="cube-status">${shortDue(p)}</span></div>
+    <div class="cube-top"><span class="cube-sun-stack"><span class="cube-sun">${sunlight[p.id]||'⛅️'}</span>${soilPreference[p.id]?`<span class="cube-soil">${soilPreference[p.id]}</span>`:''}<span class="cube-maintenance">${(maintenanceIcons[p.id]||[]).map(icon=>`<span class="maintenance-icon">${icon}</span>`).join('')}</span></span><span class="cube-status">${shortDue(p)}</span></div>
     <strong class="cube-name">${p.name}</strong>
     <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today">💧</button>
   </article>`).join('');
@@ -186,7 +245,9 @@ function renderFortnight(){
     ].filter(Boolean);
     const content=lines.length?lines.map(x=>`<div class="forecast-summary">${x}</div>`).join(''):'<span class="no-water">No watering predicted</span>';
     const emptyClass = day.plants.length ? '' : ' forecast-empty';
-    return `<article class="forecast-day${i===0?' forecast-today':''}${emptyClass}"><div class="forecast-date"><strong>${i===0?'Today':dateLabel}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${content}</div></article>`;
+    const weekday = day.date.getDay();
+    const weekendClass = weekday===6 ? ' forecast-saturday' : weekday===0 ? ' forecast-sunday' : '';
+    return `<article class="forecast-day${i===0?' forecast-today':''}${emptyClass}${weekendClass}"><div class="forecast-date"><strong>${i===0?'Today':dateLabel}</strong>${i===0?`<span>${dateLabel}</span>`:''}</div><div class="forecast-plants">${content}</div></article>`;
   }).join('');
 }
 
@@ -250,4 +311,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=21').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=27').catch(()=>{}));}
