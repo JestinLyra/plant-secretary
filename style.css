@@ -794,3 +794,12 @@
   transform:scale(.92) !important;
   background:#fff !important;
 }
+
+/* v50 — Home/My Plant Collection brightness coherence */
+.collection-item .collection-photo-wrap{
+  background:#fff !important;
+}
+.collection-item .collection-photo{
+  background:#fff !important;
+  filter:saturate(1.02) contrast(.99) !important;
+}
