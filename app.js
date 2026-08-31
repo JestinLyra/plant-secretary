@@ -39,7 +39,7 @@ const soilPreference={
   'golden-pothos':'🍋',
   'marble-queen':'🍋',
   'many':'🍋',
-  'konti':'assets/plants/monstera-thin-bright.png',
+  'konti':'🍋',
   'moon-valley':'🍋',
   'peace-lily':'🍋',
   'birkin-green':'🍋',
@@ -144,7 +144,7 @@ const plantImages={
   'maidenhair':'assets/plants/maidenhair.jpg',
   'marble-queen':'assets/plants/marble-queen.jpg',
   'many':'assets/plants/many.jpg',
-  'konti':'assets/plants/konti.jpg',
+  'konti':'assets/plants/monstera-thin-bright.png',
   'moon-valley':'assets/plants/moon-valley.jpg',
   'orchid-purple':'assets/plants/orchid-purple.jpg',
   'orchid-white':'assets/plants/orchid-white.jpg',
@@ -237,7 +237,7 @@ function renderWateringCubes(){
     ${soilPreference[p.id]?`<span class="cube-soil">${soilPreference[p.id]}</span>`:''}
     <strong class="cube-name">${p.name}</strong>
     <span class="cube-maintenance">${(maintenanceIcons[p.id]||[]).map(icon=>`<span class="maintenance-icon">${icon}</span>`).join('')}</span>
-    <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today">💧</button>
+    <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today"><span class="drop-icon">💧</span></button>
   </article>`).join('');
   document.querySelectorAll('[data-water]').forEach(btn=>btn.addEventListener('click',()=>{state.watered[btn.dataset.water]=localDateOnly();save();renderAll();if(currentProfile===btn.dataset.water)renderProfile(currentProfile);}));
 }
@@ -333,4 +333,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=42').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=43').catch(()=>{}));}

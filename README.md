@@ -218,3 +218,11 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Replaced the Home-page Monstera — thin reference image with the approved brighter, white-background photo.
 - Cropped/positioned the circular Home image to show roughly 80% of the plant and emphasise the large leaves.
 - No other plant photos, pages, watering data, profiles, navigation, or functionality changed.
+
+## v43
+- Watering Check: moved plant names slightly higher so they do not overlap 🍋/🪨.
+- Kept maintenance icons fully clear of the white droplet button.
+- Made the 💧 visually wider/fatter without increasing its height or the white button size.
+- Fixed the Monstera — thin tile bug that displayed the image path/HTTP-style text instead of the 🍋 icon.
+- Corrected Monstera — thin Home image mapping to the approved bright local photo.
+- Removed the stray leftover legend fragment above the watering tiles.

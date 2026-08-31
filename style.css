@@ -643,3 +643,70 @@
   transform-origin:center center !important;
   background:#fff !important;
 }
+
+/* v43 — Watering Check fixes from screen recording */
+
+/* Plant name sits a little higher, safely above pH and maintenance icons. */
+.water-cube .cube-name{
+  top:44% !important;
+  left:10px !important;
+  right:10px !important;
+  max-height:43px !important;
+  line-height:1.08 !important;
+  z-index:1;
+}
+
+/* pH icon stays below the name and beside the maintenance row. */
+.water-cube .cube-soil{
+  left:11px !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:34px !important;
+  font-size:15px !important;
+  line-height:1 !important;
+  z-index:2;
+}
+
+/* Maintenance row cannot enter the droplet button area. */
+.water-cube .cube-maintenance{
+  left:11px !important;
+  right:60px !important;
+  bottom:8px !important;
+  min-height:22px !important;
+  max-width:calc(100% - 71px) !important;
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:5px !important;
+  overflow:visible !important;
+  z-index:2;
+}
+.water-cube .maintenance-icon{
+  flex:0 0 auto !important;
+}
+
+/* Keep the small white droplet button the same height/overall tile size. */
+.water-cube .cube-water{
+  width:42px !important;
+  height:42px !important;
+  right:8px !important;
+  bottom:8px !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  display:grid !important;
+  place-items:center !important;
+  z-index:3;
+}
+
+/* Make only the droplet visibly wider/fatter without changing its height. */
+.water-cube .drop-icon{
+  display:inline-block;
+  font-size:27px !important;
+  line-height:1 !important;
+  transform:scaleX(1.18);
+  transform-origin:center center;
+}
+
+/* Defensive: no leftover legend fragment above tiles. */
+.tile-legends{display:none !important;}
