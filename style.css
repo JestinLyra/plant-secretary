@@ -629,3 +629,17 @@
   transform:scale(.80) !important;
   background:#f5f6f1 !important;
 }
+
+/* v42 — Home only: Monstera — thin uses the approved bright white-background photo */
+.collection-item[data-profile="konti"] .collection-photo-wrap{
+  background:#fff !important;
+}
+.collection-item[data-profile="konti"] .collection-photo{
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  object-position:center 44% !important;
+  transform:scale(.86) !important;
+  transform-origin:center center !important;
+  background:#fff !important;
+}

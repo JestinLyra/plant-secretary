@@ -39,7 +39,7 @@ const soilPreference={
   'golden-pothos':'🍋',
   'marble-queen':'🍋',
   'many':'🍋',
-  'konti':'🍋',
+  'konti':'assets/plants/monstera-thin-bright.png',
   'moon-valley':'🍋',
   'peace-lily':'🍋',
   'birkin-green':'🍋',
@@ -333,4 +333,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=41').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=42').catch(()=>{}));}

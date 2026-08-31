@@ -213,3 +213,8 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v41
 - Home page only: reduced the Monstera — thin image inside its circular frame so roughly 80% of the plant/reference image is visible.
 - No other plant photos, pages, layouts, watering data, profiles, navigation, or functions were changed.
+
+## v42
+- Replaced the Home-page Monstera — thin reference image with the approved brighter, white-background photo.
+- Cropped/positioned the circular Home image to show roughly 80% of the plant and emphasise the large leaves.
+- No other plant photos, pages, watering data, profiles, navigation, or functionality changed.
