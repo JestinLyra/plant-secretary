@@ -782,3 +782,15 @@
   object-position:center center !important;
   background:#fff !important;
 }
+
+/* v49 — Home/My Plant Collection only: Peace Lily */
+.collection-item[data-profile="peace-lily"] .collection-photo-wrap{
+  background:#fff !important;
+  overflow:hidden !important;
+}
+.collection-item[data-profile="peace-lily"] .collection-photo{
+  object-fit:contain !important;
+  object-position:center center !important;
+  transform:scale(.92) !important;
+  background:#fff !important;
+}

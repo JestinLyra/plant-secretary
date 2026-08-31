@@ -250,3 +250,8 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Removed the accidental image-path text from the Watering Check data.
 - Kept the exact user-supplied Monstera — thick photo assigned only to the Home-page image.
 - No other plant data, watering schedules, profiles, or navigation were changed.
+
+## v49
+- Confirmed Peace Lily in Home → My Plant Collection.
+- Peace Lily uses the user-supplied Home reference photo.
+- No Watering Check, watering schedules, Fortnight, profiles, or navigation changes.
