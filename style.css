@@ -795,11 +795,19 @@
   background:#fff !important;
 }
 
-/* v50 — Home/My Plant Collection brightness coherence */
-.collection-item .collection-photo-wrap{
+/* v50 — Home/My Plant Collection only: Peace Lily crop refinement */
+.collection-item[data-profile="peace-lily"] .collection-photo{
+  object-fit:contain !important;
+  object-position:center 47% !important;
+  transform:scale(1.12) !important;
+  transform-origin:center center !important;
+  filter:brightness(.90) saturate(1.03) contrast(.99) !important;
   background:#fff !important;
 }
-.collection-item .collection-photo{
-  background:#fff !important;
-  filter:saturate(1.02) contrast(.99) !important;
+
+/* v51 — Home/My Plant Collection only: restore Gardenia's original colour quality */
+.collection-item[data-profile="gardenia-radicans"] .collection-photo{
+  filter:none !important;
+  transform:scale(1.03) !important;
+  object-position:center center !important;
 }
