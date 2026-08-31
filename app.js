@@ -38,7 +38,7 @@ const soilPreference={
   'begonia':'🍋',
   'golden-pothos':'🍋',
   'marble-queen':'🍋',
-  'many':'assets/plants/monstera-thick-user.jpg',
+  'many':'🍋',
   'konti':'🍋',
   'moon-valley':'🍋',
   'peace-lily':'🍋',
@@ -143,12 +143,12 @@ const plantImages={
   'golden-pothos':'assets/plants/golden-pothos.jpg',
   'maidenhair':'assets/plants/maidenhair.jpg',
   'marble-queen':'assets/plants/marble-queen.jpg',
-  'many':'assets/plants/many.jpg',
+  'many':'assets/plants/monstera-thick-user.jpg',
   'konti':'assets/plants/monstera-thin-bright.png',
   'moon-valley':'assets/plants/moon-valley.jpg',
   'orchid-purple':'assets/plants/orchid-purple.jpg',
   'orchid-white':'assets/plants/orchid-white.jpg',
-  'peace-lily':'assets/plants/peace-lily.jpg',
+  'peace-lily':'assets/plants/peace-lily-user.jpg',
   'pink-lady':'assets/plants/pink-lady.jpg',
   'baby-snake':'assets/plants/baby-snake.jpg',
   'mama-snake':'assets/plants/mama-snake.jpg',
@@ -333,4 +333,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=46').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=48').catch(()=>{}));}

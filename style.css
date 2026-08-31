@@ -775,3 +775,10 @@
   box-shadow:none !important;
   background:#fff !important;
 }
+
+/* v48 — Home/My Plant Collection only: user-supplied Peace Lily reference photo */
+.collection-item[data-profile="peace-lily"] .collection-photo{
+  object-fit:contain !important;
+  object-position:center center !important;
+  background:#fff !important;
+}

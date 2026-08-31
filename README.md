@@ -243,3 +243,10 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Replaced only the Home-page Monstera — thick reference photo with the exact user-supplied image.
 - Removed the visible circle border/shadow around the Monstera — thick image by adjusting only its Home-page crop and frame styling.
 - No other Home photos, pages, watering data, profiles, navigation, or app functionality changed.
+
+## v47
+- Fixed the Monstera — thick Watering Check tile bug.
+- Restored the correct 🍋 soil-preference icon on the Monstera — thick tile.
+- Removed the accidental image-path text from the Watering Check data.
+- Kept the exact user-supplied Monstera — thick photo assigned only to the Home-page image.
+- No other plant data, watering schedules, profiles, or navigation were changed.
