@@ -811,3 +811,12 @@
   transform:scale(1.03) !important;
   object-position:center center !important;
 }
+
+/* v52 — Home/My Plant Collection: remove all photos from circular frames */
+.collection-item .collection-photo{
+  display:none !important;
+}
+.collection-item .collection-photo-wrap{
+  background:#f7f7f2 !important;
+  border-radius:50% !important;
+}

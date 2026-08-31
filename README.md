@@ -263,3 +263,8 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v51
 - Home/My Plant Collection only: restored Gardenia to its original pre-brightness-normalisation colour rendering.
 - No Watering Check, watering schedule/history, Fortnight, profile, or navigation changes.
+
+## v52
+- Home → My Plant Collection only: removed/hid all plant photos inside the circular frames.
+- Circular placeholders and plant names remain.
+- No Watering Check, watering schedules/history, Fortnight, profiles, navigation, or plant data changed.
