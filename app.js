@@ -38,7 +38,7 @@ const soilPreference={
   'begonia':'🍋',
   'golden-pothos':'🍋',
   'marble-queen':'🍋',
-  'many':'🍋',
+  'many':'assets/plants/monstera-thick-user.jpg',
   'konti':'🍋',
   'moon-valley':'🍋',
   'peace-lily':'🍋',
@@ -333,4 +333,4 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=43').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=46').catch(()=>{}));}

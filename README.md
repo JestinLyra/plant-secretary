@@ -226,3 +226,20 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Fixed the Monstera — thin tile bug that displayed the image path/HTTP-style text instead of the 🍋 icon.
 - Corrected Monstera — thin Home image mapping to the approved bright local photo.
 - Removed the stray leftover legend fragment above the watering tiles.
+
+## v44
+- Repositioned the lower care icons on Watering Check tiles after reviewing the screen recording.
+- Gloves/rotate and other maintenance icons now stay in a protected left-side row aligned with the pH/maintenance area.
+- Reserved the lower-right corner exclusively for the white water-droplet button, preventing icons from appearing underneath it.
+
+## v45
+- Standardised Home-page raster plant reference-photo brightness against Monstera — thin (reference mean luminance 0.778).
+- Existing Home plant photos were individually brightness-normalised rather than applying one blanket exposure value.
+- Added a Home-photo rendering standard so newly added reference photos use the same white, clean, coherent presentation.
+- Future photo assets should be brightness-normalised to the Monstera — thin reference before being added to `assets/plants/`.
+- No Watering Check, Fortnight, plant-profile, navigation, or watering-data logic was changed.
+
+## v46
+- Replaced only the Home-page Monstera — thick reference photo with the exact user-supplied image.
+- Removed the visible circle border/shadow around the Monstera — thick image by adjusting only its Home-page crop and frame styling.
+- No other Home photos, pages, watering data, profiles, navigation, or app functionality changed.

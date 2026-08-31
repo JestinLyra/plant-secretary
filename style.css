@@ -710,3 +710,68 @@
 
 /* Defensive: no leftover legend fragment above tiles. */
 .tile-legends{display:none !important;}
+
+/* v44 — Watering tile lower icon row: keep every icon clear of droplet */
+.water-cube .cube-soil{
+  left:11px !important;
+  bottom:31px !important;
+  font-size:15px !important;
+}
+/* Put maintenance beside/under pH in a protected left-side area.
+   This area ends before the white droplet button begins. */
+.water-cube .cube-maintenance{
+  left:11px !important;
+  right:59px !important;
+  bottom:8px !important;
+  width:auto !important;
+  max-width:calc(100% - 70px) !important;
+  min-height:19px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  flex-wrap:nowrap !important;
+  gap:3px !important;
+  overflow:visible !important;
+  white-space:nowrap !important;
+}
+.water-cube .maintenance-icon{
+  flex:0 0 auto !important;
+  font-size:14px !important;
+  line-height:1 !important;
+}
+/* Reserve the entire lower-right corner exclusively for watering. */
+.water-cube .cube-water{
+  right:7px !important;
+  bottom:7px !important;
+  z-index:10 !important;
+}
+
+/* v45 — Home collection photo brightness/coherence standard
+   New Home reference photos inherit the same clean rendering treatment. */
+.collection-item .collection-photo{
+  filter:saturate(1.03) contrast(.98) !important;
+  background:#fff !important;
+}
+.collection-item .collection-photo-wrap{
+  background:#fff !important;
+}
+
+/* v46 — Home only: exact user-supplied Monstera — thick photo */
+.collection-item[data-profile="many"] .collection-photo-wrap{
+  padding:0 !important;
+  border:none !important;
+  box-shadow:none !important;
+  background:#fff !important;
+  overflow:hidden !important;
+}
+.collection-item[data-profile="many"] .collection-photo{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  transform:scale(1.08) !important;
+  transform-origin:center center !important;
+  border:none !important;
+  box-shadow:none !important;
+  background:#fff !important;
+}
