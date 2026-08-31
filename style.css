@@ -621,3 +621,11 @@
 .collection-item[data-profile="zz-thin"] .collection-photo{
   object-position:center 42% !important;
 }
+
+/* v41 — Home only: show more of Monstera — thin inside its circle */
+.collection-item[data-profile="konti"] .collection-photo{
+  object-fit:contain !important;
+  object-position:center center !important;
+  transform:scale(.80) !important;
+  background:#f5f6f1 !important;
+}

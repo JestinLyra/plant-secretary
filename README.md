@@ -209,3 +209,7 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Reframed Begonia, both Birkins, Golden Pothos, Maidenhair Fern, Marble Queen Pothos, both Orchids, Peace Lily, Pink Lady, and Variegated String of Pearls to focus on foliage/flowers and reduce source-image labels/white space.
 - Preserved the Gardenia crop and other already plant-focused images.
 - No Watering Check, Fortnight, profile, navigation, or watering logic changes.
+
+## v41
+- Home page only: reduced the Monstera — thin image inside its circular frame so roughly 80% of the plant/reference image is visible.
+- No other plant photos, pages, layouts, watering data, profiles, navigation, or functions were changed.
