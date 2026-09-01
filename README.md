@@ -410,3 +410,7 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v74
 - Home page Fortnight View card only: replaced the old calendar emoji with the same approved green-squares + aqua-droplet calendar artwork used by the bottom Fortnight navigation.
 - No wording, navigation icon, watering schedule, plant data, layout behavior, or other app content changed.
+
+## v75
+- Watering Check navigation icon only: corrected the dark droplet tip to aqua/blue and softened the existing droplet fill to a cleaner 💧-like cyan-to-blue gradient.
+- No other icon, artwork geometry, size, position, page, plant data, or watering schedule/history changed.
