@@ -334,3 +334,170 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 renderAll();
 
 if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=53').catch(()=>{}));}
+
+
+// v57 — dynamic plant collection management
+const PS_CUSTOM_KEY = 'plantSecretary.customPlants.v1';
+const PS_DELETED_KEY = 'plantSecretary.deletedPlants.v1';
+
+function psReadJson(key, fallback){
+  try{
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  }catch(e){ return fallback; }
+}
+function psWriteJson(key, value){
+  localStorage.setItem(key, JSON.stringify(value));
+}
+function psSlugify(name){
+  return 'custom-' + name.toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') + '-' + Date.now().toString(36);
+}
+function psGetCustomPlants(){ return psReadJson(PS_CUSTOM_KEY, []); }
+function psGetDeletedIds(){ return psReadJson(PS_DELETED_KEY, []); }
+
+function psEnsureDynamicPlants(){
+  const deleted = new Set(psGetDeletedIds());
+  const custom = psGetCustomPlants();
+
+  // Hide deleted built-in plants from the active plant list without deleting their saved history.
+  if (Array.isArray(plants)){
+    for (let i = plants.length - 1; i >= 0; i--){
+      if (deleted.has(plants[i].id)) plants.splice(i,1);
+    }
+    for (const cp of custom){
+      if (!plants.some(p => p.id === cp.id)) plants.push(cp);
+    }
+  }
+}
+
+function psAddDeleteButtons(){
+  document.querySelectorAll('.collection-item').forEach(item => {
+    if (item.querySelector('.collection-delete-btn')) return;
+    const id = item.getAttribute('data-profile');
+    if (!id) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'collection-delete-btn';
+    btn.setAttribute('aria-label','Delete plant');
+    btn.textContent = '−';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      psDeletePlant(id);
+    });
+    item.appendChild(btn);
+  });
+}
+
+function psDeletePlant(id){
+  const plant = plants.find(p => p.id === id);
+  if (!plant) return;
+  const ok = window.confirm(`Delete "${plant.name}" from your collection?`);
+  if (!ok) return;
+
+  const custom = psGetCustomPlants();
+  const customIndex = custom.findIndex(p => p.id === id);
+  if (customIndex >= 0){
+    custom.splice(customIndex,1);
+    psWriteJson(PS_CUSTOM_KEY, custom);
+  }else{
+    const deleted = new Set(psGetDeletedIds());
+    deleted.add(id);
+    psWriteJson(PS_DELETED_KEY, Array.from(deleted));
+  }
+
+  const idx = plants.findIndex(p => p.id === id);
+  if (idx >= 0) plants.splice(idx,1);
+
+  psRenderAllCollectionViews();
+}
+
+function psRenderAllCollectionViews(){
+  if (typeof renderCollection === 'function') renderCollection();
+  else if (typeof renderPlants === 'function') renderPlants();
+
+  if (typeof renderWateringCubes === 'function') renderWateringCubes();
+  if (typeof renderFortnight === 'function') renderFortnight();
+
+  const total = document.getElementById('plantTotal');
+  if (total) total.textContent = String(plants.length);
+
+  setTimeout(psAddDeleteButtons,0);
+}
+
+function psOpenAddModal(){
+  const modal = document.getElementById('addPlantModal');
+  if (!modal) return;
+  modal.hidden = false;
+  const input = document.getElementById('newPlantName');
+  if (input) setTimeout(() => input.focus(),0);
+}
+function psCloseAddModal(){
+  const modal = document.getElementById('addPlantModal');
+  if (modal) modal.hidden = true;
+}
+
+function psSetupCollectionControls(){
+  const addBtn = document.getElementById('addPlantBtn');
+  const editBtn = document.getElementById('editPlantsBtn');
+  const form = document.getElementById('addPlantForm');
+
+  if (addBtn) addBtn.addEventListener('click', psOpenAddModal);
+  document.querySelectorAll('[data-close-add-modal],#closeAddPlantBtn').forEach(el => {
+    el.addEventListener('click', psCloseAddModal);
+  });
+
+  if (editBtn){
+    editBtn.addEventListener('click', () => {
+      const active = document.body.classList.toggle('collection-edit-mode');
+      editBtn.classList.toggle('is-active', active);
+      editBtn.setAttribute('aria-pressed', active ? 'true':'false');
+      editBtn.textContent = active ? 'Done' : 'Edit';
+      psAddDeleteButtons();
+    });
+  }
+
+  if (form){
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('newPlantName').value.trim();
+      const location = document.getElementById('newPlantLocation').value;
+      const interval = Math.max(1, parseInt(document.getElementById('newPlantInterval').value,10) || 7);
+      if (!name) return;
+
+      const id = psSlugify(name);
+      const plant = {
+        id,
+        name,
+        location,
+        indoor: location === 'indoor',
+        interval,
+        baseInterval: interval,
+        custom: true
+      };
+
+      const custom = psGetCustomPlants();
+      custom.push(plant);
+      psWriteJson(PS_CUSTOM_KEY, custom);
+      plants.push(plant);
+
+      form.reset();
+      document.getElementById('newPlantInterval').value = '7';
+      psCloseAddModal();
+      psRenderAllCollectionViews();
+    });
+  }
+}
+
+psEnsureDynamicPlants();
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', () => {
+    psSetupCollectionControls();
+    psRenderAllCollectionViews();
+  }, {once:true});
+}else{
+  psSetupCollectionControls();
+  psRenderAllCollectionViews();
+}
+

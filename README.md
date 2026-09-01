@@ -288,3 +288,12 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Watering Check icon is 2× the previous 27 px size (54 px) and uses crisp inline SVG artwork.
 - Home and Fortnight icons are unchanged.
 - No page content, watering schedules/history, plant data, profiles, or other pages changed.
+
+## v57
+- Home → My Plant Collection:
+  - Added + button to add a new plant.
+  - Added Edit button; in edit mode every plant circle gets a red minus button in the upper-left.
+  - Tapping minus removes the plant from the active collection.
+- Collection changes sync to Watering Check and Fortnight/Calendar.
+- Deleted built-in plants keep any old watering history in storage but are hidden from active views.
+- Added custom plants persist in local storage on the device.

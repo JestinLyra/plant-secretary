@@ -1,4 +1,4 @@
-const CACHE='plant-secretary-v56';
+const CACHE='plant-secretary-v57';
 const ASSETS=['./','./index.html','./style.css?v=53','./app.js?v=53','./manifest.json?v=53','./icon.svg?v=53'
   "assets/icons/calendar-droplet-approved.png",];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));

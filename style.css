@@ -853,3 +853,106 @@
 .bottom-nav button[data-view="wateringView"]{
   min-height:78px !important;
 }
+
+/* v57 — Home collection management */
+.collection-controls{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin:8px 0 14px;
+}
+.collection-action-btn{
+  min-width:44px;
+  height:40px;
+  border:1px solid #6f8f61;
+  border-radius:12px;
+  background:#fff;
+  color:#315c2f;
+  font:inherit;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 14px;
+}
+.collection-action-btn.add{
+  width:44px;
+  padding:0;
+  font-size:28px;
+  line-height:1;
+}
+.collection-action-btn.edit.is-active{
+  background:#e7efe2;
+}
+.collection-item{
+  position:relative;
+}
+.collection-delete-btn{
+  position:absolute;
+  top:-3px;
+  left:-3px;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  border:2px solid #fff;
+  background:#d92d20;
+  color:#fff;
+  font-size:20px;
+  font-weight:800;
+  line-height:20px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:20;
+  box-shadow:0 1px 4px rgba(0,0,0,.18);
+}
+body.collection-edit-mode .collection-delete-btn{
+  display:flex;
+}
+body.collection-edit-mode .collection-item{
+  cursor:default;
+}
+.plant-modal[hidden]{display:none!important}
+.plant-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.plant-modal-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.35);
+}
+.plant-modal-card{
+  position:relative;
+  width:min(92vw,420px);
+  background:#fff;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 12px 36px rgba(0,0,0,.18);
+}
+.plant-modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.plant-modal-head h2{margin:0;font-size:22px}
+.modal-close{
+  width:40px;height:40px;border:0;background:#f3f3ee;border-radius:50%;font-size:28px;
+}
+#addPlantForm{display:grid;gap:14px}
+#addPlantForm label{display:grid;gap:6px;font-weight:600;color:#2d3a2d}
+#addPlantForm input,#addPlantForm select{
+  width:100%;min-height:44px;border:1px solid #cfd8c8;border-radius:10px;padding:10px 12px;font:inherit;background:#fff;
+}
+.plant-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
+.plant-modal-actions button{min-height:44px;border-radius:10px;padding:0 14px;font:inherit;font-weight:700}
+.plant-modal-actions .secondary{border:1px solid #cfd8c8;background:#fff}
+.plant-modal-actions .primary{border:1px solid #5d7f51;background:#5d7f51;color:#fff}
