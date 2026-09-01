@@ -113,5 +113,15 @@
   </section>
 </div>
 
+<input id="profilePhotoInput" type="file" accept="image/*" hidden>
+<div id="profilePhotoMenu" class="profile-photo-menu" hidden>
+  <div class="profile-photo-backdrop" data-close-photo-menu></div>
+  <section class="profile-photo-sheet" role="dialog" aria-modal="true" aria-labelledby="profilePhotoMenuTitle">
+    <h2 id="profilePhotoMenuTitle">Plant photo</h2>
+    <button id="profileUploadPhotoBtn" type="button">Upload / Replace Photo</button>
+    <button id="profileDeletePhotoBtn" class="danger" type="button">Delete Photo</button>
+    <button id="profileCancelPhotoBtn" class="secondary" type="button">Cancel</button>
+  </section>
+</div>
 </body>
 </html>

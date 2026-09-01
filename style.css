@@ -1126,3 +1126,94 @@ body.collection-edit-mode .collection-item{
   text-align:left !important;
   width:100% !important;
 }
+
+/* v71 — profile photo management */
+.profile-top-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.profile-edit-photo-btn{
+  min-width:44px;
+  min-height:34px;
+  padding:0 12px;
+  border:1px solid rgba(49,92,47,.32);
+  border-radius:10px;
+  background:rgba(255,255,255,.72);
+  color:#315c2f;
+  font:inherit;
+  font-size:13px;
+  font-weight:650;
+}
+.profile-photo-wrap{
+  width:min(72vw,280px);
+  aspect-ratio:1/1;
+  margin:18px auto 4px;
+  border-radius:50%;
+  border:1px solid rgba(49,92,47,.15);
+  background:#f5f7f1;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.profile-plant-photo{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+}
+.profile-photo-fallback{
+  font-size:42px;
+  font-weight:750;
+  color:#174d2d;
+}
+.profile-photo-menu[hidden]{display:none!important}
+.profile-photo-menu{
+  position:fixed;
+  inset:0;
+  z-index:12000;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:18px;
+}
+.profile-photo-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.32);
+}
+.profile-photo-sheet{
+  position:relative;
+  width:min(100%,440px);
+  padding:18px;
+  border-radius:20px;
+  background:#fff;
+  display:grid;
+  gap:10px;
+  box-shadow:0 14px 38px rgba(0,0,0,.2);
+}
+.profile-photo-sheet h2{
+  margin:0 0 4px;
+  color:#174d2d;
+}
+.profile-photo-sheet button{
+  min-height:46px;
+  border-radius:12px;
+  border:1px solid #ccd6c7;
+  background:#fff;
+  color:#174d2d;
+  font:inherit;
+  font-weight:650;
+}
+.profile-photo-sheet button.danger{
+  color:#b42318;
+}
+.profile-photo-sheet button.secondary{
+  color:#5f685d;
+}
+.profile-photo-sheet button:disabled{
+  opacity:.38;
+}

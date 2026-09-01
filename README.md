@@ -387,3 +387,11 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Fortnight: existing six calendar squares recolored leaf green to match the Home icon family.
 - Fortnight: existing droplet recolored to the same blue/cyan water color.
 - No icon size, shape, line placement, crop, navigation layout, app page, plant data, or watering schedule/history changes.
+
+## v71
+- Every plant profile now has an Edit button for that specific plant's photo.
+- Edit → Upload / Replace Photo opens the iPhone/native photo picker.
+- Uploaded photos are resized for local storage and saved per plant on the device.
+- The same uploaded photo appears on both Home → My Plant Collection and that plant's profile.
+- Edit → Delete Photo removes that plant's currently displayed photo from both Home and the profile, including bundled reference photos.
+- No watering schedules/history, plant ordering, Fortnight calculations, or navigation behavior changed.

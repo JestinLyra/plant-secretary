@@ -168,12 +168,55 @@ const plantImages={
   'thai-peppers':'assets/plants/thai-peppers.svg',
   'chilli-timble':'assets/plants/chilli-timble.svg'
 };
+
+const PS_PHOTO_KEY = 'plantSecretary.plantPhotos.v1';
+
+function psGetPlantPhotos(){
+  try{return JSON.parse(localStorage.getItem(PS_PHOTO_KEY)||'{}')||{};}
+  catch(e){return {};}
+}
+function psSavePlantPhotos(photos){
+  localStorage.setItem(PS_PHOTO_KEY, JSON.stringify(photos));
+}
+function psPlantPhoto(id){
+  const photos=psGetPlantPhotos();
+  if(Object.prototype.hasOwnProperty.call(photos,id)){
+    return photos[id]==='__NONE__' ? '' : photos[id];
+  }
+  return plantImages[id] || '';
+}
+function psPlantInitials(name){
+  return String(name||'').split(/[ —/]/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase() || 'PL';
+}
+function psResizePhoto(file, maxSize=1000, quality=.84){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('Could not read photo.'));
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('Could not open photo.'));
+      img.onload=()=>{
+        const scale=Math.min(1,maxSize/Math.max(img.width,img.height));
+        const w=Math.max(1,Math.round(img.width*scale));
+        const h=Math.max(1,Math.round(img.height*scale));
+        const canvas=document.createElement('canvas');
+        canvas.width=w; canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg',quality));
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 function renderCollection(){
   el('plantTotal').textContent=plants.length;
   const card=p=>`<button class="collection-item" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile">
     <span class="collection-photo-wrap">
-      ${plantImages[p.id]?`<img class="collection-photo" src="${plantImages[p.id]}" alt="${p.name} reference photo" loading="lazy">`:''}
-      <span class="collection-fallback" aria-hidden="true">${p.name.split(/[ —/]/)[0].slice(0,2).toUpperCase()}</span>
+      ${psPlantPhoto(p.id)?`<img class="collection-photo" src="${psPlantPhoto(p.id)}" alt="${p.name} photo" loading="lazy">`:''}
+      <span class="collection-fallback" aria-hidden="true">${psPlantInitials(p.name)}</span>
     </span>
     <span class="collection-name">${p.name}</span>
   </button>`;
@@ -286,10 +329,15 @@ function renderProfile(id){
   const q=profileFor(p);const watered=wateredStatusLabel(state.watered[p.id]);
   el('profileContent').innerHTML=`
     <article class="profile-hero ${wateringClass(p)}">
-      <span class="profile-eyebrow">CARE GUIDE</span>
+      <div class="profile-top-actions">
+        <span class="profile-eyebrow">CARE GUIDE</span>
+        <button id="profileEditPhotoBtn" class="profile-edit-photo-btn" type="button">Edit</button>
+      </div>
       <h2 id="profileName">${p.name}</h2>
       <span class="profile-tag">${q.tag}</span>
-      <div class="hero-botanical" aria-hidden="true"><span class="leaf leaf-a"></span><span class="leaf leaf-b"></span><span class="leaf leaf-c"></span><span class="leaf leaf-d"></span><span class="stem"></span></div>
+      <div class="profile-photo-wrap ${psPlantPhoto(p.id)?'has-photo':''}">
+        ${psPlantPhoto(p.id)?`<img class="profile-plant-photo" src="${psPlantPhoto(p.id)}" alt="${p.name} photo">`:`<span class="profile-photo-fallback">${psPlantInitials(p.name)}</span>`}
+      </div>
     </article>
     <section class="profile-core">
       ${careCard('◉','LIGHT',q.light)}
@@ -310,11 +358,70 @@ function renderProfile(id){
     <button id="profileWaterBtn" class="profile-water-btn" type="button">💧 ${watered}</button>
   `;
   el('profileWaterBtn').addEventListener('click',()=>{state.watered[p.id]=localDateOnly();save();renderAll();renderProfile(p.id);});
+  el('profileEditPhotoBtn').addEventListener('click',()=>psOpenProfilePhotoMenu(p.id));
 }
+
+let psEditingPhotoPlantId=null;
+
+function psOpenProfilePhotoMenu(id){
+  psEditingPhotoPlantId=id;
+  const menu=el('profilePhotoMenu');
+  const del=el('profileDeletePhotoBtn');
+  const p=plants.find(x=>x.id===id);
+  if(!menu||!p)return;
+  del.disabled=!psPlantPhoto(id);
+  menu.hidden=false;
+}
+function psCloseProfilePhotoMenu(){
+  const menu=el('profilePhotoMenu');
+  if(menu)menu.hidden=true;
+  psEditingPhotoPlantId=null;
+}
+function psRefreshPlantPhotoViews(id){
+  renderCollection();
+  if(currentProfile===id)renderProfile(id);
+  setTimeout(psAddDeleteButtons,0);
+}
+
 function openProfile(id){currentProfile=id;renderProfile(id);el('profileScreen').classList.add('open');el('profileScreen').setAttribute('aria-hidden','false');document.body.classList.add('profile-open');}
 function closeProfile(){el('profileScreen').classList.remove('open');el('profileScreen').setAttribute('aria-hidden','true');document.body.classList.remove('profile-open');currentProfile=null;}
 el('profileBack').addEventListener('click',closeProfile);
 el('filterSelect').addEventListener('change',renderWateringCubes);
+
+el('profileUploadPhotoBtn').addEventListener('click',()=>{
+  if(!psEditingPhotoPlantId)return;
+  el('profilePhotoInput').value='';
+  el('profilePhotoInput').click();
+});
+el('profilePhotoInput').addEventListener('change',async(e)=>{
+  const file=e.target.files&&e.target.files[0];
+  const id=psEditingPhotoPlantId;
+  if(!file||!id)return;
+  try{
+    const data=await psResizePhoto(file);
+    const photos=psGetPlantPhotos();
+    photos[id]=data;
+    psSavePlantPhotos(photos);
+    psCloseProfilePhotoMenu();
+    psRefreshPlantPhotoViews(id);
+  }catch(err){
+    alert('That photo could not be saved. Please try another image.');
+  }
+});
+el('profileDeletePhotoBtn').addEventListener('click',()=>{
+  const id=psEditingPhotoPlantId;
+  if(!id)return;
+  const photos=psGetPlantPhotos();
+  // Hide the currently displayed photo for this specific plant, including
+  // a bundled reference photo. Uploading again replaces this marker.
+  photos[id]='__NONE__';
+  psSavePlantPhotos(photos);
+  psCloseProfilePhotoMenu();
+  psRefreshPlantPhotoViews(id);
+});
+el('profileCancelPhotoBtn').addEventListener('click',psCloseProfilePhotoMenu);
+document.querySelectorAll('[data-close-photo-menu]').forEach(x=>x.addEventListener('click',psCloseProfilePhotoMenu));
+
 
 
 function showView(viewId){
@@ -337,7 +444,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=53').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=71').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management
