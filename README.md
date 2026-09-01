@@ -350,3 +350,8 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
   - Existing Calendar + Droplet artwork retained.
   - Green linework made darker and visually thicker to better match Home and Watering Check.
 - No Home icon, Watering Check icon, page content, plant data, watering schedules/history, or app behavior changed.
+
+## v66
+- Home navigation icon only: removed the visible white circular background/ring.
+- Fortnight navigation icon only: removed the visible light-gray circular background/disc.
+- Icon drawings, colors, sizes, navigation behavior, and all other app pages/data remain unchanged.

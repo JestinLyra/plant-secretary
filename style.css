@@ -1069,3 +1069,9 @@ body.collection-edit-mode .collection-item{
 
 /* v65 — Fortnight icon artwork weight only.
    Home and Watering Check are untouched. */
+
+/* v66 — remove only Home white disc and Fortnight gray disc */
+.bottom-nav .nav-home-approved,
+.bottom-nav .nav-calendar-approved{
+  background:transparent !important;
+}
