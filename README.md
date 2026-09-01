@@ -282,3 +282,9 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Fortnight/calendar bottom navigation icon changed to the exact approved Calendar + Droplet artwork.
 - Home icon and Watering Check icon remain unchanged.
 - No page content, watering schedules/history, plant data, profiles, or layout changed.
+
+## v56
+- Watering Check bottom-navigation icon updated to the approved Progress Droplet design.
+- Watering Check icon is 2× the previous 27 px size (54 px) and uses crisp inline SVG artwork.
+- Home and Fortnight icons are unchanged.
+- No page content, watering schedules/history, plant data, profiles, or other pages changed.
