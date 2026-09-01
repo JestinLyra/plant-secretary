@@ -1083,3 +1083,46 @@ body.collection-edit-mode .collection-item{
   line-height:1.35;
   color:#6e786a;
 }
+
+/* v69 — Home/My Plant Collection header positioning only */
+.collection-heading{
+  display:block !important;
+}
+.collection-heading-row{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:16px !important;
+  width:100% !important;
+  margin:0 !important;
+}
+.collection-title-wrap{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+  min-width:0 !important;
+  flex:1 1 auto !important;
+}
+.collection-title-wrap h2{
+  margin:0 !important;
+  text-align:left !important;
+  white-space:nowrap !important;
+}
+.collection-title-wrap .collection-leaf{
+  position:static !important;
+  transform:none !important;
+  flex:0 0 auto !important;
+}
+.collection-title-wrap .collection-leaf.mirror{
+  transform:scaleX(-1) !important;
+}
+.collection-heading-row .collection-controls{
+  margin:0 !important;
+  flex:0 0 auto !important;
+}
+.collection-total{
+  margin:12px 0 0 !important;
+  text-align:left !important;
+  width:100% !important;
+}

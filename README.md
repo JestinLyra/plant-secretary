@@ -373,3 +373,10 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - New custom plants use an initials circle on Home until a photo is supplied.
 - Fortnight uses the same corrected plant location and watering interval.
 - No existing built-in plant schedules/history were changed.
+
+## v69
+- Home → My Plant Collection only:
+  - The existing ❧ decorative symbols now sit immediately before and after “MY PLANT COLLECTION”.
+  - + and Edit remain separate controls on the right.
+  - Total plant count is left-aligned below the heading.
+- No changes to plant order/data, Watering Check, Fortnight, watering schedules/history, profiles, or navigation.

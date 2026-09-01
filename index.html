@@ -23,15 +23,18 @@
   <main>
     <section id="homeView" class="app-view active-view" aria-labelledby="collectionTitle">
       <div class="collection-heading">
-        <span class="collection-leaf" aria-hidden="true">❧</span>
-        <div><div class="collection-heading-row">
-<h2 id="collectionTitle">MY PLANT COLLECTION</h2>
-<div id="collectionControls" class="collection-controls" aria-label="Plant collection controls">
-  <button id="addPlantBtn" class="collection-action-btn add" type="button" aria-label="Add new plant">+</button>
-  <button id="editPlantsBtn" class="collection-action-btn edit" type="button" aria-pressed="false">Edit</button>
-</div>
-</div><p><strong id="plantTotal">29</strong> plants</p></div>
-        <span class="collection-leaf mirror" aria-hidden="true">❧</span>
+        <div class="collection-heading-row">
+          <div class="collection-title-wrap">
+            <span class="collection-leaf" aria-hidden="true">❧</span>
+            <h2 id="collectionTitle">MY PLANT COLLECTION</h2>
+            <span class="collection-leaf mirror" aria-hidden="true">❧</span>
+          </div>
+          <div id="collectionControls" class="collection-controls" aria-label="Plant collection controls">
+            <button id="addPlantBtn" class="collection-action-btn add" type="button" aria-label="Add new plant">+</button>
+            <button id="editPlantsBtn" class="collection-action-btn edit" type="button" aria-pressed="false">Edit</button>
+          </div>
+        </div>
+        <p class="collection-total"><strong id="plantTotal">29</strong> plants</p>
       </div>
       <div id="plantCollection" class="plant-collection-groups" aria-label="My plants"></div>
 
