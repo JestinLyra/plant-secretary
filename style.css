@@ -1036,3 +1036,22 @@ body.collection-edit-mode .collection-item{
   object-fit:contain !important;
   border-radius:50% !important;
 }
+
+/* v63 — bottom navigation visual sizing only.
+   No icon artwork/assets are changed. */
+.bottom-nav .nav-home-approved{
+  width:60px !important;
+  height:60px !important;
+}
+.bottom-nav .nav-watering-approved{
+  width:60px !important;
+  height:60px !important;
+}
+.bottom-nav .nav-calendar-approved{
+  width:60px !important;
+  height:60px !important;
+  /* Slight scale-up makes the existing calendar circle/outline read
+     as bold as the other two without modifying the image itself. */
+  transform:scale(1.06) !important;
+  transform-origin:center !important;
+}
