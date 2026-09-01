@@ -972,3 +972,58 @@ body.collection-edit-mode .collection-item{
   width:54px !important;
   height:54px !important;
 }
+
+/* v60 — Home/My Plant Collection heading alignment only */
+.collection-heading-row{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:18px !important;
+  width:100% !important;
+  margin:0 0 12px !important;
+}
+.collection-heading-row > h2{
+  margin:0 !important;
+  text-align:left !important;
+  flex:1 1 auto !important;
+  min-width:0 !important;
+}
+.collection-heading-row .collection-controls{
+  margin:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:5px !important;
+  flex:0 0 auto !important;
+}
+.collection-heading-row .collection-action-btn{
+  min-width:32px !important;
+  height:30px !important;
+  border-radius:9px !important;
+  padding:0 8px !important;
+  font-size:12px !important;
+  font-weight:600 !important;
+  border-color:rgba(49,92,47,.28) !important;
+  color:rgba(49,92,47,.72) !important;
+  background:rgba(255,255,255,.72) !important;
+  box-shadow:none !important;
+}
+.collection-heading-row .collection-action-btn.add{
+  width:30px !important;
+  min-width:30px !important;
+  padding:0 !important;
+  font-size:19px !important;
+  line-height:1 !important;
+}
+.collection-heading-row .collection-action-btn.edit.is-active{
+  background:#eef3eb !important;
+}
+
+/* v61 — Home nav icon only: exact approved Leaf Circle artwork */
+.bottom-nav .nav-home-approved{
+  width:54px !important;
+  height:54px !important;
+  display:block !important;
+  object-fit:contain !important;
+  border-radius:50% !important;
+}

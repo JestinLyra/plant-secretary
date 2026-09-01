@@ -311,3 +311,17 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
   - Fortnight/Calendar icon enlarged to 54×54 px.
   - Watering Check remains 54×54 px.
 - No changes to page content, watering schedules/history, collection management, plant data, profiles, or navigation behavior.
+
+## v60
+- Home → My Plant Collection heading row only:
+  - Moved “MY PLANT COLLECTION” to the left.
+  - Moved + and Edit controls to the right.
+  - Kept title and controls on one line with clear space between them.
+  - Made + and Edit smaller and visually subtler.
+- No changes to plant data, collection behavior, Watering Check, Fortnight, profiles, or watering schedules/history.
+
+## v61
+- Home bottom-navigation icon only:
+  - Replaced with the exact approved Leaf Circle image.
+  - Sized at 54×54 px, matching Watering Check and Fortnight.
+- No other app content, behavior, plant data, watering schedules/history, or layout changed.
