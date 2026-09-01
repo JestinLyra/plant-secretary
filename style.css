@@ -829,3 +829,12 @@
 /* v54 — selected bottom navigation icons only */
 .bottom-nav .nav-icon{display:flex;align-items:center;justify-content:center;}
 .bottom-nav .nav-svg-icon{width:27px;height:27px;display:block;color:currentColor;}
+
+/* v55 — Fortnight nav only: exact approved Calendar + Droplet icon */
+.bottom-nav .nav-calendar-approved{
+  width:29px !important;
+  height:29px !important;
+  display:block !important;
+  object-fit:contain !important;
+  border-radius:50% !important;
+}

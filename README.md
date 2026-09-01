@@ -277,3 +277,8 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Bottom navigation only: Home now uses the selected Leaf Circle icon (#13).
 - Watering Check now uses the selected Progress Droplet icon (#15).
 - No other pages, watering schedules/history, plant data, Fortnight, profiles, or layout were changed.
+
+## v55
+- Fortnight/calendar bottom navigation icon changed to the exact approved Calendar + Droplet artwork.
+- Home icon and Watering Check icon remain unchanged.
+- No page content, watering schedules/history, plant data, profiles, or layout changed.
