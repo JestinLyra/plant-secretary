@@ -435,3 +435,12 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Fixed the redesigned profile content resolver so it uses each plant's existing species/cultivar-specific care record instead of showing only a broad group template.
 - Preserved Home, Watering Check, Fortnight, watering history/calculations, photos, custom plants and deletion behaviour.
 - Bumped PWA cache/service worker to v78.
+
+
+## v79
+- Fixed the root cause preventing all Home plant circles from opening profiles: the redesigned profile code called a missing `careCard()` renderer, causing a runtime error before the profile overlay could open.
+- Added the missing care-card renderer used by Quick and Care profile pages.
+- Hardened Home plant-card activation for iPhone/Safari by removing invalid nested-button markup and keeping delegated tap/keyboard routing by exact plant ID.
+- Added a defensive profile-open fallback so a future content rendering error cannot silently make taps appear unresponsive.
+- Preserved plant data, watering intervals/history, Watering Check, Fortnight, photos, custom plants, deletion behavior and navigation.
+- Bumped PWA cache/service worker to v79.

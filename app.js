@@ -213,13 +213,13 @@ function psResizePhoto(file, maxSize=1000, quality=.84){
 
 function renderCollection(){
   el('plantTotal').textContent=plants.length;
-  const card=p=>`<button class="collection-item" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile">
+  const card=p=>`<div class="collection-item" role="button" tabindex="0" data-profile="${p.id}" aria-label="Open ${p.name} profile">
     <span class="collection-photo-wrap">
       ${psPlantPhoto(p.id)?`<img class="collection-photo" src="${psPlantPhoto(p.id)}" alt="${p.name} photo" loading="lazy">`:''}
       <span class="collection-fallback" aria-hidden="true">${psPlantInitials(p.name)}</span>
     </span>
     <span class="collection-name">${p.name}</span>
-  </button>`;
+  </div>`;
   const section=(title,list)=>`<section class="collection-group">
     <div class="collection-group-title"><span>${title}</span><small>${list.length}</small></div>
     <div class="plant-collection">${list.map(card).join('')}</div>
@@ -237,14 +237,25 @@ function renderCollection(){
   // reliable after Home is re-rendered when watering/custom-plant state changes.
 }
 
-// v78: one stable Home profile handler. The collection is rebuilt often, so
-// delegation avoids stale/missing listeners and always opens the tapped plant ID.
-el('plantCollection').addEventListener('click',(event)=>{
+// v79: stable Home profile activation for iPhone/Safari and re-rendered cards.
+// Collection items are non-nested interactive containers so the edit-mode delete
+// button remains valid HTML and cannot interfere with the plant-profile tap target.
+function activateCollectionProfile(event){
+  const collection=el('plantCollection');
+  if(!collection) return;
   const card=event.target.closest('[data-profile]');
-  if(!card || !el('plantCollection').contains(card)) return;
+  if(!card || !collection.contains(card)) return;
   if(event.target.closest('.collection-delete-btn')) return;
   const id=card.dataset.profile;
   if(id) openProfile(id);
+}
+el('plantCollection').addEventListener('click',activateCollectionProfile);
+el('plantCollection').addEventListener('keydown',(event)=>{
+  if(event.key!=='Enter' && event.key!==' ') return;
+  const card=event.target.closest('[data-profile]');
+  if(!card || event.target.closest('.collection-delete-btn')) return;
+  event.preventDefault();
+  activateCollectionProfile(event);
 });
 
 const maintenanceIcons={
@@ -378,6 +389,10 @@ function individualProfileFor(p){
   if(Array.isArray(legacy.propagation) && legacy.propagation.length) g.prop=legacy.propagation.join(' ');
   return g;
 }
+function careCard(icon,label,content){
+  const safeContent=(content===undefined || content===null || content==='') ? '—' : content;
+  return `<article class="care-mini"><div class="care-icon" aria-hidden="true">${icon}</div><div><span class="care-label">${label}</span><p>${safeContent}</p></div></article>`;
+}
 function profilePageButton(n,label){return `<button class="profile-tab" type="button" data-profile-page="${n}">${label}</button>`;}
 function renderProfile(id,page=1){
  const p=plants.find(x=>x.id===id);if(!p)return; const g=individualProfileFor(p); const photo=psPlantPhoto(p.id); const watered=wateredStatusLabel(state.watered[p.id]);
@@ -415,7 +430,22 @@ function psRefreshPlantPhotoViews(id){
   setTimeout(psAddDeleteButtons,0);
 }
 
-function openProfile(id){currentProfile=id;renderProfile(id);el('profileScreen').classList.add('open');el('profileScreen').setAttribute('aria-hidden','false');document.body.classList.add('profile-open');}
+function openProfile(id){
+  const p=plants.find(x=>x.id===id);
+  const screen=el('profileScreen');
+  const content=el('profileContent');
+  if(!p || !screen || !content) return;
+  currentProfile=id;
+  screen.classList.add('open');
+  screen.setAttribute('aria-hidden','false');
+  document.body.classList.add('profile-open');
+  try{
+    renderProfile(id);
+  }catch(err){
+    console.error('Plant profile render failed',id,err);
+    content.innerHTML=`<section class="detail-stack"><h2 id="profileName">${p.name}</h2><article class="profile-panel"><b>Profile temporarily unavailable.</b><p>Please close and reopen this profile. Your watering data has not been changed.</p></article></section>`;
+  }
+}
 function closeProfile(){el('profileScreen').classList.remove('open');el('profileScreen').setAttribute('aria-hidden','true');document.body.classList.remove('profile-open');currentProfile=null;}
 el('profileBack').addEventListener('click',closeProfile);
 el('filterSelect').addEventListener('change',renderWateringCubes);
@@ -476,7 +506,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=78').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=79').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management
