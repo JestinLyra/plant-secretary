@@ -1066,3 +1066,6 @@ body.collection-edit-mode .collection-item{
 .bottom-nav .nav-home-approved{transform:scale(1.16) !important;}
 .bottom-nav .nav-watering-approved{transform:scale(1) !important;}
 .bottom-nav .nav-calendar-approved{transform:scale(1.10) !important;}
+
+/* v65 — Fortnight icon artwork weight only.
+   Home and Watering Check are untouched. */
