@@ -965,3 +965,10 @@ body.collection-edit-mode .collection-item{
   object-fit:contain !important;
   border-radius:50% !important;
 }
+
+/* v59 — bottom navigation icon sizing only */
+.bottom-nav .nav-svg-icon,
+.bottom-nav .nav-calendar-approved{
+  width:54px !important;
+  height:54px !important;
+}
