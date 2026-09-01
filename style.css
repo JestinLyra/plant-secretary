@@ -1075,3 +1075,11 @@ body.collection-edit-mode .collection-item{
 .bottom-nav .nav-calendar-approved{
   background:transparent !important;
 }
+
+/* v67 — Add Plant: automatic watering estimate note */
+.auto-water-note{
+  margin:2px 0 0;
+  font-size:13px;
+  line-height:1.35;
+  color:#6e786a;
+}

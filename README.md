@@ -355,3 +355,11 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Home navigation icon only: removed the visible white circular background/ring.
 - Fortnight navigation icon only: removed the visible light-gray circular background/disc.
 - Icon drawings, colors, sizes, navigation behavior, and all other app pages/data remain unchanged.
+
+## v67
+- Add New Plant only:
+  - Removed the manual “Water every” selector.
+  - Plant Secretary now estimates a starting watering interval automatically from the plant name and Indoor/Outdoor location.
+  - It first reuses intervals from recognised plants already in the app, then common plant-family rules, then a conservative fallback (Indoor 7 days / Outdoor 4 days).
+- Watering Check and Fortnight automatically use that assigned interval for the new plant.
+- No other pages, existing plant schedules/history, icons, or navigation changed.

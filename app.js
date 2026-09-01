@@ -438,6 +438,44 @@ function psCloseAddModal(){
   if (modal) modal.hidden = true;
 }
 
+
+function psEstimateWaterInterval(name, location){
+  const n = (name || '').toLowerCase();
+
+  // Prefer a matching plant already known to Plant Secretary.
+  const match = plants.find(p => {
+    const pn = (p.name || '').toLowerCase();
+    return pn === n || pn.includes(n) || n.includes(pn);
+  });
+  if (match && Number(match.interval || match.baseInterval)){
+    return Number(match.interval || match.baseInterval);
+  }
+
+  // Common-name families used by the existing Plant Secretary care set.
+  const rules = [
+    { words:['maidenhair'], days:3 },
+    { words:['mint','parsley','chilli','pepper','habanero','jalapeno','jalapeño'], days:3 },
+    { words:['calamansi','lemon','citrus'], days:4 },
+    { words:['gardenia','peace lily','moon valley','pilea'], days:5 },
+    { words:['bougainvillea'], days:6 },
+    { words:['begonia'], days:6 },
+    { words:['pink lady','callisia'], days:7 },
+    { words:['orchid','phalaenopsis'], days:8 },
+    { words:['pothos','monstera','birkin','philodendron'], days:8 },
+    { words:['rosemary'], days:8 },
+    { words:['string of pearls','senecio','curio'], days:12 },
+    { words:['snake plant','sansevieria','dracaena trifasciata'], days:18 },
+    { words:['zz plant','zamioculcas'], days:20 }
+  ];
+
+  for (const rule of rules){
+    if (rule.words.some(w => n.includes(w))) return rule.days;
+  }
+
+  // Conservative fallback when the plant name is not recognised.
+  return location === 'outdoor' ? 4 : 7;
+}
+
 function psSetupCollectionControls(){
   const addBtn = document.getElementById('addPlantBtn');
   const editBtn = document.getElementById('editPlantsBtn');
@@ -463,7 +501,7 @@ function psSetupCollectionControls(){
       e.preventDefault();
       const name = document.getElementById('newPlantName').value.trim();
       const location = document.getElementById('newPlantLocation').value;
-      const interval = Math.max(1, parseInt(document.getElementById('newPlantInterval').value,10) || 7);
+      const interval = psEstimateWaterInterval(name, location);
       if (!name) return;
 
       const id = psSlugify(name);
@@ -483,7 +521,6 @@ function psSetupCollectionControls(){
       plants.push(plant);
 
       form.reset();
-      document.getElementById('newPlantInterval').value = '7';
       psCloseAddModal();
       psRenderAllCollectionViews();
     });
