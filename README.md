@@ -429,3 +429,9 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Watering Check tile droplets only: replaced the emoji-rendered droplet with a continuous cyan/blue CSS droplet so the black triangular tip is gone.
 - Preserved tile button size/position, tap behavior, watering calculations/history, and bottom-navigation droplet artwork.
 - Bumped PWA cache/service worker to v77.
+
+## v78
+- Fixed Home plant-circle profile routing so each tapped plant reliably opens its own profile after Home re-renders.
+- Fixed the redesigned profile content resolver so it uses each plant's existing species/cultivar-specific care record instead of showing only a broad group template.
+- Preserved Home, Watering Check, Fortnight, watering history/calculations, photos, custom plants and deletion behaviour.
+- Bumped PWA cache/service worker to v78.

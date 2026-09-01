@@ -233,10 +233,19 @@ function renderCollection(){
     img.addEventListener('error',()=>img.closest('.collection-photo-wrap')?.classList.add('image-failed'),{once:true});
     if(img.complete && img.naturalWidth>0) img.closest('.collection-photo-wrap')?.classList.add('image-ok');
   });
-  document.querySelectorAll('#plantCollection [data-profile]').forEach(btn=>{
-    btn.addEventListener('click',()=>openProfile(btn.dataset.profile));
-  });
+  // Profile opening is handled by one delegated listener below. This remains
+  // reliable after Home is re-rendered when watering/custom-plant state changes.
 }
+
+// v78: one stable Home profile handler. The collection is rebuilt often, so
+// delegation avoids stale/missing listeners and always opens the tapped plant ID.
+el('plantCollection').addEventListener('click',(event)=>{
+  const card=event.target.closest('[data-profile]');
+  if(!card || !el('plantCollection').contains(card)) return;
+  if(event.target.closest('.collection-delete-btn')) return;
+  const id=card.dataset.profile;
+  if(id) openProfile(id);
+});
 
 const maintenanceIcons={
   'begonia':["✂️", "🤏", "🔄"],
@@ -354,9 +363,24 @@ function groupForPlant(p){
 const pestData={spider:['🕷️','Spider mites','Fine webbing; pale stippling/bronzing; leaves may dry.','Check leaf undersides and stem junctions.','Isolate; rinse/wipe foliage. If a pesticide is needed, select an APVMA-registered product listing the pest and plant/use situation; follow its label exactly.'],mite:['🔎','Mites','Fine stippling, bronzing or distorted new growth.','Inspect undersides with a hand lens.','Improve plant vigour and use only a registered mite treatment whose label covers the crop.'],mealy:['⚪','Mealybugs','White cottony clusters, sticky honeydew, weakened/distorted growth.','Inspect leaf axils, stems, roots and pot rim.','Remove small colonies manually. For larger infestations use a registered product whose label covers mealybugs and the plant.'],scale:['🟤','Scale insects','Brown/white fixed bumps, sticky honeydew, sooty mould, yellowing.','Check stems, veins and leaf undersides.','Physically remove light infestations; use a registered horticultural oil/insecticide only as its label directs.'],aphid:['🟢','Aphids','Clusters on soft new growth; curled leaves; sticky honeydew.','Inspect shoot tips, buds and leaf undersides.','Hose off small colonies; if treatment is needed, use an APVMA-registered aphid product suitable for the plant/crop and obey withholding periods.'],whitefly:['🪽','Whitefly','Tiny white adults fly up when disturbed; nymphs beneath leaves; honeydew.','Check undersides of younger leaves.','Remove heavily infested leaves and use a registered product only where the label permits.'],gnat:['🪰','Fungus gnats','Small dark flies around moist potting mix; larvae live in damp organic media.','Check soil surface and drainage conditions.','Let the surface dry where the plant tolerates it; improve drainage. Use only a registered treatment if needed.'],leafminer:['〰️','Citrus leafminer','Silvery serpentine mines and distorted young citrus leaves.','Inspect fresh flushes of growth.','Protect new flush using a registered citrus leafminer product strictly according to label directions.']};
 const problemData={yellow:['Yellow leaves','Overwatering/root stress, ageing leaves or nutrient/pH issues.','Check soil moisture first. If wet for days, improve drainage; if only old leaves yellow, remove them. Look at new-growth pattern before adding fertiliser.'],brown:['Brown tips/edges','Dry air, inconsistent watering, salt build-up or heat/sun scorch.','Check whether damage is crisp/dry versus soft. Correct watering and position first; flush accumulated salts when appropriate.'],droop:['Drooping/wilting','Dry root ball, saturated roots, heat or transplant stress.','Feel the mix before watering. Dry mix needs a thorough drink; wet mix plus wilt suggests root/oxygen stress.'],slow:['Slow growth','Low light, cool season, root crowding or depleted nutrition.','Compare seasonal growth, check light and roots, then feed only if the plant is actively growing.'],curl:['Curling/distorted leaves','Moisture stress, heat, pests or root problems.','Inspect undersides and new growth for pests; then check soil moisture and heat exposure.'],root:['Soft base/root rot signs','Prolonged wet mix and poor aeration.','Stop routine watering, inspect roots, remove rotten tissue where practical and repot into fresh free-draining mix.'],noFlower:['No flowers','Insufficient light, wrong season, excess nitrogen or plant immaturity.','Increase appropriate light, avoid overfeeding and confirm the species’ normal flowering season.'],noFruit:['Poor flowering/fruit set','Insufficient sun, nutrition/water stress or pollination conditions.','Maximise sun, keep moisture steady during flowering and use crop-appropriate fertiliser at label rates.'],budDrop:['Bud drop','Moisture swings, heat/cold stress or sudden environmental change.','Keep moisture and position stable; avoid moving the plant repeatedly while budding.'],leafDrop:['Leaf drop','Water stress, cold/heat shock, root problems or pest pressure.','Check moisture and roots, then inspect stems/leaves for pests and recent environmental changes.'],wrinkle:['Wrinkled leaves','Dehydration or damaged roots unable to take up water.','Inspect roots before simply watering more; healthy dry roots need water, rotten roots need corrective repotting.'],shrivel:['Shrivelling','Extended dryness or compromised roots.','Check whether roots are healthy and mix is dry before watering thoroughly.'],stretch:['Stretched/leggy growth','Insufficient light.','Increase light gradually and rotate the plant; prune stretched growth if appropriate.']};
 function phFor(p,g){return g.ph || (soilPreference[p.id]==='🍋'?'Acid-loving':'Plant-appropriate pH');}
+function individualProfileFor(p){
+  const group=profileGroups[groupForPlant(p)] || profileGroups.tropical;
+  const legacy=profileFor(p) || {};
+  const g={...group};
+  // Use each plant's existing species/cultivar-specific care record instead of
+  // displaying only the broad group template on every profile.
+  if(legacy.light) g.position=legacy.light;
+  if(legacy.soil) g.soil=legacy.soil;
+  if(legacy.water) g.water=legacy.water;
+  if(legacy.fertiliser){ g.feed=legacy.fertiliser; g.feedNote='Use the plant-appropriate product according to its current label directions.'; }
+  if(Array.isArray(legacy.tips) && legacy.tips.length) g.grow=legacy.tips.join(' ');
+  if(legacy.pruning){ g.maint=[legacy.pruning, ...(group.maint||[]).filter(x=>x!==legacy.pruning)]; }
+  if(Array.isArray(legacy.propagation) && legacy.propagation.length) g.prop=legacy.propagation.join(' ');
+  return g;
+}
 function profilePageButton(n,label){return `<button class="profile-tab" type="button" data-profile-page="${n}">${label}</button>`;}
 function renderProfile(id,page=1){
- const p=plants.find(x=>x.id===id);if(!p)return; const g=profileGroups[groupForPlant(p)]; const photo=psPlantPhoto(p.id); const watered=wateredStatusLabel(state.watered[p.id]);
+ const p=plants.find(x=>x.id===id);if(!p)return; const g=individualProfileFor(p); const photo=psPlantPhoto(p.id); const watered=wateredStatusLabel(state.watered[p.id]);
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  let body='';
  if(page===1) body=`<article class="profile-poster"><div class="profile-top-actions"><span class="profile-eyebrow">QUICK PLANT PROFILE</span><button id="profileEditPhotoBtn" class="profile-edit-photo-btn" type="button">Edit Photo</button></div><div class="profile-photo-wrap ${photo?'has-photo':''}">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${p.name} photo">`:`<span class="profile-photo-fallback">${psPlantInitials(p.name)}</span>`}</div><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanicalNames[p.id]||p.name}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span><div class="quick-care-row"><div><b>${sunlight[p.id]||p.sun||'🌤️'}</b><span>${g.position.split('.')[0]}</span></div><div><b>💧</b><span>${g.moisture}</span></div><div><b>pH</b><span>${phFor(p,g)}</span></div></div><section class="poster-grid">${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL',g.soil)}${careCard('💧','WATERING',g.water)}${careCard('🌿','FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}</section><article class="grow-tip"><b>💡 GROW TIP</b><p>${g.grow}</p></article></article>`;
@@ -452,7 +476,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=77').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=78').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management
