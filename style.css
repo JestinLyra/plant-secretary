@@ -1217,3 +1217,13 @@ body.collection-edit-mode .collection-item{
 .profile-photo-sheet button:disabled{
   opacity:.38;
 }
+
+/* v74 — Fortnight View card icon only: match bottom Fortnight navigation artwork */
+.fortnight-icon img,
+.fortnight-card-icon img,
+.fortnight-view-icon-img{
+  width:48px !important;
+  height:48px !important;
+  object-fit:contain !important;
+  display:block !important;
+}
