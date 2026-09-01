@@ -1055,3 +1055,14 @@ body.collection-edit-mode .collection-item{
   transform:scale(1.06) !important;
   transform-origin:center !important;
 }
+
+/* v64 — normalize visible bottom-nav circle sizes; artwork unchanged */
+.bottom-nav .nav-home-approved,
+.bottom-nav .nav-watering-approved,
+.bottom-nav .nav-calendar-approved{
+  width:60px !important;height:60px !important;object-fit:contain !important;
+  transform-origin:center center !important;
+}
+.bottom-nav .nav-home-approved{transform:scale(1.16) !important;}
+.bottom-nav .nav-watering-approved{transform:scale(1) !important;}
+.bottom-nav .nav-calendar-approved{transform:scale(1.10) !important;}

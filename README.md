@@ -339,3 +339,8 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
   - Fortnight icon enlarged slightly so its existing outline reads bolder and visually matches the other two.
 - Exact existing icon image files are unchanged.
 - No changes to watering schedules/history, plant data, collection management, profiles, or page content.
+
+## v64
+- Normalized the visible outer-circle sizes of Home, Watering Check and Fortnight.
+- Exact icon images are unchanged; only their rendered scale is adjusted.
+- No other app content or behavior changed.
