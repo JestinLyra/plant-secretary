@@ -325,3 +325,9 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
   - Replaced with the exact approved Leaf Circle image.
   - Sized at 54×54 px, matching Watering Check and Fortnight.
 - No other app content, behavior, plant data, watering schedules/history, or layout changed.
+
+## v62
+- Fortnight bottom-navigation icon only:
+  - Re-applied the exact approved Calendar + Droplet image already bundled with Plant Secretary.
+  - Display size fixed at 54×54 px, matching Home and Watering Check.
+- No other app page, data, watering schedule/history, collection behavior, or navigation behavior changed.
