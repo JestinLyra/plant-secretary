@@ -423,3 +423,9 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Troubleshooting page uses Problem → Likely causes → What to do.
 - Existing Watering Check intervals/history, Home and Fortnight logic are unchanged.
 - Product directions are deliberately label-first; no pesticide/fertiliser dilution rate is invented.
+
+
+## v77
+- Watering Check tile droplets only: replaced the emoji-rendered droplet with a continuous cyan/blue CSS droplet so the black triangular tip is gone.
+- Preserved tile button size/position, tap behavior, watering calculations/history, and bottom-navigation droplet artwork.
+- Bumped PWA cache/service worker to v77.
