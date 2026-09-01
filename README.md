@@ -414,3 +414,12 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 ## v75
 - Watering Check navigation icon only: corrected the dark droplet tip to aqua/blue and softened the existing droplet fill to a cleaner 💧-like cyan-to-blue gradient.
 - No other icon, artwork geometry, size, position, page, plant data, or watering schedule/history changed.
+
+## v76
+- Rebuilt every Plant Profile as a four-page mobile care guide: Quick, Care, Pests, Problems.
+- Quick page uses a large circular user photo, botanical/common names, Indoor/Outdoor tag, Edit Photo, light/moisture/pH summary, four care cards and a Grow Tip.
+- Care page adds position, practical soil components/pH, watering, specific fertiliser choice, growing tips, repotting, propagation and maintenance.
+- Pest page is plant-group specific and includes symptoms, inspection points and label-first treatment guidance.
+- Troubleshooting page uses Problem → Likely causes → What to do.
+- Existing Watering Check intervals/history, Home and Fortnight logic are unchanged.
+- Product directions are deliberately label-first; no pesticide/fertiliser dilution rate is invented.
