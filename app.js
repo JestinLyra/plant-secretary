@@ -172,7 +172,7 @@ function renderCollection(){
   el('plantTotal').textContent=plants.length;
   const card=p=>`<button class="collection-item" type="button" data-profile="${p.id}" aria-label="Open ${p.name} profile">
     <span class="collection-photo-wrap">
-      <img class="collection-photo" src="${plantImages[p.id]}" alt="${p.name} reference photo" loading="lazy">
+      ${plantImages[p.id]?`<img class="collection-photo" src="${plantImages[p.id]}" alt="${p.name} reference photo" loading="lazy">`:''}
       <span class="collection-fallback" aria-hidden="true">${p.name.split(/[ —/]/)[0].slice(0,2).toUpperCase()}</span>
     </span>
     <span class="collection-name">${p.name}</span>
@@ -181,8 +181,9 @@ function renderCollection(){
     <div class="collection-group-title"><span>${title}</span><small>${list.length}</small></div>
     <div class="plant-collection">${list.map(card).join('')}</div>
   </section>`;
-  const indoor=plants.filter(p=>p.place==='indoor');
-  const outdoor=plants.filter(p=>p.place==='outdoor');
+  const byName=(a,b)=>a.name.localeCompare(b.name,'en',{sensitivity:'base'});
+  const indoor=plants.filter(p=>p.place==='indoor').sort(byName);
+  const outdoor=plants.filter(p=>p.place==='outdoor').sort(byName);
   el('plantCollection').innerHTML=section('Indoor plants',indoor)+section('Outdoor plants',outdoor);
   document.querySelectorAll('#plantCollection img').forEach(img=>{
     img.addEventListener('load',()=>img.closest('.collection-photo-wrap')?.classList.add('image-ok'),{once:true});
@@ -230,7 +231,10 @@ const maintenanceIcons={
 
 function renderWateringCubes(){
   const filter=el('filterSelect').value;
-  const list=plants.filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'));
+  const placeRank={indoor:0,outdoor:1};
+  const list=plants
+    .filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'))
+    .sort((a,b)=>(placeRank[a.place]??9)-(placeRank[b.place]??9)||a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
   el('wateringCubes').innerHTML=list.map(p=>`<article class="water-cube ${wateringClass(p)} ${statusFor(p)}">
     <span class="cube-sun">${sunlight[p.id]||'⛅️'}</span>
     <span class="cube-status">${shortDue(p)}</span>
@@ -356,9 +360,24 @@ function psSlugify(name){
 function psGetCustomPlants(){ return psReadJson(PS_CUSTOM_KEY, []); }
 function psGetDeletedIds(){ return psReadJson(PS_DELETED_KEY, []); }
 
+function psNormalizeCustomPlant(cp){
+  const place = cp.place || cp.location || (cp.indoor===false ? 'outdoor' : 'indoor');
+  const base = Number(cp.base || cp.baseInterval || cp.interval) || (place==='outdoor' ? 4 : 7);
+  return {
+    ...cp,
+    place,
+    base,
+    sun: cp.sun || (place==='outdoor' ? '🌤️' : '⛅️')
+  };
+}
+
 function psEnsureDynamicPlants(){
   const deleted = new Set(psGetDeletedIds());
-  const custom = psGetCustomPlants();
+  const rawCustom = psGetCustomPlants();
+  const custom = rawCustom.map(psNormalizeCustomPlant);
+
+  // Persist the corrected schema so plants already added in older builds are repaired automatically.
+  if (JSON.stringify(rawCustom)!==JSON.stringify(custom)) psWriteJson(PS_CUSTOM_KEY, custom);
 
   // Hide deleted built-in plants from the active plant list without deleting their saved history.
   if (Array.isArray(plants)){
@@ -447,8 +466,8 @@ function psEstimateWaterInterval(name, location){
     const pn = (p.name || '').toLowerCase();
     return pn === n || pn.includes(n) || n.includes(pn);
   });
-  if (match && Number(match.interval || match.baseInterval)){
-    return Number(match.interval || match.baseInterval);
+  if (match && Number(match.base || match.interval || match.baseInterval)){
+    return Number(match.base || match.interval || match.baseInterval);
   }
 
   // Common-name families used by the existing Plant Secretary care set.
@@ -508,10 +527,9 @@ function psSetupCollectionControls(){
       const plant = {
         id,
         name,
-        location,
-        indoor: location === 'indoor',
-        interval,
-        baseInterval: interval,
+        place: location,
+        base: interval,
+        sun: location === 'outdoor' ? '🌤️' : '⛅️',
         custom: true
       };
 

@@ -363,3 +363,13 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
   - It first reuses intervals from recognised plants already in the app, then common plant-family rules, then a conservative fallback (Indoor 7 days / Outdoor 4 days).
 - Watering Check and Fortnight automatically use that assigned interval for the new plant.
 - No other pages, existing plant schedules/history, icons, or navigation changed.
+
+## v68
+- Fixed custom plants added with the + button.
+- Existing custom plants from v57–v67 are automatically migrated to the correct `place` and `base` fields.
+- A custom Indoor plant now appears in Home → Indoor plants immediately.
+- Home collection is alphabetical within Indoor and Outdoor sections.
+- Watering Check is ordered Indoor first, Outdoor second, alphabetical within each group.
+- New custom plants use an initials circle on Home until a photo is supplied.
+- Fortnight uses the same corrected plant location and watering interval.
+- No existing built-in plant schedules/history were changed.
