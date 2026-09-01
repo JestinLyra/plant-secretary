@@ -401,3 +401,8 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Watering Check: filled the existing droplet interior with a cyan-to-blue water gradient inspired by 💧.
 - Fortnight: filled the existing small droplet interior with the same cyan-to-blue water gradient.
 - Existing droplet outlines, icon artwork, sizes, positions, green calendar squares, navigation, plant data, and watering schedules/history are unchanged.
+
+## v73
+- Home navigation icon only: improved the existing leaf fill with subtle natural-green tonal shading.
+- Leaf shapes, outlines, stem, outer circle, icon size and position are unchanged.
+- Watering Check, Fortnight, all app pages, plant data and watering schedules/history are unchanged.
