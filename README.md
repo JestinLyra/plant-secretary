@@ -297,3 +297,17 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Collection changes sync to Watering Check and Fortnight/Calendar.
 - Deleted built-in plants keep any old watering history in storage but are hidden from active views.
 - Added custom plants persist in local storage on the device.
+
+## v58
+- Watering Check bottom-navigation icon only:
+  - Replaced with the exact user-supplied Progress Droplet artwork.
+  - Preserved the approved 2× size at 54×54 px.
+  - Uses the exact original dark-green and bright-green colors from the supplied image.
+- No changes to Home, Fortnight, collection management, watering schedules/history, plant data, profiles, or other page content.
+
+## v59
+- Bottom navigation sizing only:
+  - Home icon enlarged to 54×54 px.
+  - Fortnight/Calendar icon enlarged to 54×54 px.
+  - Watering Check remains 54×54 px.
+- No changes to page content, watering schedules/history, collection management, plant data, profiles, or navigation behavior.

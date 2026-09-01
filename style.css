@@ -956,3 +956,19 @@ body.collection-edit-mode .collection-item{
 .plant-modal-actions button{min-height:44px;border-radius:10px;padding:0 14px;font:inherit;font-weight:700}
 .plant-modal-actions .secondary{border:1px solid #cfd8c8;background:#fff}
 .plant-modal-actions .primary{border:1px solid #5d7f51;background:#5d7f51;color:#fff}
+
+/* v58 — Watering Check nav icon only: exact user-approved artwork */
+.bottom-nav .nav-watering-approved{
+  width:54px !important;
+  height:54px !important;
+  display:block !important;
+  object-fit:contain !important;
+  border-radius:50% !important;
+}
+
+/* v59 — bottom navigation icon sizing only */
+.bottom-nav .nav-svg-icon,
+.bottom-nav .nav-calendar-approved{
+  width:54px !important;
+  height:54px !important;
+}
