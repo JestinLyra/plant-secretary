@@ -380,3 +380,10 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
   - + and Edit remain separate controls on the right.
   - Total plant count is left-aligned below the heading.
 - No changes to plant order/data, Watering Check, Fortnight, watering schedules/history, profiles, or navigation.
+
+## v70
+- Navigation icon colors only; artwork geometry is unchanged.
+- Watering Check: existing inner droplet recolored blue/cyan to resemble 💧.
+- Fortnight: existing six calendar squares recolored leaf green to match the Home icon family.
+- Fortnight: existing droplet recolored to the same blue/cyan water color.
+- No icon size, shape, line placement, crop, navigation layout, app page, plant data, or watering schedule/history changes.
