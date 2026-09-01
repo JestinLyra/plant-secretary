@@ -820,3 +820,12 @@
   background:#f7f7f2 !important;
   border-radius:50% !important;
 }
+
+/* v53 — Watering Check only: remove all maintenance icons */
+.water-cube .cube-maintenance{
+  display:none !important;
+}
+
+/* v54 — selected bottom navigation icons only */
+.bottom-nav .nav-icon{display:flex;align-items:center;justify-content:center;}
+.bottom-nav .nav-svg-icon{width:27px;height:27px;display:block;color:currentColor;}

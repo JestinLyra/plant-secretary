@@ -268,3 +268,12 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Home → My Plant Collection only: removed/hid all plant photos inside the circular frames.
 - Circular placeholders and plant names remain.
 - No Watering Check, watering schedules/history, Fortnight, profiles, navigation, or plant data changed.
+
+## v53
+- Watering Check only: removed all maintenance icons from plant tiles.
+- Home, watering schedules/history, Fortnight, profiles, navigation, and plant data are unchanged.
+
+## v54
+- Bottom navigation only: Home now uses the selected Leaf Circle icon (#13).
+- Watering Check now uses the selected Progress Droplet icon (#15).
+- No other pages, watering schedules/history, plant data, Fortnight, profiles, or layout were changed.
