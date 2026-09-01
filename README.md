@@ -395,3 +395,9 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - The same uploaded photo appears on both Home → My Plant Collection and that plant's profile.
 - Edit → Delete Photo removes that plant's currently displayed photo from both Home and the profile, including bundled reference photos.
 - No watering schedules/history, plant ordering, Fortnight calculations, or navigation behavior changed.
+
+## v72
+- Navigation icon color fill only.
+- Watering Check: filled the existing droplet interior with a cyan-to-blue water gradient inspired by 💧.
+- Fortnight: filled the existing small droplet interior with the same cyan-to-blue water gradient.
+- Existing droplet outlines, icon artwork, sizes, positions, green calendar squares, navigation, plant data, and watering schedules/history are unchanged.
