@@ -1330,3 +1330,19 @@ body.collection-edit-mode .collection-item{
   display:block !important;
   pointer-events:none !important;
 }
+
+/* v87 — Watering Check direct-sun icon placement only.
+   Move the approved pencil sun to the upper-left and make it slightly larger
+   than the unchanged 42px watering button. Plant-name position is untouched;
+   overlap is intentional when it occurs. */
+.water-cube .cube-direct-sun{
+  top:7px !important;
+  right:auto !important;
+  left:7px !important;
+  width:50px !important;
+  height:50px !important;
+  z-index:0 !important;
+}
+.water-cube .cube-name{
+  z-index:1 !important;
+}

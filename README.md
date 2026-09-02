@@ -470,5 +470,5 @@ Removed all sunlight/weather icons (☀️ ☁️ 🌤️ ⛅️) from Watering 
 - No watering calculations, history, Undo, Fortnight, profile, or navigation behaviour changed.
 
 
-## v86
+## v87
 Fixed direct-sun icon delivery on Watering Check by cache-busting app/CSS and precaching the direct-sun asset. Direct-sun icon is 36px, slightly larger than the 31px watering button.
