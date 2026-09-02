@@ -1406,3 +1406,11 @@ body.collection-edit-mode .collection-item{
   position:relative !important;
   z-index:2 !important;
 }
+
+/* v92 — Watering Check indirect/minimal-light icon visibility fix only.
+   Use transparent-background uploaded pencil artwork at 80px. */
+.water-cube .cube-light-pencil{
+  width:80px !important;
+  height:80px !important;
+  background:transparent !important;
+}
