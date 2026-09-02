@@ -171,13 +171,18 @@ const plantImages={
 
 const PS_PHOTO_KEY = 'plantSecretary.plantPhotos.v1';
 const PS_PHOTO_RESET_V100_KEY = 'plantSecretary.photoReset.v100';
+const PS_PHOTO_RESET_V101_KEY = 'plantSecretary.photoReset.v101';
 
-// v100: remove all previously saved user plant photos once, without disabling
-// the existing photo upload/delete controls for future use.
+// v100/v101: clear all user-saved profile photos once on upgrade while keeping
+// the upload/delete feature available for photos saved after this release.
 try{
   if(localStorage.getItem(PS_PHOTO_RESET_V100_KEY)!=='done'){
     localStorage.removeItem(PS_PHOTO_KEY);
     localStorage.setItem(PS_PHOTO_RESET_V100_KEY,'done');
+  }
+  if(localStorage.getItem(PS_PHOTO_RESET_V101_KEY)!=='done'){
+    localStorage.removeItem(PS_PHOTO_KEY);
+    localStorage.setItem(PS_PHOTO_RESET_V101_KEY,'done');
   }
 }catch(e){}
 
@@ -440,14 +445,18 @@ function careCard(icon,label,content){
 }
 function profilePageButton(n,label){return `<button class="profile-tab" type="button" data-profile-page="${n}">${label}</button>`;}
 function renderProfile(id,page=1){
- const p=plants.find(x=>x.id===id);if(!p)return; const g=individualProfileFor(p); const photo=psSavedPlantPhoto(p.id); const watered=wateredStatusLabel(state.watered[p.id]);
+ const p=plants.find(x=>x.id===id);if(!p)return;
+ const g=individualProfileFor(p);
+ const photo=psSavedPlantPhoto(p.id);
+ const watered=wateredStatusLabel(state.watered[p.id]);
+ const identity=`<section class="profile-identity" aria-label="${p.name} identity"><div class="profile-top-actions"><span class="profile-eyebrow">PLANT PROFILE</span><button id="profileEditPhotoBtn" class="profile-edit-photo-btn" type="button">Edit Photo</button></div><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanicalNames[p.id]||p.name}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span><div class="profile-photo-wrap ${photo?'has-photo':''}">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${p.name} photo">`:`<span class="profile-photo-fallback" aria-label="No saved plant photo">${psPlantInitials(p.name)}</span>`}</div></section>`;
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  let body='';
- if(page===1) body=`<article class="profile-poster"><div class="profile-top-actions"><span class="profile-eyebrow">QUICK PLANT PROFILE</span><button id="profileEditPhotoBtn" class="profile-edit-photo-btn" type="button">Edit Photo</button></div><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanicalNames[p.id]||p.name}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span><div class="profile-photo-wrap ${photo?'has-photo':''}">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${p.name} photo">`:`<span class="profile-photo-fallback">${psPlantInitials(p.name)}</span>`}</div><div class="quick-care-row"><div><b>${sunlight[p.id]||p.sun||'🌤️'}</b><span>${g.position.split('.')[0]}</span></div><div><b>💧</b><span>${g.moisture}</span></div><div><b>pH</b><span>${phFor(p,g)}</span></div></div><section class="poster-grid">${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL',g.soil)}${careCard('💧','WATERING',g.water)}${careCard('🌿','FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}</section><article class="grow-tip"><b>💡 GROW TIP</b><p>${g.grow}</p></article></article>`;
- if(page===2) body=`<section class="detail-stack"><h2 id="profileName">${p.name} — Care Guide</h2>${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL + pH',`${g.soil}<br><strong>${phFor(p,g)}</strong>`)}${careCard('💧','WATERING',`${g.water}<br><small>Watering Check interval remains ${p.base} days; always confirm soil moisture first.</small>`)}${careCard('🌿','FERTILISING / FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}${careCard('💡','GROWING TIPS',g.grow)}${careCard('🪴','REPOTTING',g.repot)}${careCard('🌱','REPLANTING / PROPAGATION',g.prop)}<article class="profile-panel"><span class="care-label">✂️ MAINTENANCE</span><ul>${g.maint.map(x=>`<li>${x}</li>`).join('')}</ul></article><article class="evidence-note"><b>Evidence standard</b><p>Care is structured around Gardening Australia, Australian botanic-garden guidance, Altona/Melbourne seasonal conditions, and product-label directions. Product availability is a practical shopping reference; always follow the current pack/registered label.</p></article></section>`;
- if(page===3) body=`<section class="detail-stack"><h2 id="profileName">Common Pests — Symptoms & Solutions</h2><p class="section-intro">Only pests relevant to this plant type are shown. Confirm the pest before treating.</p>${g.pests.map(k=>{const x=pestData[k];return `<article class="pest-card"><div class="pest-thumb" role="img" aria-label="${x[1]} reference">${x[0]}</div><div><h3>${x[1]}</h3><p><b>Symptoms:</b> ${x[2]}</p><p><b>Inspect:</b> ${x[3]}</p><p><b>Care / treatment:</b> ${x[4]}</p></div></article>`}).join('')}<article class="evidence-note"><b>Product safety</b><p>No pesticide dilution or schedule is invented in Plant Secretary. Use only products whose current APVMA-approved label covers the pest and use situation, and follow that label.</p></article></section>`;
- if(page===4) body=`<section class="detail-stack"><h2 id="profileName">Common Problems & Troubleshooting</h2><div class="trouble-list">${g.problems.map(k=>{const x=problemData[k];return `<article class="trouble-card"><h3>${x[0]}</h3><p><b>Likely causes</b><br>${x[1]}</p><p><b>What to do</b><br>${x[2]}</p></article>`}).join('')}</div><article class="evidence-note"><b>Diagnostic rule</b><p>Similar symptoms can have different causes. Check soil moisture, roots, light and pests before treating or feeding.</p></article></section>`;
- el('profileContent').innerHTML=`${tabs}<div class="profile-page">${body}</div><button id="profileWaterBtn" class="profile-water-btn" type="button">💧 ${watered}</button>`;
+ if(page===1) body=`<article class="profile-poster"><div class="quick-care-row"><div><b>${sunlight[p.id]||p.sun||'🌤️'}</b><span>${g.position.split('.')[0]}</span></div><div><b>💧</b><span>${g.moisture}</span></div><div><b>pH</b><span>${phFor(p,g)}</span></div></div><section class="poster-grid">${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL',g.soil)}${careCard('💧','WATERING',g.water)}${careCard('🌿','FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}</section><article class="grow-tip"><b>💡 GROW TIP</b><p>${g.grow}</p></article></article>`;
+ if(page===2) body=`<section class="detail-stack"><h2>${p.name} — Care Guide</h2>${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL + pH',`${g.soil}<br><strong>${phFor(p,g)}</strong>`)}${careCard('💧','WATERING',`${g.water}<br><small>Watering Check interval remains ${p.base} days; always confirm soil moisture first.</small>`)}${careCard('🌿','FERTILISING / FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}${careCard('💡','GROWING TIPS',g.grow)}${careCard('🪴','REPOTTING',g.repot)}${careCard('🌱','REPLANTING / PROPAGATION',g.prop)}<article class="profile-panel"><span class="care-label">✂️ MAINTENANCE</span><ul>${g.maint.map(x=>`<li>${x}</li>`).join('')}</ul></article><article class="evidence-note"><b>Evidence standard</b><p>Care is structured around Gardening Australia, Australian botanic-garden guidance, Altona/Melbourne seasonal conditions, and product-label directions. Product availability is a practical shopping reference; always follow the current pack/registered label.</p></article></section>`;
+ if(page===3) body=`<section class="detail-stack"><h2>Common Pests — Symptoms & Solutions</h2><p class="section-intro">Only pests relevant to this plant type are shown. Confirm the pest before treating.</p>${g.pests.map(k=>{const x=pestData[k];return `<article class="pest-card"><div class="pest-thumb" role="img" aria-label="${x[1]} reference">${x[0]}</div><div><h3>${x[1]}</h3><p><b>Symptoms:</b> ${x[2]}</p><p><b>Inspect:</b> ${x[3]}</p><p><b>Care / treatment:</b> ${x[4]}</p></div></article>`}).join('')}<article class="evidence-note"><b>Product safety</b><p>No pesticide dilution or schedule is invented in Plant Secretary. Use only products whose current APVMA-approved label covers the pest and use situation, and follow that label.</p></article></section>`;
+ if(page===4) body=`<section class="detail-stack"><h2>Common Problems & Troubleshooting</h2><div class="trouble-list">${g.problems.map(k=>{const x=problemData[k];return `<article class="trouble-card"><h3>${x[0]}</h3><p><b>Likely causes</b><br>${x[1]}</p><p><b>What to do</b><br>${x[2]}</p></article>`}).join('')}</div><article class="evidence-note"><b>Diagnostic rule</b><p>Similar symptoms can have different causes. Check soil moisture, roots, light and pests before treating or feeding.</p></article></section>`;
+ el('profileContent').innerHTML=`${identity}${tabs}<div class="profile-page">${body}</div><button id="profileWaterBtn" class="profile-water-btn" type="button">💧 ${watered}</button>`;
  document.querySelectorAll('.profile-tab').forEach(b=>{b.classList.toggle('active',Number(b.dataset.profilePage)===page);b.addEventListener('click',()=>renderProfile(id,Number(b.dataset.profilePage)));});
  el('profileWaterBtn').addEventListener('click',()=>{state.watered[p.id]=localDateOnly();save();renderAll();renderProfile(p.id,page);});
  const edit=el('profileEditPhotoBtn'); if(edit)edit.addEventListener('click',()=>psOpenProfilePhotoMenu(p.id));
@@ -461,7 +470,7 @@ function psOpenProfilePhotoMenu(id){
   const del=el('profileDeletePhotoBtn');
   const p=plants.find(x=>x.id===id);
   if(!menu||!p)return;
-  del.disabled=!psPlantPhoto(id);
+  del.disabled=!psSavedPlantPhoto(id);
   menu.hidden=false;
 }
 function psCloseProfilePhotoMenu(){
@@ -553,7 +562,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=100').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=101').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management

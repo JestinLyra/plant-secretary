@@ -1494,3 +1494,179 @@ body.collection-edit-mode .collection-item{
 @media(max-width:380px){
   .profile-poster .profile-photo-wrap{width:185px !important;height:185px !important;}
 }
+
+/* v101 — Plant Profile bug-fix release only.
+   Full-width isolated overlay, no horizontal drift/overflow, normal-flow identity/photo,
+   and non-floating watering status. */
+body.profile-open{
+  overflow:hidden !important;
+  overscroll-behavior:none !important;
+}
+.profile-screen{
+  position:fixed !important;
+  inset:0 !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  transform:translate3d(100%,0,0) !important;
+  -webkit-overflow-scrolling:touch !important;
+  touch-action:pan-y !important;
+  contain:layout paint !important;
+}
+.profile-screen.open{
+  transform:translate3d(0,0,0) !important;
+}
+.profile-topbar{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+}
+.profile-content{
+  width:100% !important;
+  max-width:680px !important;
+  min-width:0 !important;
+  margin:0 auto !important;
+  padding:10px 14px calc(28px + env(safe-area-inset-bottom)) !important;
+  overflow-x:hidden !important;
+}
+.profile-identity,
+.profile-page,
+.profile-poster,
+.detail-stack,
+.poster-grid,
+.quick-care-row,
+.pest-card,
+.trouble-card,
+.evidence-note,
+.profile-panel,
+.care-mini{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+.profile-identity{
+  position:relative !important;
+  display:block !important;
+  width:100% !important;
+  text-align:center !important;
+  padding:8px 0 4px !important;
+  overflow:visible !important;
+}
+.profile-identity .profile-top-actions{
+  position:relative !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  margin:0 0 8px !important;
+  z-index:1 !important;
+}
+.profile-identity h2{
+  position:relative !important;
+  margin:12px 0 2px !important;
+  color:#0a5031 !important;
+  font-size:31px !important;
+  line-height:1.05 !important;
+  overflow-wrap:anywhere !important;
+}
+.profile-identity .botanical-name{
+  position:relative !important;
+  margin:0 0 9px !important;
+  font-size:17px !important;
+  color:#315c49 !important;
+  overflow-wrap:anywhere !important;
+}
+.profile-identity .profile-tag{
+  position:relative !important;
+  display:inline-block !important;
+}
+.profile-identity .profile-photo-wrap{
+  position:relative !important;
+  inset:auto !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  float:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:min(210px,62vw) !important;
+  height:auto !important;
+  aspect-ratio:1/1 !important;
+  margin:14px auto 14px !important;
+  border-radius:50% !important;
+  overflow:hidden !important;
+  border:1.5px solid #8eb29e !important;
+  background:#eef2ea !important;
+  z-index:0 !important;
+}
+.profile-identity .profile-plant-photo{
+  position:static !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  border-radius:50% !important;
+  display:block !important;
+}
+.profile-identity .profile-photo-fallback{
+  position:static !important;
+  display:grid !important;
+  place-items:center !important;
+  width:100% !important;
+  height:100% !important;
+  font-size:52px !important;
+  font-weight:800 !important;
+  color:#174d2d !important;
+}
+.profile-tabs{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+}
+.profile-tab{
+  min-width:0 !important;
+  width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+.profile-page{
+  width:100% !important;
+  overflow-x:hidden !important;
+}
+.poster-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+}
+.care-mini > div,
+.pest-card > div,
+.trouble-card,
+.detail-stack,
+.poster-grid > *{
+  min-width:0 !important;
+  overflow-wrap:anywhere !important;
+}
+.profile-water-btn{
+  position:static !important;
+  inset:auto !important;
+  bottom:auto !important;
+  z-index:auto !important;
+  display:block !important;
+  width:100% !important;
+  margin:12px 0 0 !important;
+}
+@media(max-width:380px){
+  .profile-identity .profile-photo-wrap{
+    width:min(185px,58vw) !important;
+  }
+  .profile-content{
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+  .profile-tabs{gap:4px !important;}
+  .profile-tab{font-size:10.5px !important;padding-left:2px !important;padding-right:2px !important;}
+}
