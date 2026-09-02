@@ -1376,3 +1376,11 @@ body.collection-edit-mode .collection-item{
 .water-cube:has(.cube-direct-sun) .cube-name{
   color:#063d2b !important;
 }
+
+
+/* v90 — direct-sun Watering Check icon size only.
+   Increase the approved pencil sun from 65px to 75px. Everything else unchanged. */
+.water-cube .cube-direct-sun{
+  width:75px !important;
+  height:75px !important;
+}
