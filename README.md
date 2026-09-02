@@ -468,3 +468,7 @@ Removed all sunlight/weather icons (☀️ ☁️ 🌤️ ⛅️) from Watering 
 - Plant names and water droplet buttons remain in their existing positions.
 - Added the approved coloured-pencil direct-sun icon at the upper-right only for plants marked as needing direct sunlight.
 - No watering calculations, history, Undo, Fortnight, profile, or navigation behaviour changed.
+
+
+## v86
+Fixed direct-sun icon delivery on Watering Check by cache-busting app/CSS and precaching the direct-sun asset. Direct-sun icon is 36px, slightly larger than the 31px watering button.

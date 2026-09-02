@@ -1324,8 +1324,8 @@ body.collection-edit-mode .collection-item{
   position:absolute !important;
   top:8px !important;
   right:8px !important;
-  width:28px !important;
-  height:28px !important;
+  width:36px !important;
+  height:36px !important;
   object-fit:contain !important;
   display:block !important;
   pointer-events:none !important;
