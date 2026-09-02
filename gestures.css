@@ -1,0 +1,231 @@
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  touch-action: manipulation;
+}
+
+.record-swipe,
+.misc-swipe {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  touch-action: pan-y;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.record-swipe:last-child,
+.misc-swipe:last-child {
+  border-bottom: 0;
+}
+
+.record-swipe .record,
+.misc-swipe .misc-expense {
+  position: relative;
+  z-index: 2;
+  min-height: 76px;
+  border: 0;
+  background: var(--card);
+  will-change: transform;
+}
+
+.record-swipe.swipe-armed .record,
+.misc-swipe.swipe-armed .misc-expense {
+  box-shadow: inset 0 0 0 2px #4169e122;
+}
+
+.swipe-action {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  width: 115px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.swipe-edit {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: 22px;
+  background: #4169e1;
+}
+
+.swipe-delete {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: 18px;
+  background: #d83a52;
+}
+
+.reminder-title,
+.misc-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.reminder-title button,
+.misc-title button {
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: #e8eeff;
+  color: var(--green);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.reminder-title button:disabled,
+.misc-title button:disabled {
+  opacity: .35;
+}
+
+.backup-card {
+  display: grid;
+  gap: 13px;
+  padding: 20px;
+  border: 1px solid #cfdafa;
+  border-radius: 22px;
+  background: #fff;
+}
+
+.backup-card h2 {
+  margin-top: 4px;
+}
+
+.backup-card p:not(.eyebrow) {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.backup-card button {
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 13px 15px;
+  background: var(--green);
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+}
+
+.backup-card small {
+  min-height: 14px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.backup-choice {
+  display: grid;
+  gap: 10px;
+}
+
+.backup-choice p {
+  margin: 5px 0;
+  color: var(--muted);
+}
+
+.backup-choice button {
+  width: 100%;
+  border: 1px solid #cfdafa;
+  border-radius: 14px;
+  padding: 14px;
+  background: #f3f6fc;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+}
+
+.backup-choice strong,
+.backup-choice small {
+  display: block;
+}
+
+.backup-choice small {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+dialog {
+  position: fixed;
+  top: var(--dialog-top, max(8px, env(safe-area-inset-top)));
+  right: auto;
+  bottom: auto;
+  left: var(--dialog-left, 50%);
+  width: var(--dialog-width, min(420px, calc(100vw - 20px)));
+  max-width: none;
+  max-height: var(--dialog-height, calc(100dvh - 16px));
+  margin: 0;
+  overflow: hidden;
+  transform: translateX(-50%);
+}
+
+dialog form {
+  display: flex;
+  flex-direction: column;
+  max-height: var(--dialog-height, calc(100dvh - 16px));
+  overflow: hidden;
+  padding: 18px;
+}
+
+#modalTitle,
+.dialog-actions {
+  flex: none;
+}
+
+#modalBody {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 2px 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+dialog input,
+dialog textarea,
+dialog select {
+  min-width: 0;
+  max-width: 100%;
+  font-size: 16px;
+}
+
+.dialog-actions {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
+
+@media (max-height: 560px) {
+  dialog form {
+    padding: 14px;
+  }
+
+  #modalTitle {
+    margin-top: 0;
+    font-size: 19px;
+  }
+}

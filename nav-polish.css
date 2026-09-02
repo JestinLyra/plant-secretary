@@ -1,0 +1,66 @@
+nav {
+  background: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+nav button,
+nav .nav-link {
+  background: #fff;
+}
+
+.nav-icon {
+  width: 49px;
+  height: 44px;
+  padding: 0;
+  margin: 0 auto 2px;
+  object-fit: contain;
+  mix-blend-mode: normal;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+  image-rendering: auto;
+  transform: none;
+}
+
+.nav-icon-car {
+  width: 55px;
+  transform: none;
+}
+
+#navChecks .nav-icon {
+  transform: none;
+}
+
+#navRecords .nav-icon {
+  transform: none;
+}
+
+nav button:active .nav-icon {
+  box-shadow: none;
+  transform: scale(.98);
+}
+
+nav button small,
+nav .nav-link small {
+  color: #6b7894;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1px;
+}
+
+nav button.active small,
+nav .nav-link.active small {
+  color: var(--green);
+}
+
+/* Give the Checks heading the generous status-bar clearance shown on iPhone. */
+#checksSection {
+  scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 82px);
+}
+
+#services {
+  scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 24px);
+}
