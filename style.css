@@ -1384,3 +1384,25 @@ body.collection-edit-mode .collection-item{
   width:75px !important;
   height:75px !important;
 }
+
+
+/* v91 — Watering Check light icons only.
+   Add the user's pencil sun+cloud artwork for non-direct light plants and
+   pencil cloud artwork for minimal-light plants. Existing direct-sun styling remains unchanged. */
+.water-cube .cube-light-pencil{
+  position:absolute !important;
+  top:4px !important;
+  left:4px !important;
+  width:75px !important;
+  height:75px !important;
+  object-fit:contain !important;
+  display:block !important;
+  pointer-events:none !important;
+  z-index:1 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+.water-cube:has(.cube-light-pencil) .cube-name{
+  position:relative !important;
+  z-index:2 !important;
+}

@@ -486,7 +486,13 @@ Fixed direct-sun icon delivery on Watering Check by cache-busting app/CSS and pr
 - All other layout, watering data, controls and app behaviour remain unchanged.
 
 
-## v90
+## v91
 - Watering Check direct-sun pencil icon increased from 65px to 75px.
 - Deeper botanical-green plant-name contrast retained on direct-sun tiles.
 - All other layout, watering schedule positions, droplet appearance/function, Undo, watering history, Fortnight, profiles and navigation remain unchanged.
+
+
+## v91
+- Watering Check tiles: added uploaded 75px pencil sun+cloud icon for indirect/partial-light plants.
+- Added uploaded 75px pencil cloud icon for minimal-light plants.
+- Direct-sun icon and all watering/app behavior remain unchanged.
