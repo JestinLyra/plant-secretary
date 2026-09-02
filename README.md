@@ -457,3 +457,7 @@ Visual-only Watering Check refinements: tile droplet white highlights are uprigh
 
 ## v83
 Added a small single-level Undo control beside Watering checks. It restores only the most recent Watering Check tile watering record and then disables itself.
+
+
+## v84
+Removed all sunlight/weather icons (☀️ ☁️ 🌤️ ⛅️) from Watering Check tiles only. Underlying sunlight data and all other app behaviour remain unchanged.
