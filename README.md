@@ -531,3 +531,9 @@ Replaced Watering Check indirect-light and minimal-light icons with the user-upl
 - Fixed Plant Profile layout only: identity information now precedes the circular photo, and the photo is forced into normal document flow so it cannot float over Quick Profile cards.
 - Preserved Quick / Care / Pests / Problems tabs, Edit Photo, watering actions/history, Home, Watering Check, Fortnight, custom plants and navigation.
 - PWA cache bumped to v99.
+
+
+## v100
+- Cleans all previously saved user plant photos once on upgrade.
+- Plant Profiles start with no saved photo, while Edit Photo upload/delete remains available for future use.
+- No watering, navigation, profile-care, Home, Watering Check or Fortnight logic changed.

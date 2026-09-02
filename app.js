@@ -170,6 +170,16 @@ const plantImages={
 };
 
 const PS_PHOTO_KEY = 'plantSecretary.plantPhotos.v1';
+const PS_PHOTO_RESET_V100_KEY = 'plantSecretary.photoReset.v100';
+
+// v100: remove all previously saved user plant photos once, without disabling
+// the existing photo upload/delete controls for future use.
+try{
+  if(localStorage.getItem(PS_PHOTO_RESET_V100_KEY)!=='done'){
+    localStorage.removeItem(PS_PHOTO_KEY);
+    localStorage.setItem(PS_PHOTO_RESET_V100_KEY,'done');
+  }
+}catch(e){}
 
 function psGetPlantPhotos(){
   try{return JSON.parse(localStorage.getItem(PS_PHOTO_KEY)||'{}')||{};}
@@ -184,6 +194,11 @@ function psPlantPhoto(id){
     return photos[id]==='__NONE__' ? '' : photos[id];
   }
   return plantImages[id] || '';
+}
+function psSavedPlantPhoto(id){
+  const photos=psGetPlantPhotos();
+  if(!Object.prototype.hasOwnProperty.call(photos,id)) return '';
+  return photos[id]==='__NONE__' ? '' : photos[id];
 }
 function psPlantInitials(name){
   return String(name||'').split(/[ —/]/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase() || 'PL';
@@ -425,7 +440,7 @@ function careCard(icon,label,content){
 }
 function profilePageButton(n,label){return `<button class="profile-tab" type="button" data-profile-page="${n}">${label}</button>`;}
 function renderProfile(id,page=1){
- const p=plants.find(x=>x.id===id);if(!p)return; const g=individualProfileFor(p); const photo=psPlantPhoto(p.id); const watered=wateredStatusLabel(state.watered[p.id]);
+ const p=plants.find(x=>x.id===id);if(!p)return; const g=individualProfileFor(p); const photo=psSavedPlantPhoto(p.id); const watered=wateredStatusLabel(state.watered[p.id]);
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  let body='';
  if(page===1) body=`<article class="profile-poster"><div class="profile-top-actions"><span class="profile-eyebrow">QUICK PLANT PROFILE</span><button id="profileEditPhotoBtn" class="profile-edit-photo-btn" type="button">Edit Photo</button></div><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanicalNames[p.id]||p.name}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span><div class="profile-photo-wrap ${photo?'has-photo':''}">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${p.name} photo">`:`<span class="profile-photo-fallback">${psPlantInitials(p.name)}</span>`}</div><div class="quick-care-row"><div><b>${sunlight[p.id]||p.sun||'🌤️'}</b><span>${g.position.split('.')[0]}</span></div><div><b>💧</b><span>${g.moisture}</span></div><div><b>pH</b><span>${phFor(p,g)}</span></div></div><section class="poster-grid">${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL',g.soil)}${careCard('💧','WATERING',g.water)}${careCard('🌿','FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}</section><article class="grow-tip"><b>💡 GROW TIP</b><p>${g.grow}</p></article></article>`;
@@ -538,7 +553,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=99').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=100').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management
