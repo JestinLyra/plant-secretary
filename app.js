@@ -398,6 +398,27 @@ let currentProfile=null;
 const botanicalNames={
 'begonia':'Begonia spp.','birkin-green':"Philodendron ‘Birkin’",'birkin-white':"Philodendron ‘Birkin’",'gardenia-radicans':'Gardenia jasminoides','golden-pothos':'Epipremnum aureum','maidenhair':'Adiantum spp.','marble-queen':"Epipremnum aureum ‘Marble Queen’",'many':'Monstera deliciosa','konti':'Monstera deliciosa','moon-valley':"Pilea involucrata ‘Moon Valley’",'orchid-purple':'Phalaenopsis spp.','orchid-white':'Phalaenopsis spp.','peace-lily':'Spathiphyllum spp.','pink-lady':'Callisia repens','baby-snake':'Dracaena trifasciata','mama-snake':'Dracaena trifasciata','string-of-pearls':"Curio rowleyanus ‘Variegatus’",'zz-thick':'Zamioculcas zamiifolia','zz-thin':'Zamioculcas zamiifolia','bougainvillea':'Bougainvillea spp.','calamansi':'Citrus × microcarpa','chilli-firecracker':'Capsicum annuum','habanero':'Capsicum chinense','jalapeno':'Capsicum annuum','regular-lemon':'Citrus limon','dwarf-lemon':'Citrus limon','mint':'Mentha spp.','parsley':'Petroselinum crispum','rosemary':'Salvia rosmarinus','thai-peppers':'Capsicum annuum','chilli-timble':'Capsicum annuum'};
 
+// v106 — per-plant botanical-name overrides. These affect profile care classification only;
+// plant IDs, common names, watering intervals/history and navigation are unchanged.
+const PS_BOTANICAL_KEY='plantSecretary.botanicalNames.v1';
+function psGetBotanicalNames(){try{return JSON.parse(localStorage.getItem(PS_BOTANICAL_KEY)||'{}')||{};}catch(e){return {};}}
+function psSaveBotanicalNames(names){localStorage.setItem(PS_BOTANICAL_KEY,JSON.stringify(names));}
+function psBotanicalName(p){const names=psGetBotanicalNames();return String(names[p.id]||botanicalNames[p.id]||p.name).trim();}
+function psBotanicalGroup(name){
+ const n=String(name||'').toLowerCase();
+ if(/epipremnum|pothos/.test(n))return 'pothos';
+ if(/adiantum|maidenhair/.test(n))return 'fern';
+ if(/phalaenopsis|orchid/.test(n))return 'orchid';
+ if(/dracaena\s+trifasciata|sansevieria/.test(n))return 'snake';
+ if(/gardenia/.test(n))return 'gardenia';
+ if(/citrus/.test(n))return 'citrus';
+ if(/bougainvillea/.test(n))return 'bougainvillea';
+ if(/capsicum|mentha|petroselinum|salvia\s+rosmarinus|rosmarinus/.test(n))return 'edible';
+ if(/curio|senecio\s+rowleyanus|callisia|zamioculcas/.test(n))return 'succulent';
+ if(/monstera|philodendron|spathiphyllum|pilea|begonia/.test(n))return 'tropical';
+ return null;
+}
+
 const profileGroups={
  pothos:{position:'Bright, indirect light; keep out of harsh afternoon sun.',soil:'Quality indoor potting mix amended with perlite and fine orchid bark for extra air space. Use a pot with drainage.',ph:'Slightly acidic • about pH 5.5–6.5',moisture:'Let top 2–3 cm dry',water:'Check the top 2–3 cm of mix first. Water thoroughly only when it has begun to dry, then let excess drain.',feed:'Yates Thrive Indoor Plants & Ferns Liquid Plant Food',feedNote:'Suitable for indoor foliage plants. Follow the current bottle label for dilution and frequency.',grow:'Pinch or prune long vines above a node for a fuller plant; rotate for even growth.',repot:'Repot when root-bound or drying much faster than usual. Move up one pot size; refresh the airy mix.',prop:'Take a stem cutting containing a node; root in water or a moist propagation mix, then pot when well rooted.',maint:['Wipe dusty leaves','Trim yellow or damaged leaves','Rotate for even growth','Pinch long vines for fullness'],pests:['spider','mealy','scale','gnat'],problems:['yellow','brown','droop','slow']},
  tropical:{position:'Bright, indirect light. Gentle morning light is useful; avoid hot afternoon sun through glass.',soil:'Quality indoor potting mix with added perlite and orchid bark for drainage and root aeration.',ph:'Slightly acidic • about pH 5.5–6.5',moisture:'Moderately moist',water:'Check the upper few centimetres before watering. Water deeply when partly dry and empty any saucer.',feed:'Yates Thrive Indoor Plants & Ferns Liquid Plant Food',feedNote:'A practical indoor-plant feed. Use only as directed on the current product label.',grow:'Keep leaves clean, rotate regularly and give climbing types support before stems become heavy.',repot:'Repot when roots crowd the pot. Increase by one pot size and retain a chunky, free-draining mix.',prop:'Use a healthy stem section with at least one node; root before potting into an airy mix.',maint:['Wipe broad leaves','Remove damaged foliage','Rotate regularly','Provide support where needed'],pests:['spider','mealy','scale','gnat'],problems:['yellow','brown','droop','curl']},
@@ -412,6 +433,8 @@ const profileGroups={
 };
 
 function groupForPlant(p){
+ const edited=psGetBotanicalNames()[p.id];
+ if(edited){const mapped=psBotanicalGroup(edited);if(mapped)return mapped;}
  if(['golden-pothos','marble-queen'].includes(p.id))return 'pothos';
  if(['many','konti','birkin-green','birkin-white','peace-lily','moon-valley','begonia'].includes(p.id))return 'tropical';
  if(p.id==='maidenhair')return 'fern'; if(['orchid-purple','orchid-white'].includes(p.id))return 'orchid';
@@ -483,13 +506,21 @@ const productClassByPlant={
 function verifiedProductsFor(p){
   // Built-ins have a known care identity. Custom plants do not receive a species-specific
   // product recommendation unless their species has been reliably identified in app data.
+  const edited=psGetBotanicalNames()[p.id];
+  if(edited){
+    const mapped=psBotanicalGroup(edited);
+    if(!mapped)return null;
+    const productKey=['gardenia','orchid','succulent','citrus','edible','bougainvillea'].includes(mapped)?mapped:'indoor';
+    return verifiedCareProducts[productKey] || verifiedCareProducts.indoor;
+  }
   if(!botanicalNames[p.id]) return null;
   const key=productClassByPlant[p.id] || 'indoor';
   return verifiedCareProducts[key] || verifiedCareProducts.indoor;
 }
 function individualProfileFor(p){
   const group=profileGroups[groupForPlant(p)] || profileGroups.tropical;
-  const legacy=profileFor(p) || {};
+  const hasBotanicalOverride=!!psGetBotanicalNames()[p.id];
+  const legacy=hasBotanicalOverride ? {} : (profileFor(p) || {});
   const g={...group};
   // Use each plant's existing species/cultivar-specific care record instead of
   // displaying only the broad group template on every profile.
@@ -522,10 +553,11 @@ function renderProfile(id,page=1){
  const g=individualProfileFor(p);
  const photo=psSavedPlantPhoto(p.id);
  const watered=wateredStatusLabel(state.watered[p.id]);
- const photoMarkup=`<div class="profile-photo-wrap ${photo?'has-photo':''}">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${p.name} photo">`:`<span class="profile-photo-fallback" aria-label="No saved plant photo">${psPlantInitials(p.name)}</span>`}</div>`;
+ const botanical=psBotanicalName(p);
+ const photoMarkup=`<button class="profile-photo-wrap profile-photo-trigger ${photo?'has-photo':''}" type="button" data-profile-photo-edit="${p.id}" aria-label="Edit ${p.name} photo and botanical name">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${p.name} photo">`:`<span class="profile-photo-fallback" aria-label="No saved plant photo">${psPlantInitials(p.name)}</span>`}</button>`;
  const identity=page===1
-  ? `<section class="profile-identity profile-identity-quick" aria-label="${p.name} identity"><div class="quick-identity-photo">${photoMarkup}<button id="profileEditPhotoBtn" class="profile-edit-photo-btn" type="button">Edit Photo</button></div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanicalNames[p.id]||p.name}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`
-  : `<section class="profile-identity" aria-label="${p.name} identity"><div class="profile-top-actions"><span class="profile-eyebrow">PLANT PROFILE</span><button id="profileEditPhotoBtn" class="profile-edit-photo-btn" type="button">Edit Photo</button></div><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanicalNames[p.id]||p.name}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span>${photoMarkup}</section>`;
+  ? `<section class="profile-identity profile-identity-quick" aria-label="${p.name} identity"><div class="quick-identity-photo">${photoMarkup}</div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`
+  : `<section class="profile-identity" aria-label="${p.name} identity"><div class="profile-top-actions"><span class="profile-eyebrow">PLANT PROFILE</span></div><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span>${photoMarkup}</section>`;
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  let body='';
  if(page===1) body=`<article class="profile-poster"><div class="quick-care-row"><div><b>${sunlight[p.id]||p.sun||'🌤️'}</b><span>${g.position.split('.')[0]}</span></div><div><b>💧</b><span>${g.moisture}</span></div><div><b>pH</b><span>${phFor(p,g)}</span></div></div><section class="poster-grid poster-grid-rows"><div class="quick-card quick-card-position">${careCard('☀️','POSITION',g.position)}</div><div class="quick-card quick-card-watering">${careCard('💧','WATERING',g.water)}</div><div class="quick-card quick-card-feeding">${careCard('🌿','FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}</div><div class="quick-card quick-card-soil">${careCard('🪴','SOIL',g.soil)}</div></section><article class="grow-tip"><b>💡 GROW TIP</b><p>${g.grow}</p></article></article>`;
@@ -535,31 +567,63 @@ function renderProfile(id,page=1){
  el('profileContent').innerHTML=`${identity}${tabs}<div class="profile-page">${body}</div><button id="profileWaterBtn" class="profile-water-btn" type="button">💧 ${watered}</button>`;
  document.querySelectorAll('.profile-tab').forEach(b=>{b.classList.toggle('active',Number(b.dataset.profilePage)===page);b.addEventListener('click',()=>renderProfile(id,Number(b.dataset.profilePage)));});
  el('profileWaterBtn').addEventListener('click',()=>{state.watered[p.id]=localDateOnly();save();renderAll();renderProfile(p.id,page);});
- const edit=el('profileEditPhotoBtn'); if(edit)edit.addEventListener('click',()=>psOpenProfilePhotoMenu(p.id));
+ document.querySelectorAll('[data-profile-photo-edit]').forEach(btn=>btn.addEventListener('click',()=>psOpenProfilePhotoMenu(p.id)));
 }
 
 let psEditingPhotoPlantId=null;
+let psCropSource='';
+let psCropImage=null;
 
+function psSetCropSource(src){
+  psCropSource=src||'';
+  const preview=el('profileCropImage');
+  const controls=el('profileCropControls');
+  if(!preview||!controls)return;
+  if(!src){preview.removeAttribute('src');controls.hidden=true;psCropImage=null;return;}
+  preview.src=src;controls.hidden=false;
+  el('profileCropZoom').value='1';el('profileCropX').value='0';el('profileCropY').value='0';
+  psCropImage=new Image();psCropImage.src=src;
+  psUpdateCropPreview();
+}
+function psUpdateCropPreview(){
+  const img=el('profileCropImage');if(!img||!psCropSource)return;
+  const zoom=Number(el('profileCropZoom').value||1);
+  const x=Number(el('profileCropX').value||0);
+  const y=Number(el('profileCropY').value||0);
+  img.style.transform=`translate(${x}%,${y}%) scale(${zoom})`;
+}
 function psOpenProfilePhotoMenu(id){
   psEditingPhotoPlantId=id;
   const menu=el('profilePhotoMenu');
-  const del=el('profileDeletePhotoBtn');
   const p=plants.find(x=>x.id===id);
   if(!menu||!p)return;
-  del.disabled=!psSavedPlantPhoto(id);
+  el('profileBotanicalInput').value=psBotanicalName(p);
+  const saved=psSavedPlantPhoto(id);
+  el('profileDeletePhotoBtn').disabled=!saved;
+  psSetCropSource(saved);
   menu.hidden=false;
 }
 function psCloseProfilePhotoMenu(){
-  const menu=el('profilePhotoMenu');
-  if(menu)menu.hidden=true;
-  psEditingPhotoPlantId=null;
+  const menu=el('profilePhotoMenu');if(menu)menu.hidden=true;
+  psEditingPhotoPlantId=null;psCropSource='';psCropImage=null;
 }
-function psRefreshPlantPhotoViews(id){
-  renderCollection();
-  if(currentProfile===id)renderProfile(id);
-  setTimeout(psAddDeleteButtons,0);
+function psReadPhotoFile(file){
+ return new Promise((resolve,reject)=>{const r=new FileReader();r.onerror=()=>reject(new Error('Could not read photo.'));r.onload=()=>resolve(r.result);r.readAsDataURL(file);});
 }
-
+function psRenderCroppedPhoto(src,zoom,xPct,yPct,size=900,quality=.86){
+ return new Promise((resolve,reject)=>{
+  const img=new Image();img.onerror=()=>reject(new Error('Could not crop photo.'));img.onload=()=>{
+   const canvas=document.createElement('canvas');canvas.width=size;canvas.height=size;const ctx=canvas.getContext('2d');
+   const base=Math.max(size/img.width,size/img.height);const scale=base*zoom;
+   const w=img.width*scale,h=img.height*scale;
+   const maxX=Math.max(0,(w-size)/2),maxY=Math.max(0,(h-size)/2);
+   const dx=(size-w)/2 + (xPct/100)*maxX;
+   const dy=(size-h)/2 + (yPct/100)*maxY;
+   ctx.drawImage(img,dx,dy,w,h);resolve(canvas.toDataURL('image/jpeg',quality));
+  };img.src=src;
+ });
+}
+function psRefreshPlantPhotoViews(id){renderCollection();if(currentProfile===id)renderProfile(id);setTimeout(psAddDeleteButtons,0);}
 function openProfile(id){
   const p=plants.find(x=>x.id===id);
   const screen=el('profileScreen');
@@ -583,39 +647,29 @@ el('undoWateringBtn').addEventListener('click',undoLastWatering);
 updateWateringUndoButton();
 
 el('profileUploadPhotoBtn').addEventListener('click',()=>{
-  if(!psEditingPhotoPlantId)return;
-  el('profilePhotoInput').value='';
-  el('profilePhotoInput').click();
+  if(!psEditingPhotoPlantId)return;el('profilePhotoInput').value='';el('profilePhotoInput').click();
 });
 el('profilePhotoInput').addEventListener('change',async(e)=>{
-  const file=e.target.files&&e.target.files[0];
-  const id=psEditingPhotoPlantId;
-  if(!file||!id)return;
-  try{
-    const data=await psResizePhoto(file);
-    const photos=psGetPlantPhotos();
-    photos[id]=data;
-    psSavePlantPhotos(photos);
-    psCloseProfilePhotoMenu();
-    psRefreshPlantPhotoViews(id);
-  }catch(err){
-    alert('That photo could not be saved. Please try another image.');
-  }
+  const file=e.target.files&&e.target.files[0];if(!file||!psEditingPhotoPlantId)return;
+  try{psSetCropSource(await psReadPhotoFile(file));}catch(err){alert('That photo could not be opened. Please try another image.');}
 });
+['profileCropZoom','profileCropX','profileCropY'].forEach(id=>el(id).addEventListener('input',psUpdateCropPreview));
 el('profileDeletePhotoBtn').addEventListener('click',()=>{
-  const id=psEditingPhotoPlantId;
-  if(!id)return;
+  if(!psEditingPhotoPlantId)return;psSetCropSource('');el('profileDeletePhotoBtn').disabled=true;
+});
+el('profileSavePhotoBtn').addEventListener('click',async()=>{
+  const id=psEditingPhotoPlantId;if(!id)return;const p=plants.find(x=>x.id===id);if(!p)return;
+  const botanical=el('profileBotanicalInput').value.trim();if(!botanical){alert('Botanical name cannot be blank.');return;}
+  const names=psGetBotanicalNames();names[id]=botanical;psSaveBotanicalNames(names);
   const photos=psGetPlantPhotos();
-  // Hide the currently displayed photo for this specific plant, including
-  // a bundled reference photo. Uploading again replaces this marker.
-  photos[id]='__NONE__';
-  psSavePlantPhotos(photos);
-  psCloseProfilePhotoMenu();
-  psRefreshPlantPhotoViews(id);
+  try{
+    if(psCropSource){photos[id]=await psRenderCroppedPhoto(psCropSource,Number(el('profileCropZoom').value),Number(el('profileCropX').value),Number(el('profileCropY').value));}
+    else{photos[id]='__NONE__';}
+    psSavePlantPhotos(photos);psCloseProfilePhotoMenu();psRefreshPlantPhotoViews(id);
+  }catch(err){alert('That photo could not be saved. Please try again.');}
 });
 el('profileCancelPhotoBtn').addEventListener('click',psCloseProfilePhotoMenu);
 document.querySelectorAll('[data-close-photo-menu]').forEach(x=>x.addEventListener('click',psCloseProfilePhotoMenu));
-
 
 
 function showView(viewId){

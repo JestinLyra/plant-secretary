@@ -1826,3 +1826,18 @@ body.profile-open{
 @media(max-width:380px){
   .profile-poster .poster-grid.poster-grid-rows{gap:7px !important;}
 }
+
+/* v106 — profile photo is the edit trigger; no visible Edit Photo buttons. */
+.profile-edit-photo-btn{display:none !important;}
+.profile-photo-trigger{padding:0 !important;appearance:none;-webkit-appearance:none;cursor:pointer;color:inherit;font:inherit;}
+.profile-photo-trigger:focus-visible{outline:3px solid rgba(49,92,47,.35);outline-offset:3px;}
+.profile-editor-sheet{max-height:min(88vh,760px);overflow-y:auto;}
+.profile-botanical-field,.profile-crop-controls label{display:grid;gap:6px;color:#315c49;font-size:13px;font-weight:750;}
+.profile-botanical-field input{width:100%;min-height:44px;border:1px solid #ccd6c7;border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;color:#173d2a;background:#fff;box-sizing:border-box;}
+.profile-crop-controls{display:grid;gap:10px;}
+.profile-crop-controls[hidden]{display:none!important;}
+.profile-crop-preview{width:190px;aspect-ratio:1/1;margin:2px auto 4px;border-radius:50%;overflow:hidden;background:#eef2ea;border:1.5px solid #8eb29e;position:relative;}
+.profile-crop-preview img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center center;}
+.profile-crop-controls input[type="range"]{width:100%;accent-color:#315c2f;}
+.profile-editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.profile-photo-sheet .profile-editor-actions .primary{background:#315c2f;color:#fff;border-color:#315c2f;}
