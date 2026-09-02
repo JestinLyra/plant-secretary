@@ -1346,3 +1346,22 @@ body.collection-edit-mode .collection-item{
 .water-cube .cube-name{
   z-index:1 !important;
 }
+
+/* v88 — fix direct-sun icon visibility on Watering Check tiles only.
+   Keep the icon in the upper-left, visibly larger than the unchanged droplet button,
+   and allow the unchanged plant name to overlap it intentionally. */
+.water-cube .cube-direct-sun{
+  top:4px !important;
+  left:4px !important;
+  right:auto !important;
+  width:56px !important;
+  height:56px !important;
+  z-index:1 !important;
+  display:block !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+.water-cube .cube-name{
+  position:relative !important;
+  z-index:2 !important;
+}

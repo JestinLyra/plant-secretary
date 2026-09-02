@@ -472,3 +472,10 @@ Removed all sunlight/weather icons (☀️ ☁️ 🌤️ ⛅️) from Watering 
 
 ## v87
 Fixed direct-sun icon delivery on Watering Check by cache-busting app/CSS and precaching the direct-sun asset. Direct-sun icon is 36px, slightly larger than the 31px watering button.
+
+
+## v88
+- Fixed Watering Check direct-sun pencil icon visibility by placing it above the tile background.
+- Direct-sun icon remains upper-left and is now 56px, larger than the unchanged watering button.
+- Plant-name position is unchanged and may intentionally overlap the sun icon.
+- Bumped stylesheet, script and service-worker cache references to v88 to prevent stale PWA assets.
