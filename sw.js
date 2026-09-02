@@ -1,9 +1,9 @@
-const CACHE='plant-secretary-v94';
+const CACHE='plant-secretary-v95';
 const ASSETS=[
   './',
   './index.html',
-  './style.css?v=93',
-  './app.js?v=93',
+  './style.css?v=95',
+  './app.js?v=95',
   './manifest.json',
   './icon.svg',
   'assets/icons/calendar-droplet-approved.png',
@@ -13,6 +13,9 @@ const ASSETS=[
   ,'assets/icons/direct-sun-pencil.png'
   ,'assets/icons/indirect-sun-pencil.png'
   ,'assets/icons/minimal-sun-pencil.png'
+  ,'assets/icons/ph-acidic.png'
+  ,'assets/icons/ph-slight-neutral.png'
+  ,'assets/icons/ph-alkaline.png'
 ];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

@@ -292,6 +292,13 @@ const maintenanceIcons={
   'chilli-timble':["✂️", "🤏"]
 };
 
+function wateringPhIcon(p){
+  const pref=soilPreference[p.id];
+  if(pref==='🍋') return '<img class="cube-ph-affinity" src="assets/icons/ph-acidic.png" alt="Acidic pH affinity">';
+  if(pref==='🪨') return '<img class="cube-ph-affinity" src="assets/icons/ph-alkaline.png" alt="Alkaline pH affinity">';
+  return '<img class="cube-ph-affinity" src="assets/icons/ph-slight-neutral.png" alt="Slightly acidic to neutral pH affinity">';
+}
+
 function renderWateringCubes(){
   const filter=el('filterSelect').value;
   const placeRank={indoor:0,outdoor:1};
@@ -301,6 +308,7 @@ function renderWateringCubes(){
   el('wateringCubes').innerHTML=list.map(p=>`<article class="water-cube ${wateringClass(p)} ${statusFor(p)}">
     <span class="cube-status">${shortDue(p)}</span>
     ${p.sun==='☀️'?'<img class="cube-direct-sun" src="assets/icons/direct-sun-pencil.png" alt="Direct sunlight">':p.sun==='☁️'?'<img class="cube-light-pencil cube-minimal-sun" src="assets/icons/minimal-sun-pencil.png" alt="Minimal sunlight">':'<img class="cube-light-pencil cube-indirect-sun" src="assets/icons/indirect-sun-pencil.png" alt="Indirect sunlight">'}
+    ${wateringPhIcon(p)}
     <strong class="cube-name">${p.name}</strong>
     <span class="cube-maintenance">${(maintenanceIcons[p.id]||[]).map(icon=>`<span class="maintenance-icon">${icon}</span>`).join('')}</span>
     <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today"><span class="drop-icon" aria-hidden="true"></span></button>
@@ -530,7 +538,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=94').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=95').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management
