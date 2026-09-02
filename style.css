@@ -1495,7 +1495,7 @@ body.collection-edit-mode .collection-item{
   .profile-poster .profile-photo-wrap{width:185px !important;height:185px !important;}
 }
 
-/* v101 — Plant Profile bug-fix release only.
+/* v102 — Plant Profile bug-fix release only.
    Full-width isolated overlay, no horizontal drift/overflow, normal-flow identity/photo,
    and non-floating watering status. */
 body.profile-open{

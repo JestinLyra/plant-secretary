@@ -171,9 +171,9 @@ const plantImages={
 
 const PS_PHOTO_KEY = 'plantSecretary.plantPhotos.v1';
 const PS_PHOTO_RESET_V100_KEY = 'plantSecretary.photoReset.v100';
-const PS_PHOTO_RESET_V101_KEY = 'plantSecretary.photoReset.v101';
+const PS_PHOTO_RESET_V101_KEY = 'plantSecretary.photoReset.v102';
 
-// v100/v101: clear all user-saved profile photos once on upgrade while keeping
+// v100/v102: clear all user-saved profile photos once on upgrade while keeping
 // the upload/delete feature available for photos saved after this release.
 try{
   if(localStorage.getItem(PS_PHOTO_RESET_V100_KEY)!=='done'){
@@ -424,6 +424,69 @@ function groupForPlant(p){
 const pestData={spider:['🕷️','Spider mites','Fine webbing; pale stippling/bronzing; leaves may dry.','Check leaf undersides and stem junctions.','Isolate; rinse/wipe foliage. If a pesticide is needed, select an APVMA-registered product listing the pest and plant/use situation; follow its label exactly.'],mite:['🔎','Mites','Fine stippling, bronzing or distorted new growth.','Inspect undersides with a hand lens.','Improve plant vigour and use only a registered mite treatment whose label covers the crop.'],mealy:['⚪','Mealybugs','White cottony clusters, sticky honeydew, weakened/distorted growth.','Inspect leaf axils, stems, roots and pot rim.','Remove small colonies manually. For larger infestations use a registered product whose label covers mealybugs and the plant.'],scale:['🟤','Scale insects','Brown/white fixed bumps, sticky honeydew, sooty mould, yellowing.','Check stems, veins and leaf undersides.','Physically remove light infestations; use a registered horticultural oil/insecticide only as its label directs.'],aphid:['🟢','Aphids','Clusters on soft new growth; curled leaves; sticky honeydew.','Inspect shoot tips, buds and leaf undersides.','Hose off small colonies; if treatment is needed, use an APVMA-registered aphid product suitable for the plant/crop and obey withholding periods.'],whitefly:['🪽','Whitefly','Tiny white adults fly up when disturbed; nymphs beneath leaves; honeydew.','Check undersides of younger leaves.','Remove heavily infested leaves and use a registered product only where the label permits.'],gnat:['🪰','Fungus gnats','Small dark flies around moist potting mix; larvae live in damp organic media.','Check soil surface and drainage conditions.','Let the surface dry where the plant tolerates it; improve drainage. Use only a registered treatment if needed.'],leafminer:['〰️','Citrus leafminer','Silvery serpentine mines and distorted young citrus leaves.','Inspect fresh flushes of growth.','Protect new flush using a registered citrus leafminer product strictly according to label directions.']};
 const problemData={yellow:['Yellow leaves','Overwatering/root stress, ageing leaves or nutrient/pH issues.','Check soil moisture first. If wet for days, improve drainage; if only old leaves yellow, remove them. Look at new-growth pattern before adding fertiliser.'],brown:['Brown tips/edges','Dry air, inconsistent watering, salt build-up or heat/sun scorch.','Check whether damage is crisp/dry versus soft. Correct watering and position first; flush accumulated salts when appropriate.'],droop:['Drooping/wilting','Dry root ball, saturated roots, heat or transplant stress.','Feel the mix before watering. Dry mix needs a thorough drink; wet mix plus wilt suggests root/oxygen stress.'],slow:['Slow growth','Low light, cool season, root crowding or depleted nutrition.','Compare seasonal growth, check light and roots, then feed only if the plant is actively growing.'],curl:['Curling/distorted leaves','Moisture stress, heat, pests or root problems.','Inspect undersides and new growth for pests; then check soil moisture and heat exposure.'],root:['Soft base/root rot signs','Prolonged wet mix and poor aeration.','Stop routine watering, inspect roots, remove rotten tissue where practical and repot into fresh free-draining mix.'],noFlower:['No flowers','Insufficient light, wrong season, excess nitrogen or plant immaturity.','Increase appropriate light, avoid overfeeding and confirm the species’ normal flowering season.'],noFruit:['Poor flowering/fruit set','Insufficient sun, nutrition/water stress or pollination conditions.','Maximise sun, keep moisture steady during flowering and use crop-appropriate fertiliser at label rates.'],budDrop:['Bud drop','Moisture swings, heat/cold stress or sudden environmental change.','Keep moisture and position stable; avoid moving the plant repeatedly while budding.'],leafDrop:['Leaf drop','Water stress, cold/heat shock, root problems or pest pressure.','Check moisture and roots, then inspect stems/leaves for pests and recent environmental changes.'],wrinkle:['Wrinkled leaves','Dehydration or damaged roots unable to take up water.','Inspect roots before simply watering more; healthy dry roots need water, rotten roots need corrective repotting.'],shrivel:['Shrivelling','Extended dryness or compromised roots.','Check whether roots are healthy and mix is dry before watering thoroughly.'],stretch:['Stretched/leggy growth','Insufficient light.','Increase light gradually and rotate the plant; prune stretched growth if appropriate.']};
 function phFor(p,g){return g.ph || (soilPreference[p.id]==='🍋'?'Acid-loving':'Plant-appropriate pH');}
+// v102 — verified Australian soil + feeding product recommendations.
+// Botanical care requirements remain separate from retailer availability. Retail products below
+// were verified as current Bunnings Australia listings on 3 Sep 2026. Where the current
+// manufacturer/approved application label was not independently verified, the UI explicitly
+// tells the user to follow the current product label rather than inventing a rate.
+const verifiedCareProducts={
+  indoor:{
+    soil:'Scotts Osmocote 10L Indoor Plants Premium Potting Mix',
+    soilNote:'A current Bunnings Australia premium indoor mix containing coir, sphagnum peat and perlite for moisture balance and root aeration. ABC Gardening Australia recommends a premium Australian-standard potting mix and shows perlite as a drainage amendment for indoor plants. No extra fixed ratio is stated here unless the plant-specific evidence supports one.',
+    feed:'Yates 500ml Thrive Indoor Plants And Ferns Liquid Plant Food',
+    feedNote:'A current Bunnings Australia liquid fertiliser formulated for indoor plants and ferns. Use during active growth. Follow the current product label directions for dilution and frequency; no unverified rate is supplied.'
+  },
+  gardenia:{
+    soil:'Scotts Osmocote 25L Rose Gardenia And Azalea Premium Potting Mix',
+    soilNote:'A current Bunnings Australia lower-pH premium mix formulated for acid-loving gardenias. ABC Gardening Australia specifically identifies Gardenia/Azalea/Camellia/Rhododendron mixes as acid-adjusted specialty mixes.',
+    feed:'Scotts Osmocote 2.5L Pour+Feed for Rose, Gardenia and Azalea',
+    feedNote:'A current Bunnings Australia ready-to-use feed for acid-loving gardenias. Current listing directions: apply one capful directly to moist soil around the plant, then water as required; for best results feed every 2 weeks. No dilution is required.'
+  },
+  orchid:{
+    soil:'Scotts Osmocote 10L Orchid Premium Potting Mix',
+    soilNote:'A current Bunnings Australia free-draining orchid mix made with coir chips and graded composted pine bark. ABC Gardening Australia notes orchids need coarse particles with abundant air around roots rather than ordinary fine potting soil.',
+    feed:'Yates 500ml Thrive Orchid Liquid Plant Food',
+    feedNote:'A current Bunnings Australia complete liquid fertiliser specifically developed for orchids. Use while the orchid is actively growing. Follow the current bottle label for dilution and frequency; no unverified rate is supplied.'
+  },
+  succulent:{
+    soil:'Scotts Osmocote 10L Cacti And Succulent Premium Potting Mix',
+    soilNote:'A current Bunnings Australia coarse, fast-draining premium mix for cacti and succulents. If still more aeration is needed, Brunnings 5L Coarse Grade Perlite is a current Bunnings option; no arbitrary mixing ratio is imposed.',
+    feed:'Scotts Osmocote 1L Pour+Feed Cacti & Succulents',
+    feedNote:'A current Bunnings Australia ready-to-use low-nitrogen, higher-potassium fertiliser for cacti and succulents. Follow the current bottle label for dose and frequency; no unverified schedule is supplied.'
+  },
+  citrus:{
+    soil:'Scotts Osmocote 10L Citrus & Fruit Premium Potting Mix',
+    soilNote:'A current Bunnings Australia citrus/fruit premium mix formulated for container citrus with wetting agent and citrus-oriented nutrition. ABC Gardening Australia also cautions that citrus roots need air and should not remain in overly wet soil.',
+    feed:'Yates 500mL Thrive Citrus Liquid Plant Food',
+    feedNote:'A current Bunnings Australia complete liquid feed formulated for all citrus, including lemons, limes and mandarins. Use during active growth/fruiting as appropriate. Follow the current bottle label for dilution and frequency; no unverified rate is supplied.'
+  },
+  edible:{
+    soil:'Scotts Osmocote 25L Tomato Vegetable & Herb Premium Potting Mix',
+    soilNote:'A current Bunnings Australia premium mix formulated for vegetables, herbs and salad greens, including container growing. No extra fixed amendment ratio is claimed unless plant-specific evidence supports it.',
+    feed:'Scotts Osmocote 2.5L Pour+Feed for Tomato & Herb',
+    feedNote:'A current Bunnings Australia ready-to-use feed listed for edible plants including herbs and chillies. Current listing directions: apply one capful directly to moist soil around the plant, then water as required; for best results feed every 2 weeks. No dilution is required.'
+  },
+  bougainvillea:{
+    soil:'Scotts Osmocote 25L Premium Potting Mix + Brunnings 5L Perlite (if extra drainage is needed)',
+    soilNote:'Both are current Bunnings Australia products. Use a premium Australian-standard potting mix; perlite can improve aeration/drainage where the container mix stays too wet. No authoritative fixed ratio is claimed here.',
+    feed:'Yates 500mL Thrive Roses & Flowers Liquid Plant Food',
+    feedNote:'A current Bunnings Australia complete liquid fertiliser for flowering plants. Use during active growth/flowering. Follow the current bottle label for dilution and frequency; no unverified rate is supplied.'
+  }
+};
+const productClassByPlant={
+  'gardenia-radicans':'gardenia','orchid-purple':'orchid','orchid-white':'orchid',
+  'string-of-pearls':'succulent','pink-lady':'succulent','zz-thick':'succulent','zz-thin':'succulent','baby-snake':'succulent','mama-snake':'succulent',
+  'calamansi':'citrus','regular-lemon':'citrus','dwarf-lemon':'citrus',
+  'chilli-firecracker':'edible','habanero':'edible','jalapeno':'edible','mint':'edible','parsley':'edible','rosemary':'edible','thai-peppers':'edible','chilli-timble':'edible',
+  'bougainvillea':'bougainvillea'
+};
+function verifiedProductsFor(p){
+  // Built-ins have a known care identity. Custom plants do not receive a species-specific
+  // product recommendation unless their species has been reliably identified in app data.
+  if(!botanicalNames[p.id]) return null;
+  const key=productClassByPlant[p.id] || 'indoor';
+  return verifiedCareProducts[key] || verifiedCareProducts.indoor;
+}
 function individualProfileFor(p){
   const group=profileGroups[groupForPlant(p)] || profileGroups.tropical;
   const legacy=profileFor(p) || {};
@@ -434,6 +497,16 @@ function individualProfileFor(p){
   if(legacy.soil) g.soil=legacy.soil;
   if(legacy.water) g.water=legacy.water;
   if(legacy.fertiliser){ g.feed=legacy.fertiliser; g.feedNote='Use the plant-appropriate product according to its current label directions.'; }
+  const products=verifiedProductsFor(p);
+  if(products){
+    g.soil=`${g.soil}\n\nPractical product: ${products.soil}. ${products.soilNote}`;
+    g.feed=products.feed;
+    g.feedNote=products.feedNote;
+  }else{
+    g.soil=`${g.soil}\n\nProduct recommendation: Species not reliably identified — no species-specific soil product added.`;
+    g.feed='No species-specific product recommended';
+    g.feedNote='Species not reliably identified. Do not guess; identify the plant first, then follow the current product label.';
+  }
   if(Array.isArray(legacy.tips) && legacy.tips.length) g.grow=legacy.tips.join(' ');
   if(legacy.pruning){ g.maint=[legacy.pruning, ...(group.maint||[]).filter(x=>x!==legacy.pruning)]; }
   if(Array.isArray(legacy.propagation) && legacy.propagation.length) g.prop=legacy.propagation.join(' ');
@@ -562,7 +635,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=101').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=102').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management
