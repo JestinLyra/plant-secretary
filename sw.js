@@ -1,14 +1,15 @@
-const CACHE='plant-secretary-v82';
+const CACHE='plant-secretary-v83';
 const ASSETS=[
   './',
   './index.html',
-  './style.css?v=82',
-  './app.js?v=82',
+  './style.css?v=83',
+  './app.js?v=83',
   './manifest.json',
   './icon.svg',
   'assets/icons/calendar-droplet-approved.png',
   'assets/icons/watering-check-approved.png',
-  'assets/icons/home-leaf-circle-approved.png'
+  'assets/icons/home-leaf-circle-approved.png',
+  'assets/icons/undo-watering-approved.png'
 ];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

@@ -305,9 +305,32 @@ function renderWateringCubes(){
     <span class="cube-maintenance">${(maintenanceIcons[p.id]||[]).map(icon=>`<span class="maintenance-icon">${icon}</span>`).join('')}</span>
     <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today"><span class="drop-icon" aria-hidden="true"></span></button>
   </article>`).join('');
-  document.querySelectorAll('[data-water]').forEach(btn=>btn.addEventListener('click',()=>{state.watered[btn.dataset.water]=localDateOnly();save();renderAll();if(currentProfile===btn.dataset.water)renderProfile(currentProfile);}));
+  document.querySelectorAll('[data-water]').forEach(btn=>btn.addEventListener('click',()=>{
+    const id=btn.dataset.water;
+    state.lastWaterUndo={id,hadPrevious:Object.prototype.hasOwnProperty.call(state.watered,id),previous:state.watered[id]??null};
+    state.watered[id]=localDateOnly();
+    save();renderAll();updateWateringUndoButton();
+    if(currentProfile===id)renderProfile(currentProfile);
+  }));
 }
 
+
+function updateWateringUndoButton(){
+  const btn=el('undoWateringBtn');
+  if(!btn)return;
+  const available=!!(state.lastWaterUndo&&state.lastWaterUndo.id);
+  btn.disabled=!available;
+  btn.setAttribute('aria-disabled',String(!available));
+}
+function undoLastWatering(){
+  const u=state.lastWaterUndo;
+  if(!u||!u.id)return;
+  if(u.hadPrevious) state.watered[u.id]=u.previous;
+  else delete state.watered[u.id];
+  delete state.lastWaterUndo;
+  save();renderAll();updateWateringUndoButton();
+  if(currentProfile===u.id)renderProfile(currentProfile);
+}
 function firstForecastDate(p){const last=state.watered[p.id];if(!last)return new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);const due=addDays(parseDateOnly(last),p.base);const t=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);return due<t?t:due;}
 function renderFortnight(){
   const start=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12);
@@ -448,6 +471,8 @@ function openProfile(id){
 function closeProfile(){el('profileScreen').classList.remove('open');el('profileScreen').setAttribute('aria-hidden','true');document.body.classList.remove('profile-open');currentProfile=null;}
 el('profileBack').addEventListener('click',closeProfile);
 el('filterSelect').addEventListener('change',renderWateringCubes);
+el('undoWateringBtn').addEventListener('click',undoLastWatering);
+updateWateringUndoButton();
 
 el('profileUploadPhotoBtn').addEventListener('click',()=>{
   if(!psEditingPhotoPlantId)return;
@@ -505,7 +530,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=82').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=83').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management

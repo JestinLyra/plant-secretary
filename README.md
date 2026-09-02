@@ -453,3 +453,7 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 
 ## v82
 Visual-only Watering Check refinements: tile droplet white highlights are upright and moved to the lower-right without changing droplet body shape/colour; bottom Watering Check navigation droplet tip is lightened only. No functionality changes.
+
+
+## v83
+Added a small single-level Undo control beside Watering checks. It restores only the most recent Watering Check tile watering record and then disables itself.

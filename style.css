@@ -1297,3 +1297,12 @@ body.collection-edit-mode .collection-item{
   content:none !important;
   display:none !important;
 }
+
+
+/* v83 — compact single-level Watering Check undo control. */
+.watering-title-wrap{display:flex;align-items:center;gap:7px;min-width:0}
+.watering-title-wrap h2{margin:5px 0 0}
+.watering-undo-btn{width:25px;height:25px;padding:0;border:0;background:transparent;border-radius:50%;display:grid;place-items:center;opacity:.58;transition:opacity .15s ease,transform .15s ease;flex:0 0 auto;margin-top:5px}
+.watering-undo-btn img{width:25px;height:25px;display:block;object-fit:contain;border-radius:50%}
+.watering-undo-btn:not(:disabled):active{transform:scale(.92);opacity:.9}
+.watering-undo-btn:disabled{opacity:.18;cursor:default}

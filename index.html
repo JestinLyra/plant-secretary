@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
   <link rel="manifest" href="manifest.json?v=53" />
   <link rel="apple-touch-icon" href="icon.svg?v=53" />
-  <link rel="stylesheet" href="style.css?v=80" />
+  <link rel="stylesheet" href="style.css?v=83" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -47,7 +47,7 @@
 
     <section id="wateringView" class="app-view" aria-labelledby="wateringChecksTitle" hidden>
       <div class="section-title-row">
-        <div><h2 id="wateringChecksTitle">Watering checks</h2></div>
+        <div class="watering-title-wrap"><h2 id="wateringChecksTitle">Watering checks</h2><button id="undoWateringBtn" class="watering-undo-btn" type="button" aria-label="Undo last watering" title="Undo last watering" disabled><img src="assets/icons/undo-watering-approved.png" alt="" aria-hidden="true"></button></div>
         <select id="filterSelect" aria-label="Filter watering checks">
           <option value="all">All plants</option>
           <option value="indoor">Indoor</option>
@@ -85,7 +85,7 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=80" defer></script>
+  <script src="app.js?v=83" defer></script>
 
 <div id="addPlantModal" class="plant-modal" hidden>
   <div class="plant-modal-backdrop" data-close-add-modal></div>
