@@ -525,3 +525,9 @@ Replaced Watering Check indirect-light and minimal-light icons with the user-upl
 ## v98
 - Added bottom content clearance to Home, Watering Check, and Fortnight views so final cards/tiles scroll fully above the fixed bottom navigation.
 - Bottom navigation appearance, safe-area position, icons, and functionality are unchanged.
+
+
+## v99
+- Fixed Plant Profile layout only: identity information now precedes the circular photo, and the photo is forced into normal document flow so it cannot float over Quick Profile cards.
+- Preserved Quick / Care / Pests / Problems tabs, Edit Photo, watering actions/history, Home, Watering Check, Fortnight, custom plants and navigation.
+- PWA cache bumped to v99.

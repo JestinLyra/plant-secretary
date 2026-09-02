@@ -1447,3 +1447,50 @@ body.collection-edit-mode .collection-item{
 .app-view{
   padding-bottom:calc(142px + env(safe-area-inset-bottom)) !important;
 }
+
+
+/* v99 — Plant Profile layout repair only. Keep identity/photo in normal document flow. */
+.profile-poster{
+  position:relative !important;
+  display:block !important;
+  overflow:visible !important;
+}
+.profile-poster .profile-top-actions{
+  position:relative !important;
+  z-index:1 !important;
+}
+.profile-poster h2,
+.profile-poster .botanical-name,
+.profile-poster .profile-tag{
+  position:relative !important;
+  z-index:1 !important;
+}
+.profile-poster .profile-photo-wrap{
+  position:relative !important;
+  inset:auto !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  float:none !important;
+  display:flex !important;
+  flex:0 0 auto !important;
+  width:210px !important;
+  height:210px !important;
+  min-height:0 !important;
+  aspect-ratio:1/1 !important;
+  margin:14px auto 14px !important;
+  border-radius:50% !important;
+  overflow:hidden !important;
+  z-index:0 !important;
+}
+.profile-poster .quick-care-row,
+.profile-poster .poster-grid,
+.profile-poster .grow-tip{
+  position:relative !important;
+  clear:both !important;
+  z-index:1 !important;
+}
+@media(max-width:380px){
+  .profile-poster .profile-photo-wrap{width:185px !important;height:185px !important;}
+}
