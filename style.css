@@ -1290,3 +1290,10 @@ body.collection-edit-mode .collection-item{
   bottom:4px !important;
   transform:none !important;
 }
+
+/* v82 — Watering Check visual-only fixes.
+   Remove the white highlight from tile droplets; preserve the droplet body exactly. */
+.water-cube .cube-water .drop-icon::after{
+  content:none !important;
+  display:none !important;
+}

@@ -451,5 +451,5 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Lemon/pH markers removed from Watering Check tiles only.
 - Bottom Watering Check navigation droplet dark tip recoloured cyan/blue; navigation behaviour unchanged.
 
-## v81
+## v82
 Visual-only Watering Check refinements: tile droplet white highlights are upright and moved to the lower-right without changing droplet body shape/colour; bottom Watering Check navigation droplet tip is lightened only. No functionality changes.
