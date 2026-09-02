@@ -1425,3 +1425,18 @@ body.collection-edit-mode .collection-item{
 .water-cube .cube-name{
   z-index:2 !important;
 }
+
+
+/* v97 — Watering Check pH affinity icons only.
+   Use the approved circular pH gauges at 25px in the upper-right. */
+.water-cube .cube-ph-affinity{
+  position:absolute !important;
+  top:4px !important;
+  right:4px !important;
+  width:25px !important;
+  height:25px !important;
+  object-fit:contain !important;
+  display:block !important;
+  pointer-events:none !important;
+  z-index:3 !important;
+}
