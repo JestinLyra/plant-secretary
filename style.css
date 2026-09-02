@@ -1278,3 +1278,15 @@ body.collection-edit-mode .collection-item{
 }
 /* pH/soil lemon markers are intentionally hidden from Watering Check tiles. */
 .water-cube .cube-soil{display:none !important;}
+
+/* v81 — Watering Check visual-only refinement.
+   Preserve droplet body exactly; only re-orient/reposition its white highlight. */
+.water-cube .cube-water .drop-icon::after{
+  width:4px !important;
+  height:7px !important;
+  left:auto !important;
+  right:4px !important;
+  top:auto !important;
+  bottom:4px !important;
+  transform:none !important;
+}

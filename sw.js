@@ -1,9 +1,9 @@
-const CACHE='plant-secretary-v80';
+const CACHE='plant-secretary-v81';
 const ASSETS=[
   './',
   './index.html',
-  './style.css?v=80',
-  './app.js?v=80',
+  './style.css?v=81',
+  './app.js?v=81',
   './manifest.json',
   './icon.svg',
   'assets/icons/calendar-droplet-approved.png',
