@@ -461,3 +461,10 @@ Added a small single-level Undo control beside Watering checks. It restores only
 
 ## v84
 Removed all sunlight/weather icons (☀️ ☁️ 🌤️ ⛅️) from Watering Check tiles only. Underlying sunlight data and all other app behaviour remain unchanged.
+
+
+## v85
+- Watering Check schedule/status text moved to the lower-left of each tile.
+- Plant names and water droplet buttons remain in their existing positions.
+- Added the approved coloured-pencil direct-sun icon at the upper-right only for plants marked as needing direct sunlight.
+- No watering calculations, history, Undo, Fortnight, profile, or navigation behaviour changed.

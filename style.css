@@ -1306,3 +1306,27 @@ body.collection-edit-mode .collection-item{
 .watering-undo-btn img{width:25px;height:25px;display:block;object-fit:contain;border-radius:50%}
 .watering-undo-btn:not(:disabled):active{transform:scale(.92);opacity:.9}
 .watering-undo-btn:disabled{opacity:.18;cursor:default}
+
+/* v85 — Watering Check tile layout refinement only.
+   Keep plant-name and droplet positions/appearance unchanged. */
+.water-cube .cube-status{
+  top:auto !important;
+  right:auto !important;
+  left:10px !important;
+  bottom:11px !important;
+  max-width:calc(100% - 62px) !important;
+  text-align:left !important;
+  font-size:12px !important;
+  line-height:1.05 !important;
+  font-weight:800 !important;
+}
+.water-cube .cube-direct-sun{
+  position:absolute !important;
+  top:8px !important;
+  right:8px !important;
+  width:28px !important;
+  height:28px !important;
+  object-fit:contain !important;
+  display:block !important;
+  pointer-events:none !important;
+}
