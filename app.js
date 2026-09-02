@@ -582,7 +582,7 @@ function psSetCropSource(src){
   if(!src){preview.removeAttribute('src');controls.hidden=true;psCropImage=null;return;}
   preview.src=src;controls.hidden=false;
   el('profileCropZoom').value='1';el('profileCropX').value='0';el('profileCropY').value='0';
-  psCropImage=new Image();psCropImage.src=src;
+  psCropImage=new Image();psCropImage.onload=psUpdateCropPreview;psCropImage.src=src;
   psUpdateCropPreview();
 }
 function psUpdateCropPreview(){
@@ -590,7 +590,20 @@ function psUpdateCropPreview(){
   const zoom=Number(el('profileCropZoom').value||1);
   const x=Number(el('profileCropX').value||0);
   const y=Number(el('profileCropY').value||0);
-  img.style.transform=`translate(${x}%,${y}%) scale(${zoom})`;
+  const box=img.parentElement;
+  const size=(box&&box.clientWidth)||190;
+  const nw=(psCropImage&&psCropImage.naturalWidth)||img.naturalWidth;
+  const nh=(psCropImage&&psCropImage.naturalHeight)||img.naturalHeight;
+  if(!nw||!nh){img.style.transform='none';return;}
+  const base=Math.max(size/nw,size/nh);
+  const w=nw*base*zoom,h=nh*base*zoom;
+  const maxX=Math.max(0,(w-size)/2),maxY=Math.max(0,(h-size)/2);
+  const tx=(x/100)*maxX,ty=(y/100)*maxY;
+  img.style.width=`${w}px`;
+  img.style.height=`${h}px`;
+  img.style.left=`${(size-w)/2}px`;
+  img.style.top=`${(size-h)/2}px`;
+  img.style.transform=`translate(${tx}px,${ty}px)`;
 }
 function psOpenProfilePhotoMenu(id){
   psEditingPhotoPlantId=id;
@@ -651,7 +664,7 @@ el('profileUploadPhotoBtn').addEventListener('click',()=>{
 });
 el('profilePhotoInput').addEventListener('change',async(e)=>{
   const file=e.target.files&&e.target.files[0];if(!file||!psEditingPhotoPlantId)return;
-  try{psSetCropSource(await psReadPhotoFile(file));}catch(err){alert('That photo could not be opened. Please try another image.');}
+  try{psSetCropSource(await psReadPhotoFile(file));el('profileDeletePhotoBtn').disabled=false;}catch(err){alert('That photo could not be opened. Please try another image.');}
 });
 ['profileCropZoom','profileCropX','profileCropY'].forEach(id=>el(id).addEventListener('input',psUpdateCropPreview));
 el('profileDeletePhotoBtn').addEventListener('click',()=>{

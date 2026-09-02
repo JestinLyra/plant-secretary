@@ -547,10 +547,10 @@ Plant Profile bug-fix release: clears pre-v103 user-saved profile photos once, r
 Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separator so the requested horizontal photo/identity header actually applies, and changed the four Quick cards into two independent natural-height columns (Position/Watering and Soil/Feeding) so short cards no longer inherit blank row space from taller cards. No care content, data, functionality, or other pages were changed.
 
 
-## v106
+## v107
 - Quick Plant Profile layout only: Position remains left; Watering moved to its right. Feeding moved to the left column with Soil on its right. No data, functionality, or other pages changed.
 
-## v106
+## v107
 - Removed visible Edit Photo buttons from all Plant Profile pages.
 - Plant Profile photo circle is now the only photo/profile-edit trigger; Home collection photos are unchanged.
 - Added one per-plant editor with Change Photo, circular crop/reposition/resize controls, Delete Photo, Botanical Name, Save and Cancel.

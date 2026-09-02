@@ -1807,7 +1807,6 @@ body.profile-open{
 }
 .profile-poster .poster-grid-rows .quick-card{
   min-width:0 !important;
-}
 .profile-poster .poster-grid-rows .care-mini{
   min-height:0 !important;
   height:auto !important;
@@ -1837,7 +1836,10 @@ body.profile-open{
 .profile-crop-controls{display:grid;gap:10px;}
 .profile-crop-controls[hidden]{display:none!important;}
 .profile-crop-preview{width:190px;aspect-ratio:1/1;margin:2px auto 4px;border-radius:50%;overflow:hidden;background:#eef2ea;border:1.5px solid #8eb29e;position:relative;}
-.profile-crop-preview img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center center;}
+.profile-crop-preview img{position:absolute;display:block;max-width:none;max-height:none;transform-origin:center center;}
 .profile-crop-controls input[type="range"]{width:100%;accent-color:#315c2f;}
 .profile-editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .profile-photo-sheet .profile-editor-actions .primary{background:#315c2f;color:#fff;border-color:#315c2f;}
+
+/* v107 — profile editor bug fixes: photo circle remains the sole edit trigger. */
+.profile-photo-trigger{border:1.5px solid #8eb29e !important;background:#eef2ea !important;}
