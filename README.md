@@ -539,5 +539,5 @@ Replaced Watering Check indirect-light and minimal-light icons with the user-upl
 - No watering, navigation, profile-care, Home, Watering Check or Fortnight logic changed.
 
 
-## v102
-Plant Profile bug-fix release: clears pre-v102 user-saved profile photos once, restores a full-width isolated profile overlay with no horizontal overflow, keeps identity/photo in normal flow above the profile tabs, and places the watering-status button in normal document flow. Home, Watering Check, Fortnight, Undo, custom plants and navigation are unchanged.
+## v103
+Plant Profile bug-fix release: clears pre-v103 user-saved profile photos once, restores a full-width isolated profile overlay with no horizontal overflow, keeps identity/photo in normal flow above the profile tabs, and places the watering-status button in normal document flow. Home, Watering Check, Fortnight, Undo, custom plants and navigation are unchanged.
