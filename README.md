@@ -500,3 +500,7 @@ Fixed direct-sun icon delivery on Watering Check by cache-busting app/CSS and pr
 
 ## v92
 Watering Check light-icon artwork only: cloud interiors in the indirect-light and minimal-light pencil icons are now opaque white. No layout, watering logic, Undo, history, Fortnight, profiles, or navigation changes.
+
+## v93
+- Watering Check light icons only: cloud interiors changed to solid white while preserving the blue pencil outlines.
+- No layout, watering, Undo, Fortnight, profile, navigation, or other behavior changes.
