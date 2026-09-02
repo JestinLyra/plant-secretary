@@ -520,3 +520,8 @@ Replaced Watering Check indirect-light and minimal-light icons with the user-upl
 - Watering Check visual-only update: removed all pH affinity icons from plant tiles.
 - Preserved sunlight icons, plant names, watering schedule placement, droplets, Undo, watering history/calculations, Fortnight, profiles, and navigation.
 - Bumped PWA asset/service-worker cache version to v96.
+
+
+## v98
+- Added bottom content clearance to Home, Watering Check, and Fortnight views so final cards/tiles scroll fully above the fixed bottom navigation.
+- Bottom navigation appearance, safe-area position, icons, and functionality are unchanged.

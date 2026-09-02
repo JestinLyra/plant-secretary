@@ -1440,3 +1440,10 @@ body.collection-edit-mode .collection-item{
   pointer-events:none !important;
   z-index:3 !important;
 }
+
+/* v98 — bottom content clearance only.
+   Keep the fixed bottom navigation exactly where it is, but give each main
+   scrollable view enough space so its final card/tile can scroll fully above it. */
+.app-view{
+  padding-bottom:calc(142px + env(safe-area-inset-bottom)) !important;
+}
