@@ -1339,8 +1339,8 @@ body.collection-edit-mode .collection-item{
   top:7px !important;
   right:auto !important;
   left:7px !important;
-  width:50px !important;
-  height:50px !important;
+  width:30px !important;
+  height:30px !important;
   z-index:0 !important;
 }
 .water-cube .cube-name{
@@ -1408,8 +1408,8 @@ body.collection-edit-mode .collection-item{
 }
 
 
-/* v95 — Watering Check pH affinity icons only.
-   Add the approved pH classification artwork at 50px in the upper-right.
+/* v96 — Watering Check pH affinity icons only.
+   Reduce approved pH classification artwork to 30px in the upper-right and remove embedded classification words from the artwork.
    No existing tile positions, watering controls, or behavior are changed. */
 .water-cube .cube-ph-affinity{
   position:absolute !important;

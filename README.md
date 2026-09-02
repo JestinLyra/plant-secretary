@@ -514,3 +514,9 @@ Replaced Watering Check indirect-light and minimal-light icons with the user-upl
 - Watering Check visual-only update: added 50 px pH-affinity icons in the upper-right of every plant tile using the approved uploaded artwork.
 - Existing acid-affinity plants use Acidic; Rosemary uses Alkaline; remaining plants use Slightly Acidic to Neutral, based on the app's existing pH-affinity classification data.
 - No changes to plant-name position, schedule placement, droplets, Undo, watering history/calculations, Fortnight, profiles, or navigation.
+
+
+## v96
+- Watering Check visual-only update: reduced the pH-affinity artwork to 30 px in the upper-right of each plant tile.
+- Removed the embedded classification words Acidic, Slightly Acidic to Neutral, and Alkaline from the pH artwork while retaining the gauge/droplet symbols.
+- No other layout, watering, Undo, history, Fortnight, profile, or navigation changes.
