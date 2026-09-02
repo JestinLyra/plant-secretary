@@ -1365,3 +1365,14 @@ body.collection-edit-mode .collection-item{
   position:relative !important;
   z-index:2 !important;
 }
+
+/* v89 — Watering Check direct-sun visual refinement only.
+   Make the approved direct-sun pencil icon 65px and increase plant-name
+   contrast where it intentionally overlaps the orange/yellow artwork. */
+.water-cube .cube-direct-sun{
+  width:65px !important;
+  height:65px !important;
+}
+.water-cube:has(.cube-direct-sun) .cube-name{
+  color:#063d2b !important;
+}

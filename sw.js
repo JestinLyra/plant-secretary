@@ -1,4 +1,4 @@
-const CACHE='plant-secretary-v88';
+const CACHE='plant-secretary-v89';
 const ASSETS=[
   './',
   './index.html',

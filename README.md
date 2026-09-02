@@ -479,3 +479,8 @@ Fixed direct-sun icon delivery on Watering Check by cache-busting app/CSS and pr
 - Direct-sun icon remains upper-left and is now 56px, larger than the unchanged watering button.
 - Plant-name position is unchanged and may intentionally overlap the sun icon.
 - Bumped stylesheet, script and service-worker cache references to v88 to prevent stale PWA assets.
+
+## v89
+- Watering Check direct-sun pencil icon increased to 65px.
+- Direct-sun tile plant names use a deeper botanical green for stronger contrast against the sun artwork.
+- All other layout, watering data, controls and app behaviour remain unchanged.
