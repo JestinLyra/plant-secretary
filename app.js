@@ -301,7 +301,6 @@ function renderWateringCubes(){
   el('wateringCubes').innerHTML=list.map(p=>`<article class="water-cube ${wateringClass(p)} ${statusFor(p)}">
     <span class="cube-sun">${sunlight[p.id]||'⛅️'}</span>
     <span class="cube-status">${shortDue(p)}</span>
-    ${soilPreference[p.id]?`<span class="cube-soil">${soilPreference[p.id]}</span>`:''}
     <strong class="cube-name">${p.name}</strong>
     <span class="cube-maintenance">${(maintenanceIcons[p.id]||[]).map(icon=>`<span class="maintenance-icon">${icon}</span>`).join('')}</span>
     <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today"><span class="drop-icon" aria-hidden="true"></span></button>
@@ -506,7 +505,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=79').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=80').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management

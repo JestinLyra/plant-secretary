@@ -444,3 +444,9 @@ Fortnight View condenses long lists with “All indoor plants, except …” and
 - Added a defensive profile-open fallback so a future content rendering error cannot silently make taps appear unresponsive.
 - Preserved plant data, watering intervals/history, Watering Check, Fortnight, photos, custom plants, deletion behavior and navigation.
 - Bumped PWA cache/service worker to v79.
+
+
+## v80
+- Watering Check tile droplets rotated upright without changing their colours, size, tap behaviour, watering calculations, or history.
+- Lemon/pH markers removed from Watering Check tiles only.
+- Bottom Watering Check navigation droplet dark tip recoloured cyan/blue; navigation behaviour unchanged.

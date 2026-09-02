@@ -1265,3 +1265,16 @@ body.collection-edit-mode .collection-item{
   top:5px;
   transform:rotate(-35deg);
 }
+
+
+/* v80 — Watering Check visual fixes only. */
+/* Upright the existing cyan/blue tile droplet; preserve its colour, size and button behaviour. */
+.water-cube .cube-water .drop-icon{
+  transform:rotate(135deg) !important;
+}
+/* Keep the highlight visually natural after the droplet is rotated upright. */
+.water-cube .cube-water .drop-icon::after{
+  transform:rotate(-125deg) !important;
+}
+/* pH/soil lemon markers are intentionally hidden from Watering Check tiles. */
+.water-cube .cube-soil{display:none !important;}
