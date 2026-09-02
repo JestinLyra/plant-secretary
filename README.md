@@ -504,3 +504,7 @@ Watering Check light-icon artwork only: cloud interiors in the indirect-light an
 ## v93
 - Watering Check light icons only: cloud interiors changed to solid white while preserving the blue pencil outlines.
 - No layout, watering, Undo, Fortnight, profile, navigation, or other behavior changes.
+
+
+## v94
+Replaced Watering Check indirect-light and minimal-light icons with the user-uploaded transparent-background pencil artwork. Direct-sun icon and all layout/functionality unchanged.
