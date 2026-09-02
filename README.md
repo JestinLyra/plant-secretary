@@ -541,3 +541,7 @@ Replaced Watering Check indirect-light and minimal-light icons with the user-upl
 
 ## v103
 Plant Profile bug-fix release: clears pre-v103 user-saved profile photos once, restores a full-width isolated profile overlay with no horizontal overflow, keeps identity/photo in normal flow above the profile tabs, and places the watering-status button in normal document flow. Home, Watering Check, Fortnight, Undo, custom plants and navigation are unchanged.
+
+
+## v104
+Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separator so the requested horizontal photo/identity header actually applies, and changed the four Quick cards into two independent natural-height columns (Position/Watering and Soil/Feeding) so short cards no longer inherit blank row space from taller cards. No care content, data, functionality, or other pages were changed.

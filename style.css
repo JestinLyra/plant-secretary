@@ -1670,7 +1670,9 @@ body.profile-open{
   .profile-tabs{gap:4px !important;}
   .profile-tab{font-size:10.5px !important;padding-left:2px !important;padding-right:2px !important;}
 }
-\n\n/* v103 — Quick Plant Profile layout optimisation only. */
+
+
+/* v103 — Quick Plant Profile layout optimisation only. */
 .profile-identity.profile-identity-quick{
   display:grid !important;
   grid-template-columns:minmax(125px,140px) minmax(0,1fr) !important;
@@ -1760,4 +1762,37 @@ body.profile-open{
   .profile-identity-quick .profile-photo-wrap{width:125px !important;}
   .profile-identity-quick h2{font-size:24px !important;}
   .profile-poster .poster-grid{gap:7px !important;}
+}
+
+
+/* v104 — Quick page bug fixes only: ensure horizontal identity CSS parses and use natural-height card columns. */
+.profile-poster .poster-grid.poster-grid-natural{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:8px !important;
+  align-items:start !important;
+}
+.profile-poster .poster-grid-natural .poster-column{
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:8px !important;
+  align-self:start !important;
+}
+.profile-poster .poster-grid-natural .care-mini{
+  min-height:0 !important;
+  height:auto !important;
+  align-self:stretch !important;
+  margin:0 !important;
+}
+.profile-poster .poster-grid-natural .poster-column:nth-child(2) .care-mini{
+  text-align:left !important;
+}
+.profile-poster .poster-grid-natural .poster-column:nth-child(2) .care-icon,
+.profile-poster .poster-grid-natural .poster-column:nth-child(2) .care-label{
+  text-align:center !important;
+}
+@media(max-width:380px){
+  .profile-poster .poster-grid.poster-grid-natural,
+  .profile-poster .poster-grid-natural .poster-column{gap:7px !important;}
 }
