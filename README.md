@@ -517,6 +517,6 @@ Replaced Watering Check indirect-light and minimal-light icons with the user-upl
 
 
 ## v96
-- Watering Check visual-only update: reduced the pH-affinity artwork to 30 px in the upper-right of each plant tile.
-- Removed the embedded classification words Acidic, Slightly Acidic to Neutral, and Alkaline from the pH artwork while retaining the gauge/droplet symbols.
-- No other layout, watering, Undo, history, Fortnight, profile, or navigation changes.
+- Watering Check visual-only update: removed all pH affinity icons from plant tiles.
+- Preserved sunlight icons, plant names, watering schedule placement, droplets, Undo, watering history/calculations, Fortnight, profiles, and navigation.
+- Bumped PWA asset/service-worker cache version to v96.
