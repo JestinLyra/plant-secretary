@@ -1796,3 +1796,33 @@ body.profile-open{
   .profile-poster .poster-grid.poster-grid-natural,
   .profile-poster .poster-grid-natural .poster-column{gap:7px !important;}
 }
+
+
+/* v105 — Quick Guide card order only: Position | Watering, then Feeding | Soil. */
+.profile-poster .poster-grid.poster-grid-rows{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:8px !important;
+  align-items:start !important;
+}
+.profile-poster .poster-grid-rows .quick-card{
+  min-width:0 !important;
+}
+.profile-poster .poster-grid-rows .care-mini{
+  min-height:0 !important;
+  height:auto !important;
+  margin:0 !important;
+}
+.profile-poster .poster-grid-rows .quick-card-feeding .care-mini,
+.profile-poster .poster-grid-rows .quick-card-soil .care-mini{
+  text-align:left !important;
+}
+.profile-poster .poster-grid-rows .quick-card-feeding .care-icon,
+.profile-poster .poster-grid-rows .quick-card-feeding .care-label,
+.profile-poster .poster-grid-rows .quick-card-soil .care-icon,
+.profile-poster .poster-grid-rows .quick-card-soil .care-label{
+  text-align:center !important;
+}
+@media(max-width:380px){
+  .profile-poster .poster-grid.poster-grid-rows{gap:7px !important;}
+}

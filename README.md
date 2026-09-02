@@ -545,3 +545,7 @@ Plant Profile bug-fix release: clears pre-v103 user-saved profile photos once, r
 
 ## v104
 Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separator so the requested horizontal photo/identity header actually applies, and changed the four Quick cards into two independent natural-height columns (Position/Watering and Soil/Feeding) so short cards no longer inherit blank row space from taller cards. No care content, data, functionality, or other pages were changed.
+
+
+## v105
+- Quick Plant Profile layout only: Position remains left; Watering moved to its right. Feeding moved to the left column with Soil on its right. No data, functionality, or other pages changed.
