@@ -9,14 +9,19 @@
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
   <link rel="manifest" href="manifest.json?v=53" />
   <link rel="apple-touch-icon" href="icon.svg?v=53" />
-  <link rel="stylesheet" href="style.css?v=118" />
+  <link rel="stylesheet" href="style.css?v=119" />
   <title>Plant Secretary</title>
 </head>
 <body>
   <header class="topbar" id="top">
     <div class="brand-row">
-      <span class="brand-mark" aria-hidden="true">🌿</span>
-      <div><h1>Plant Secretary</h1><p id="todayLabel">Altona, Victoria</p></div>
+      <div class="brand-identity">
+        <span class="brand-mark" aria-hidden="true">🌿</span>
+        <div><h1>Plant Secretary</h1><p id="todayLabel">Altona, Victoria</p></div>
+      </div>
+      <button id="topBackupBtn" class="top-backup-btn" data-view="backupView" type="button" aria-label="Backup Data" title="Backup Data">
+        <img src="assets/icons/backup-data-approved.png" alt="" aria-hidden="true">
+      </button>
     </div>
   </header>
 
@@ -115,7 +120,6 @@
       </button>
 
     <button data-view="fortnightView" type="button"><span class="nav-icon"><img class="nav-calendar-approved" src="assets/icons/calendar-droplet-approved.png" alt="" aria-hidden="true"></span><span>Fortnight</span></button>
-    <button data-view="backupView" type="button" aria-label="Backup Data"><span class="nav-icon"><img class="nav-backup-approved" src="assets/icons/backup-data-approved.svg" alt="" aria-hidden="true"></span><span>Backup</span></button>
   </nav>
 
   <input id="backupImportInput" type="file" accept="application/json,.json" hidden>
@@ -133,7 +137,7 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=118" defer></script>
+  <script src="app.js?v=119" defer></script>
 
 <div id="addPlantModal" class="plant-modal" hidden>
   <div class="plant-modal-backdrop" data-close-add-modal></div>

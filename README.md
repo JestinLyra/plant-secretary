@@ -619,3 +619,8 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 - A deliberate horizontal threshold prevents normal vertical scrolling from triggering plant navigation, and swipes starting on interactive controls are ignored.
 - No plant data, watering history, profile content, editing behaviour, or non-profile navigation was changed.
 - Bumped app/CSS/service-worker cache references to v114.
+
+## v119
+- Replaced the Backup control artwork with the approved cloud-download botanical icon.
+- Moved Backup from the bottom navigation to the far right of the Plant Secretary top header.
+- Bottom navigation now contains Home, Watering Check and Fortnight only and is explicitly fixed to the bottom of the viewport, including iPhone safe-area padding.

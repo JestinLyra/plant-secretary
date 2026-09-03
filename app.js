@@ -873,7 +873,7 @@ function showView(viewId){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-document.querySelectorAll('.bottom-nav [data-view]').forEach(btn=>{
+document.querySelectorAll('.bottom-nav [data-view], .top-backup-btn[data-view]').forEach(btn=>{
   btn.addEventListener('click',()=>showView(btn.dataset.view));
 });
 
@@ -881,7 +881,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=118').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=119').catch(()=>{}));}
 
 
 // v118 — complete Plant Secretary backup / restore
