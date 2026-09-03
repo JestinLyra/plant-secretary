@@ -404,6 +404,39 @@ const botanicalNames={
 'begonia':'Begonia spp.','birkin-green':"Philodendron ‘Birkin’",'birkin-white':"Philodendron ‘Birkin’",'gardenia-radicans':'Gardenia jasminoides','golden-pothos':'Epipremnum aureum','maidenhair':'Adiantum spp.','marble-queen':"Epipremnum aureum ‘Marble Queen’",'many':'Monstera deliciosa','konti':'Monstera deliciosa','moon-valley':"Pilea involucrata ‘Moon Valley’",'orchid-purple':'Phalaenopsis spp.','orchid-white':'Phalaenopsis spp.','peace-lily':'Spathiphyllum spp.','pink-lady':'Callisia repens','baby-snake':'Dracaena trifasciata','mama-snake':'Dracaena trifasciata','string-of-pearls':"Curio rowleyanus ‘Variegatus’",'zz-thick':'Zamioculcas zamiifolia','zz-thin':'Zamioculcas zamiifolia','bougainvillea':'Bougainvillea spp.','calamansi':'Citrus × microcarpa','chilli-firecracker':'Capsicum annuum','habanero':'Capsicum chinense','jalapeno':'Capsicum annuum','regular-lemon':'Citrus limon','dwarf-lemon':'Citrus limon','mint':'Mentha spp.','parsley':'Petroselinum crispum','rosemary':'Salvia rosmarinus','thai-peppers':'Capsicum annuum','chilli-timble':'Capsicum annuum'};
 
 // v109 — per-plant common/display-name overrides. The stable plant ID and care identity remain unchanged.
+// v116 — verified Australian alternative/common names shown on Plant Profile identity only.
+// Scientific/taxonomic synonyms are deliberately excluded. Empty entries are omitted.
+const australianOtherNames={
+  'birkin-green':['White Wave'],
+  'birkin-white':['White Wave'],
+  'gardenia-radicans':['Cape Jasmine'],
+  'golden-pothos':["Devil's Ivy",'Pothos'],
+  'marble-queen':["Devil's Ivy",'Marble Queen Pothos'],
+  'many':['Fruit Salad Plant','Swiss Cheese Plant'],
+  'konti':['Fruit Salad Plant','Swiss Cheese Plant'],
+  'orchid-purple':['Moth Orchid'],
+  'orchid-white':['Moth Orchid'],
+  'peace-lily':['Madonna Lily'],
+  'pink-lady':['Pink Panther','Turtle Vine'],
+  'baby-snake':["Mother-in-law's Tongue",'Bow String Hemp'],
+  'mama-snake':["Mother-in-law's Tongue",'Bow String Hemp'],
+  'string-of-pearls':['String of Beads'],
+  'zz-thick':['Zanzibar Gem'],
+  'zz-thin':['Zanzibar Gem'],
+  'bougainvillea':['Lesser Bougainvillea','Paper Flower'],
+  'calamansi':['Calamondin','Limau Kesturi','Must Lime'],
+  'mint':['Common Mint','Garden Mint','Spearmint'],
+  'parsley':['Garden Parsley']
+};
+function psOtherNames(p){
+  const main=psDisplayName(p).trim().toLocaleLowerCase('en-AU');
+  return (australianOtherNames[p.id]||[]).filter(name=>String(name).trim().toLocaleLowerCase('en-AU')!==main);
+}
+function psOtherNamesMarkup(p){
+  const names=psOtherNames(p);
+  return names.length?`<p class="profile-other-names">${names.map(psEscapeHTML).join(' / ')}</p>`:'';
+}
+
 const PS_COMMON_NAME_KEY='plantSecretary.plantNames.v1';
 function psGetCommonNames(){try{return JSON.parse(localStorage.getItem(PS_COMMON_NAME_KEY)||'{}')||{};}catch(e){return {};}}
 function psSaveCommonNames(names){localStorage.setItem(PS_COMMON_NAME_KEY,JSON.stringify(names));}
@@ -589,11 +622,11 @@ function renderProfile(id,page=1){
  const photo=psSavedPlantPhoto(p.id);
  const watered=wateredStatusLabel(state.watered[p.id]);
  const botanical=psBotanicalName(p);
- const displayName=psDisplayName(p),safeName=psEscapeHTML(displayName),safeBotanical=psEscapeHTML(botanical);
+ const displayName=psDisplayName(p),safeName=psEscapeHTML(displayName),safeBotanical=psEscapeHTML(botanical),otherNames=psOtherNamesMarkup(p);
  const photoMarkup=`<button class="profile-photo-wrap profile-photo-trigger ${photo?'has-photo':''}" type="button" data-profile-photo-edit="${p.id}" aria-label="Edit ${safeName} profile">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${safeName} photo">`:`<span class="profile-photo-fallback" aria-label="No saved plant photo">${psEscapeHTML(psPlantInitials(displayName))}</span>`}</button>`;
  const identity=page===1
-  ? `<section class="profile-identity profile-identity-quick" aria-label="${safeName} identity"><div class="quick-identity-photo">${photoMarkup}</div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${safeName}</h2><p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`
-  : `<section class="profile-identity" aria-label="${safeName} identity"><div class="profile-top-actions"><span class="profile-eyebrow">PLANT PROFILE</span></div><h2 id="profileName">${safeName}</h2><p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span>${photoMarkup}</section>`;
+  ? `<section class="profile-identity profile-identity-quick" aria-label="${safeName} identity"><div class="quick-identity-photo">${photoMarkup}</div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${safeName}</h2>${otherNames}<p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`
+  : `<section class="profile-identity" aria-label="${safeName} identity"><div class="profile-top-actions"><span class="profile-eyebrow">PLANT PROFILE</span></div><h2 id="profileName">${safeName}</h2>${otherNames}<p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span>${photoMarkup}</section>`;
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  let body='';
  if(page===1) body=`<article class="profile-poster quick-guide-v110"><section class="quick-info-grid quick-info-columns"><div class="quick-info-column">${quickInfoCard('light','LIGHT',g.position)}${quickInfoCard('soil','SOIL',g.soil)}</div><div class="quick-info-column">${quickInfoCard('watering','WATERING',`${g.moisture}. ${g.water}`)}<article class="quick-info-card quick-info-feeding quick-feeding-card"><div class="quick-info-icon">${quickGuideIcon('feeding')}</div><div class="quick-info-copy"><span class="quick-info-label">FEEDING</span><p><strong>${g.feed}</strong></p><p>${g.feedNote}</p></div></article>${quickInfoCard('ph','pH',phFor(p,g),'quick-ph-card')}</div></section>${quickFullSection('maintenance','HANDS-ON CARE',`<ul>${(g.maint||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`,'quick-maintenance-card')}${quickFullSection('tip','GROW TIP',`<p>${g.grow}</p>`,'quick-grow-card')}</article>`;
@@ -833,7 +866,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=115').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=116').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management

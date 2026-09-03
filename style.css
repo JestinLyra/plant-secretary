@@ -2143,3 +2143,16 @@ body.profile-open{
 @media (prefers-reduced-motion: reduce){
   .profile-content{will-change:auto;}
 }
+
+
+/* v116 — Plant Profile-only verified Australian alternative/common-name line. */
+.profile-other-names{
+  margin:3px 0 4px;
+  max-width:100%;
+  color:#526452;
+  font-size:13px;
+  line-height:1.3;
+  font-weight:600;
+  overflow-wrap:anywhere;
+}
+.profile-identity-quick .profile-other-names{margin:2px 0 4px;}
