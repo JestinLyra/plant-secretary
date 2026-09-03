@@ -582,3 +582,9 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 - Removed duplicated Quick summary/card presentation: Light, Watering, Soil and pH are compact cards; Feeding, Hands-on Care and Grow Tip are full-width.
 - Fixed a malformed legacy v105 Quick CSS brace so later scoped rules parse predictably.
 - Bumped app/CSS/service-worker cache references to v110.
+
+
+## v111
+- Moved the existing Quick / Care / Pests / Problems profile tab bar above the plant identity/photo block on all four profile pages.
+- Tab labels, styling, navigation behaviour, photo/name editing, and all profile content remain unchanged.
+- Bumped app/CSS/service-worker cache references to v111.
