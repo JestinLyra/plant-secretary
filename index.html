@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
   <link rel="manifest" href="manifest.json?v=53" />
   <link rel="apple-touch-icon" href="icon.svg?v=53" />
-  <link rel="stylesheet" href="style.css?v=108" />
+  <link rel="stylesheet" href="style.css?v=109" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -85,7 +85,7 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=108" defer></script>
+  <script src="app.js?v=109" defer></script>
 
 <div id="addPlantModal" class="plant-modal" hidden>
   <div class="plant-modal-backdrop" data-close-add-modal></div>
@@ -118,6 +118,7 @@
   <div class="profile-photo-backdrop" data-close-photo-menu></div>
   <section class="profile-photo-sheet profile-editor-sheet" role="dialog" aria-modal="true" aria-labelledby="profilePhotoMenuTitle">
     <div class="profile-editor-header"><h2 id="profilePhotoMenuTitle">Edit plant profile</h2><div class="profile-editor-actions"><button id="profileCancelPhotoBtn" class="secondary" type="button">Cancel</button><button id="profileSavePhotoBtn" class="primary" type="button">Save</button></div></div>
+    <label class="profile-botanical-field profile-common-name-field"><span>Plant name</span><input id="profileCommonNameInput" type="text" autocomplete="off" spellcheck="false"></label>
     <label class="profile-botanical-field"><span>Botanical name</span><input id="profileBotanicalInput" type="text" autocomplete="off" spellcheck="false"></label>
     <div id="profileCropControls" class="profile-crop-controls" hidden>
       <div class="profile-crop-preview"><img id="profileCropImage" alt="Photo crop preview"></div>

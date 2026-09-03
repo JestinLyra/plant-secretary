@@ -564,3 +564,12 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 - Matched editable botanical-name text more closely to profile botanical-name typography.
 - No plant data or other app functionality changed.
 - Bumped app/CSS/service-worker cache references to v108.
+
+
+## v109
+- Added a per-plant editable common/display name to the existing Plant Profile editor.
+- Common-name overrides persist in `plantSecretary.plantNames.v1` and do not modify stable plant IDs.
+- Home, Quick, Care, Pests, Problems, Watering Check, Fortnight, accessibility labels and delete confirmation now use the per-plant display name.
+- Botanical name remains independently editable and remains the field used for profile-care classification.
+- Saving a profile re-renders all name-bearing views immediately.
+- Bumped app/CSS/service-worker cache references to v109.

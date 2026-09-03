@@ -84,7 +84,7 @@ function profileFor(p){
     toxicity:'Toxic — Humans, Dogs & Cats'
   };
   const base={
-    intro:`${p.name} is part of your Plant Secretary collection. Use soil moisture and plant response as the final check before watering.`,
+    intro:`${psDisplayName(p)} is part of your Plant Secretary collection. Use soil moisture and plant response as the final check before watering.`,
     light:'Bright filtered light is generally suitable.',water:p.note,soil:'Use a well-draining mix suited to the plant type.',temp:'Protect from temperature extremes.',humidity:'Normal household or outdoor humidity is usually suitable.',fertiliser:'Feed only during active growth and follow the product label.',pruning:'Remove damaged growth with clean tools.',toxicity:'Non-toxic',propagation:['Use a healthy section of the plant.','Root using the method suited to the species.','Pot up once new roots or growth are established.'],tips:['Check moisture before watering.','Use a pot with drainage where appropriate.','Watch new growth for signs of stress.'],tag:'Care guide'};
 
   if(['golden-pothos','marble-queen'].includes(p.id)) Object.assign(base,commonProfiles.pothos,{toxicity:'Toxic — Humans, Dogs & Cats'});
@@ -113,7 +113,7 @@ function profileFor(p){
     'parsley':{tag:'Edible • leafy • cool-season friendly',light:'Direct to indirect sun; protect from extreme heat.',water:'Keep soil consistently moist but not saturated.',soil:'Fertile, free-draining potting mix.',temp:'Prefers mild growing conditions.',humidity:'Normal outdoor humidity.',fertiliser:'Use a suitable edible-plant fertiliser according to label.',pruning:'Harvest outer stems from the base.',toxicity:'Non-toxic',propagation:['Grow from seed.','Keep seedbed evenly moist during germination.','Thin seedlings for airflow and space.'],tips:['Harvest outer stems first.','Consistent moisture supports tender leaves.','Replace when plants become old or bolt.']}
   };
   if(overrides[p.id]) Object.assign(base,overrides[p.id]);
-  base.intro=`${p.name} — ${base.tag.toLowerCase()}.`;
+  base.intro=`${psDisplayName(p)} — ${base.tag.toLowerCase()}.`;
   return base;
 }
 
@@ -233,18 +233,18 @@ function psResizePhoto(file, maxSize=1000, quality=.84){
 
 function renderCollection(){
   el('plantTotal').textContent=plants.length;
-  const card=p=>`<div class="collection-item" role="button" tabindex="0" data-profile="${p.id}" aria-label="Open ${p.name} profile">
+  const card=p=>{const displayName=psDisplayName(p),safeName=psEscapeHTML(displayName);return `<div class="collection-item" role="button" tabindex="0" data-profile="${p.id}" aria-label="Open ${safeName} profile">
     <span class="collection-photo-wrap">
-      ${psPlantPhoto(p.id)?`<img class="collection-photo" src="${psPlantPhoto(p.id)}" alt="${p.name} photo" loading="lazy">`:''}
-      <span class="collection-fallback" aria-hidden="true">${psPlantInitials(p.name)}</span>
+      ${psPlantPhoto(p.id)?`<img class="collection-photo" src="${psPlantPhoto(p.id)}" alt="${safeName} photo" loading="lazy">`:''}
+      <span class="collection-fallback" aria-hidden="true">${psEscapeHTML(psPlantInitials(displayName))}</span>
     </span>
-    <span class="collection-name">${p.name}</span>
-  </div>`;
+    <span class="collection-name">${safeName}</span>
+  </div>`};
   const section=(title,list)=>`<section class="collection-group">
     <div class="collection-group-title"><span>${title}</span><small>${list.length}</small></div>
     <div class="plant-collection">${list.map(card).join('')}</div>
   </section>`;
-  const byName=(a,b)=>a.name.localeCompare(b.name,'en',{sensitivity:'base'});
+  const byName=(a,b)=>psDisplayName(a).localeCompare(psDisplayName(b),'en',{sensitivity:'base'});
   const indoor=plants.filter(p=>p.place==='indoor').sort(byName);
   const outdoor=plants.filter(p=>p.place==='outdoor').sort(byName);
   el('plantCollection').innerHTML=section('Indoor plants',indoor)+section('Outdoor plants',outdoor);
@@ -324,14 +324,14 @@ function renderWateringCubes(){
   const placeRank={indoor:0,outdoor:1};
   const list=plants
     .filter(p=>filter==='all'||p.place===filter||(filter==='due'&&statusFor(p)==='due'))
-    .sort((a,b)=>(placeRank[a.place]??9)-(placeRank[b.place]??9)||a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+    .sort((a,b)=>(placeRank[a.place]??9)-(placeRank[b.place]??9)||psDisplayName(a).localeCompare(psDisplayName(b),'en',{sensitivity:'base'}));
   el('wateringCubes').innerHTML=list.map(p=>`<article class="water-cube ${wateringClass(p)} ${statusFor(p)}">
     <span class="cube-status">${shortDue(p)}</span>
     ${p.sun==='☀️'?'<img class="cube-direct-sun" src="assets/icons/direct-sun-pencil.png" alt="Direct sunlight">':p.sun==='☁️'?'<img class="cube-light-pencil cube-minimal-sun" src="assets/icons/minimal-sun-pencil.png" alt="Minimal sunlight">':'<img class="cube-light-pencil cube-indirect-sun" src="assets/icons/indirect-sun-pencil.png" alt="Indirect sunlight">'}
     ${wateringPhIcon(p)}
-    <strong class="cube-name">${p.name}</strong>
+    <strong class="cube-name">${psEscapeHTML(psDisplayName(p))}</strong>
     <span class="cube-maintenance">${(maintenanceIcons[p.id]||[]).map(icon=>`<span class="maintenance-icon">${icon}</span>`).join('')}</span>
-    <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${p.name} watered today"><span class="drop-icon" aria-hidden="true"></span></button>
+    <button class="cube-water" type="button" data-water="${p.id}" aria-label="Record ${psEscapeHTML(psDisplayName(p))} watered today"><span class="drop-icon" aria-hidden="true"></span></button>
   </article>`).join('');
   document.querySelectorAll('[data-water]').forEach(btn=>btn.addEventListener('click',()=>{
     const id=btn.dataset.water;
@@ -372,8 +372,8 @@ function renderFortnight(){
     const label=group[0].place==='indoor'?'All indoor plants':'All outdoor plants';
     if(due.length===group.length)return label;
     const excluded=group.filter(p=>!due.some(d=>d.id===p.id));
-    if(due.length>excluded.length)return `${label}<span class="forecast-except">, except ${excluded.map(p=>p.name).join(', ')}</span>`;
-    return due.map(p=>p.name).join(', ');
+    if(due.length>excluded.length)return `${label}<span class="forecast-except">, except ${excluded.map(p=>psEscapeHTML(psDisplayName(p))).join(', ')}</span>`;
+    return due.map(p=>psEscapeHTML(psDisplayName(p))).join(', ');
   }
 
   el('fortnightGrid').innerHTML=days.map((day,i)=>{
@@ -397,6 +397,13 @@ let currentProfile=null;
 // v76 — professional four-page plant profiles. Watering intervals/history remain untouched.
 const botanicalNames={
 'begonia':'Begonia spp.','birkin-green':"Philodendron ‘Birkin’",'birkin-white':"Philodendron ‘Birkin’",'gardenia-radicans':'Gardenia jasminoides','golden-pothos':'Epipremnum aureum','maidenhair':'Adiantum spp.','marble-queen':"Epipremnum aureum ‘Marble Queen’",'many':'Monstera deliciosa','konti':'Monstera deliciosa','moon-valley':"Pilea involucrata ‘Moon Valley’",'orchid-purple':'Phalaenopsis spp.','orchid-white':'Phalaenopsis spp.','peace-lily':'Spathiphyllum spp.','pink-lady':'Callisia repens','baby-snake':'Dracaena trifasciata','mama-snake':'Dracaena trifasciata','string-of-pearls':"Curio rowleyanus ‘Variegatus’",'zz-thick':'Zamioculcas zamiifolia','zz-thin':'Zamioculcas zamiifolia','bougainvillea':'Bougainvillea spp.','calamansi':'Citrus × microcarpa','chilli-firecracker':'Capsicum annuum','habanero':'Capsicum chinense','jalapeno':'Capsicum annuum','regular-lemon':'Citrus limon','dwarf-lemon':'Citrus limon','mint':'Mentha spp.','parsley':'Petroselinum crispum','rosemary':'Salvia rosmarinus','thai-peppers':'Capsicum annuum','chilli-timble':'Capsicum annuum'};
+
+// v109 — per-plant common/display-name overrides. The stable plant ID and care identity remain unchanged.
+const PS_COMMON_NAME_KEY='plantSecretary.plantNames.v1';
+function psGetCommonNames(){try{return JSON.parse(localStorage.getItem(PS_COMMON_NAME_KEY)||'{}')||{};}catch(e){return {};}}
+function psSaveCommonNames(names){localStorage.setItem(PS_COMMON_NAME_KEY,JSON.stringify(names));}
+function psDisplayName(p){const names=psGetCommonNames();return String(names[p.id]||p.name||'Plant').trim();}
+function psEscapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 
 // v106 — per-plant botanical-name overrides. These affect profile care classification only;
 // plant IDs, common names, watering intervals/history and navigation are unchanged.
@@ -554,14 +561,15 @@ function renderProfile(id,page=1){
  const photo=psSavedPlantPhoto(p.id);
  const watered=wateredStatusLabel(state.watered[p.id]);
  const botanical=psBotanicalName(p);
- const photoMarkup=`<button class="profile-photo-wrap profile-photo-trigger ${photo?'has-photo':''}" type="button" data-profile-photo-edit="${p.id}" aria-label="Edit ${p.name} photo and botanical name">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${p.name} photo">`:`<span class="profile-photo-fallback" aria-label="No saved plant photo">${psPlantInitials(p.name)}</span>`}</button>`;
+ const displayName=psDisplayName(p),safeName=psEscapeHTML(displayName),safeBotanical=psEscapeHTML(botanical);
+ const photoMarkup=`<button class="profile-photo-wrap profile-photo-trigger ${photo?'has-photo':''}" type="button" data-profile-photo-edit="${p.id}" aria-label="Edit ${safeName} profile">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${safeName} photo">`:`<span class="profile-photo-fallback" aria-label="No saved plant photo">${psEscapeHTML(psPlantInitials(displayName))}</span>`}</button>`;
  const identity=page===1
-  ? `<section class="profile-identity profile-identity-quick" aria-label="${p.name} identity"><div class="quick-identity-photo">${photoMarkup}</div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`
-  : `<section class="profile-identity" aria-label="${p.name} identity"><div class="profile-top-actions"><span class="profile-eyebrow">PLANT PROFILE</span></div><h2 id="profileName">${p.name}</h2><p class="botanical-name"><em>${botanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span>${photoMarkup}</section>`;
+  ? `<section class="profile-identity profile-identity-quick" aria-label="${safeName} identity"><div class="quick-identity-photo">${photoMarkup}</div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${safeName}</h2><p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`
+  : `<section class="profile-identity" aria-label="${safeName} identity"><div class="profile-top-actions"><span class="profile-eyebrow">PLANT PROFILE</span></div><h2 id="profileName">${safeName}</h2><p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span>${photoMarkup}</section>`;
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  let body='';
  if(page===1) body=`<article class="profile-poster"><div class="quick-care-row"><div><b>${sunlight[p.id]||p.sun||'🌤️'}</b><span>${g.position.split('.')[0]}</span></div><div><b>💧</b><span>${g.moisture}</span></div><div><b>pH</b><span>${phFor(p,g)}</span></div></div><section class="poster-grid poster-grid-rows"><div class="quick-card quick-card-position">${careCard('☀️','POSITION',g.position)}</div><div class="quick-card quick-card-watering">${careCard('💧','WATERING',g.water)}</div><div class="quick-card quick-card-feeding">${careCard('🌿','FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}</div><div class="quick-card quick-card-soil">${careCard('🪴','SOIL',g.soil)}</div></section><article class="grow-tip"><b>💡 GROW TIP</b><p>${g.grow}</p></article></article>`;
- if(page===2) body=`<section class="detail-stack"><h2>${p.name} — Care Guide</h2>${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL + pH',`${g.soil}<br><strong>${phFor(p,g)}</strong>`)}${careCard('💧','WATERING',`${g.water}<br><small>Watering Check interval remains ${p.base} days; always confirm soil moisture first.</small>`)}${careCard('🌿','FERTILISING / FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}${careCard('💡','GROWING TIPS',g.grow)}${careCard('🪴','REPOTTING',g.repot)}${careCard('🌱','REPLANTING / PROPAGATION',g.prop)}<article class="profile-panel"><span class="care-label">✂️ MAINTENANCE</span><ul>${g.maint.map(x=>`<li>${x}</li>`).join('')}</ul></article><article class="evidence-note"><b>Evidence standard</b><p>Care is structured around Gardening Australia, Australian botanic-garden guidance, Altona/Melbourne seasonal conditions, and product-label directions. Product availability is a practical shopping reference; always follow the current pack/registered label.</p></article></section>`;
+ if(page===2) body=`<section class="detail-stack"><h2>${safeName} — Care Guide</h2>${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL + pH',`${g.soil}<br><strong>${phFor(p,g)}</strong>`)}${careCard('💧','WATERING',`${g.water}<br><small>Watering Check interval remains ${p.base} days; always confirm soil moisture first.</small>`)}${careCard('🌿','FERTILISING / FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}${careCard('💡','GROWING TIPS',g.grow)}${careCard('🪴','REPOTTING',g.repot)}${careCard('🌱','REPLANTING / PROPAGATION',g.prop)}<article class="profile-panel"><span class="care-label">✂️ MAINTENANCE</span><ul>${g.maint.map(x=>`<li>${x}</li>`).join('')}</ul></article><article class="evidence-note"><b>Evidence standard</b><p>Care is structured around Gardening Australia, Australian botanic-garden guidance, Altona/Melbourne seasonal conditions, and product-label directions. Product availability is a practical shopping reference; always follow the current pack/registered label.</p></article></section>`;
  if(page===3) body=`<section class="detail-stack"><h2>Common Pests — Symptoms & Solutions</h2><p class="section-intro">Only pests relevant to this plant type are shown. Confirm the pest before treating.</p>${g.pests.map(k=>{const x=pestData[k];return `<article class="pest-card"><div class="pest-thumb" role="img" aria-label="${x[1]} reference">${x[0]}</div><div><h3>${x[1]}</h3><p><b>Symptoms:</b> ${x[2]}</p><p><b>Inspect:</b> ${x[3]}</p><p><b>Care / treatment:</b> ${x[4]}</p></div></article>`}).join('')}<article class="evidence-note"><b>Product safety</b><p>No pesticide dilution or schedule is invented in Plant Secretary. Use only products whose current APVMA-approved label covers the pest and use situation, and follow that label.</p></article></section>`;
  if(page===4) body=`<section class="detail-stack"><h2>Common Problems & Troubleshooting</h2><div class="trouble-list">${g.problems.map(k=>{const x=problemData[k];return `<article class="trouble-card"><h3>${x[0]}</h3><p><b>Likely causes</b><br>${x[1]}</p><p><b>What to do</b><br>${x[2]}</p></article>`}).join('')}</div><article class="evidence-note"><b>Diagnostic rule</b><p>Similar symptoms can have different causes. Check soil moisture, roots, light and pests before treating or feeding.</p></article></section>`;
  el('profileContent').innerHTML=`${identity}${tabs}<div class="profile-page">${body}</div><button id="profileWaterBtn" class="profile-water-btn" type="button">💧 ${watered}</button>`;
@@ -573,6 +581,7 @@ function renderProfile(id,page=1){
 let psEditingPhotoPlantId=null;
 let psCropSource='';
 let psCropImage=null;
+let psPhotoDirty=false;
 
 function psSetCropSource(src){
   psCropSource=src||'';
@@ -610,15 +619,17 @@ function psOpenProfilePhotoMenu(id){
   const menu=el('profilePhotoMenu');
   const p=plants.find(x=>x.id===id);
   if(!menu||!p)return;
+  el('profileCommonNameInput').value=psDisplayName(p);
   el('profileBotanicalInput').value=psBotanicalName(p);
   const saved=psSavedPlantPhoto(id);
   el('profileDeletePhotoBtn').disabled=!saved;
   psSetCropSource(saved);
+  psPhotoDirty=false;
   menu.hidden=false;
 }
 function psCloseProfilePhotoMenu(){
   const menu=el('profilePhotoMenu');if(menu)menu.hidden=true;
-  psEditingPhotoPlantId=null;psCropSource='';psCropImage=null;
+  psEditingPhotoPlantId=null;psCropSource='';psCropImage=null;psPhotoDirty=false;
 }
 function psReadPhotoFile(file){
  return new Promise((resolve,reject)=>{const r=new FileReader();r.onerror=()=>reject(new Error('Could not read photo.'));r.onload=()=>resolve(r.result);r.readAsDataURL(file);});
@@ -636,7 +647,7 @@ function psRenderCroppedPhoto(src,zoom,xPct,yPct,size=900,quality=.86){
   };img.src=src;
  });
 }
-function psRefreshPlantPhotoViews(id){renderCollection();if(currentProfile===id)renderProfile(id);setTimeout(psAddDeleteButtons,0);}
+function psRefreshPlantPhotoViews(id){renderAll();if(currentProfile===id)renderProfile(id);setTimeout(psAddDeleteButtons,0);}
 function openProfile(id){
   const p=plants.find(x=>x.id===id);
   const screen=el('profileScreen');
@@ -650,7 +661,7 @@ function openProfile(id){
     renderProfile(id);
   }catch(err){
     console.error('Plant profile render failed',id,err);
-    content.innerHTML=`<section class="detail-stack"><h2 id="profileName">${p.name}</h2><article class="profile-panel"><b>Profile temporarily unavailable.</b><p>Please close and reopen this profile. Your watering data has not been changed.</p></article></section>`;
+    content.innerHTML=`<section class="detail-stack"><h2 id="profileName">${psEscapeHTML(psDisplayName(p))}</h2><article class="profile-panel"><b>Profile temporarily unavailable.</b><p>Please close and reopen this profile. Your watering data has not been changed.</p></article></section>`;
   }
 }
 function closeProfile(){el('profileScreen').classList.remove('open');el('profileScreen').setAttribute('aria-hidden','true');document.body.classList.remove('profile-open');currentProfile=null;}
@@ -664,21 +675,28 @@ el('profileUploadPhotoBtn').addEventListener('click',()=>{
 });
 el('profilePhotoInput').addEventListener('change',async(e)=>{
   const file=e.target.files&&e.target.files[0];if(!file||!psEditingPhotoPlantId)return;
-  try{psSetCropSource(await psReadPhotoFile(file));el('profileDeletePhotoBtn').disabled=false;}catch(err){alert('That photo could not be opened. Please try another image.');}
+  try{psSetCropSource(await psReadPhotoFile(file));psPhotoDirty=true;el('profileDeletePhotoBtn').disabled=false;}catch(err){alert('That photo could not be opened. Please try another image.');}
 });
-['profileCropZoom','profileCropX','profileCropY'].forEach(id=>el(id).addEventListener('input',psUpdateCropPreview));
+['profileCropZoom','profileCropX','profileCropY'].forEach(id=>el(id).addEventListener('input',()=>{psPhotoDirty=true;psUpdateCropPreview();}));
 el('profileDeletePhotoBtn').addEventListener('click',()=>{
-  if(!psEditingPhotoPlantId)return;psSetCropSource('');el('profileDeletePhotoBtn').disabled=true;
+  if(!psEditingPhotoPlantId)return;psSetCropSource('');psPhotoDirty=true;el('profileDeletePhotoBtn').disabled=true;
 });
 el('profileSavePhotoBtn').addEventListener('click',async()=>{
   const id=psEditingPhotoPlantId;if(!id)return;const p=plants.find(x=>x.id===id);if(!p)return;
+  const commonName=el('profileCommonNameInput').value.trim();if(!commonName){alert('Plant name cannot be blank.');return;}
   const botanical=el('profileBotanicalInput').value.trim();if(!botanical){alert('Botanical name cannot be blank.');return;}
+  const commonNames=psGetCommonNames();
+  if(commonName===String(p.name||'').trim()) delete commonNames[id]; else commonNames[id]=commonName;
+  psSaveCommonNames(commonNames);
   const names=psGetBotanicalNames();names[id]=botanical;psSaveBotanicalNames(names);
   const photos=psGetPlantPhotos();
   try{
-    if(psCropSource){photos[id]=await psRenderCroppedPhoto(psCropSource,Number(el('profileCropZoom').value),Number(el('profileCropX').value),Number(el('profileCropY').value));}
-    else{photos[id]='__NONE__';}
-    psSavePlantPhotos(photos);psCloseProfilePhotoMenu();psRefreshPlantPhotoViews(id);
+    if(psPhotoDirty){
+      if(psCropSource){photos[id]=await psRenderCroppedPhoto(psCropSource,Number(el('profileCropZoom').value),Number(el('profileCropX').value),Number(el('profileCropY').value));}
+      else{photos[id]='__NONE__';}
+      psSavePlantPhotos(photos);
+    }
+    psCloseProfilePhotoMenu();psRefreshPlantPhotoViews(id);
   }catch(err){alert('That photo could not be saved. Please try again.');}
 });
 el('profileCancelPhotoBtn').addEventListener('click',psCloseProfilePhotoMenu);
@@ -705,7 +723,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=102').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=109').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management
@@ -780,7 +798,7 @@ function psAddDeleteButtons(){
 function psDeletePlant(id){
   const plant = plants.find(p => p.id === id);
   if (!plant) return;
-  const ok = window.confirm(`Delete "${plant.name}" from your collection?`);
+  const ok = window.confirm(`Delete "${psDisplayName(plant)}" from your collection?`);
   if (!ok) return;
 
   const custom = psGetCustomPlants();
