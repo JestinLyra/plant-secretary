@@ -233,9 +233,14 @@ function psResizePhoto(file, maxSize=1000, quality=.84){
 
 function renderCollection(){
   el('plantTotal').textContent=plants.length;
-  const card=p=>{const displayName=psDisplayName(p),safeName=psEscapeHTML(displayName);return `<div class="collection-item" role="button" tabindex="0" data-profile="${p.id}" aria-label="Open ${safeName} profile">
+  const card=p=>{
+    const displayName=psDisplayName(p),safeName=psEscapeHTML(displayName);
+    const savedPhoto=psSavedPlantPhoto(p.id);
+    const photo=savedPhoto || psPlantPhoto(p.id);
+    const userPhotoClass=savedPhoto?' has-user-photo':'';
+    return `<div class="collection-item${userPhotoClass}" role="button" tabindex="0" data-profile="${p.id}" aria-label="Open ${safeName} profile">
     <span class="collection-photo-wrap">
-      ${psPlantPhoto(p.id)?`<img class="collection-photo" src="${psPlantPhoto(p.id)}" alt="${safeName} photo" loading="lazy">`:''}
+      ${photo?`<img class="collection-photo" src="${photo}" alt="${safeName} photo" loading="lazy">`:''}
       <span class="collection-fallback" aria-hidden="true">${psEscapeHTML(psPlantInitials(displayName))}</span>
     </span>
     <span class="collection-name">${safeName}</span>
@@ -704,8 +709,9 @@ function psActiveProfilePage(){
   const page=Number(active&&active.dataset.profilePage);
   return page>=1&&page<=4?page:1;
 }
+let psProfileSwipeAnimating=false;
 function psNavigateAdjacentProfile(direction){
-  if(!currentProfile || (direction!==1&&direction!==-1)) return false;
+  if(psProfileSwipeAnimating || !currentProfile || (direction!==1&&direction!==-1)) return false;
   const sequence=psProfileSequence();
   const index=sequence.findIndex(p=>p.id===currentProfile);
   if(index<0) return false;
@@ -713,10 +719,36 @@ function psNavigateAdjacentProfile(direction){
   if(nextIndex<0 || nextIndex>=sequence.length) return false;
   const next=sequence[nextIndex];
   const page=psActiveProfilePage();
-  currentProfile=next.id;
-  renderProfile(next.id,page);
+  const content=el('profileContent');
   const screen=el('profileScreen');
-  if(screen) screen.scrollTo(0,0);
+  const renderNext=()=>{
+    currentProfile=next.id;
+    renderProfile(next.id,page);
+    if(screen) screen.scrollTo({top:0,left:0,behavior:'auto'});
+  };
+  if(!content || typeof content.animate!=='function'){
+    renderNext();
+    return true;
+  }
+  psProfileSwipeAnimating=true;
+  const outX=direction>0?'-16%':'16%';
+  const inX=direction>0?'16%':'-16%';
+  const outgoing=content.animate(
+    [{transform:'translate3d(0,0,0)',opacity:1},{transform:`translate3d(${outX},0,0)`,opacity:.45}],
+    {duration:120,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}
+  );
+  outgoing.finished.catch(()=>{}).then(()=>{
+    renderNext();
+    if(outgoing.cancel) outgoing.cancel();
+    const incoming=content.animate(
+      [{transform:`translate3d(${inX},0,0)`,opacity:.45},{transform:'translate3d(0,0,0)',opacity:1}],
+      {duration:190,easing:'cubic-bezier(0,0,.2,1)',fill:'both'}
+    );
+    incoming.finished.catch(()=>{}).then(()=>{
+      if(incoming.cancel) incoming.cancel();
+      psProfileSwipeAnimating=false;
+    });
+  });
   return true;
 }
 (function psEnableProfileSwipe(){
@@ -801,7 +833,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=113').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=115').catch(()=>{}));}
 
 
 // v57 — dynamic plant collection management

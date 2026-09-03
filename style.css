@@ -2121,3 +2121,25 @@ body.profile-open{
   .quick-guide-v110 .quick-info-grid.quick-info-columns,
   .quick-guide-v110 .quick-info-columns .quick-info-column{gap:7px;}
 }
+
+
+/* v115 — Home uploaded-photo visibility + smoother profile-to-profile swipe transition. */
+/* v52 intentionally hides bundled Home photos. A user-saved profile photo must override that rule. */
+#homeView .collection-item.has-user-photo .collection-photo{
+  display:block !important;
+  transform:none !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+}
+#homeView .collection-item.has-user-photo .collection-photo-wrap.image-ok .collection-fallback{
+  display:none !important;
+}
+#homeView .collection-item.has-user-photo .collection-photo-wrap.image-failed .collection-fallback{
+  display:grid !important;
+}
+.profile-content{
+  will-change:transform,opacity;
+}
+@media (prefers-reduced-motion: reduce){
+  .profile-content{will-change:auto;}
+}
