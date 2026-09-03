@@ -584,12 +584,12 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 - Bumped app/CSS/service-worker cache references to v110.
 
 
-## v112
+## v113
 - Moved the existing Quick / Care / Pests / Problems profile tab bar above the plant identity/photo block on all four profile pages.
 - Tab labels, styling, navigation behaviour, photo/name editing, and all profile content remain unchanged.
-- Bumped app/CSS/service-worker cache references to v112.
+- Bumped app/CSS/service-worker cache references to v113.
 
-## v112
+## v113
 - Quick Guide only: swapped Feeding and pH positions without changing their stored care content or SVG illustration types.
 - Plant Profile only: standardized the editable profile photo circle to exactly 210 × 210 px on Quick, Care, Pests and Problems, including narrow screens.
 - No Home collection photo sizing or plant data/storage logic changed.

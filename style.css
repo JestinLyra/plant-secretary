@@ -2060,3 +2060,64 @@ body.profile-open{
     gap:8px !important;
   }
 }
+
+
+/* v113 — Plant Profile-only layout corrections: anchor profile tabs with header; place pH beneath Feeding in the right Quick column. */
+.profile-sticky-stack{
+  position:sticky;
+  top:0;
+  z-index:12;
+  width:100%;
+  background:rgba(251,252,249,.97);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.profile-sticky-stack .profile-topbar{
+  position:relative !important;
+  top:auto !important;
+  z-index:auto !important;
+  border-bottom:0 !important;
+}
+.profile-tabs-mount{
+  width:100%;
+  max-width:680px;
+  margin:0 auto;
+  padding:0 14px;
+  box-sizing:border-box;
+  background:rgba(251,250,245,.97);
+  border-bottom:1px solid var(--border);
+}
+.profile-tabs-mount .profile-tabs{
+  position:relative !important;
+  top:auto !important;
+  z-index:auto !important;
+  margin:0 !important;
+  padding:4px 0 10px !important;
+  background:transparent !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+.quick-guide-v110 .quick-info-grid.quick-info-columns{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  align-items:start;
+}
+.quick-guide-v110 .quick-info-columns .quick-info-column{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.quick-guide-v110 .quick-info-columns .quick-info-card{
+  width:100%;
+  margin:0;
+}
+.quick-guide-v110 .quick-info-columns .quick-ph-card{
+  background:#eef2d8;
+}
+@media(max-width:360px){
+  .profile-tabs-mount{padding-left:10px;padding-right:10px;}
+  .quick-guide-v110 .quick-info-grid.quick-info-columns,
+  .quick-guide-v110 .quick-info-columns .quick-info-column{gap:7px;}
+}
