@@ -2025,3 +2025,38 @@ body.profile-open{
   .quick-guide-v110 .quick-full-body li{font-size:11.75px;}
   .quick-guide-v110 .quick-full-body ul{grid-template-columns:1fr;}
 }
+
+
+/* v112 — requested Plant Profile-only changes: Feeding/pH position swap and uniform 210px profile photo circles. */
+.profile-identity .profile-photo-wrap,
+.profile-identity.profile-identity-quick .profile-photo-wrap{
+  width:210px !important;
+  height:210px !important;
+  min-width:210px !important;
+  min-height:210px !important;
+  max-width:210px !important;
+  max-height:210px !important;
+  aspect-ratio:1/1 !important;
+}
+.profile-identity.profile-identity-quick{
+  grid-template-columns:210px minmax(0,1fr) !important;
+}
+.quick-guide-v110 .quick-info-feeding{background:#f3f0cf;}
+.quick-guide-v110 .quick-info-feeding p{margin:0 0 5px;}
+.quick-guide-v110 .quick-info-feeding p:last-child{margin-bottom:0;}
+.quick-guide-v110 .quick-ph-card{background:#eef2d8;}
+@media(max-width:380px){
+  .profile-identity .profile-photo-wrap,
+  .profile-identity.profile-identity-quick .profile-photo-wrap{
+    width:210px !important;
+    height:210px !important;
+    min-width:210px !important;
+    min-height:210px !important;
+    max-width:210px !important;
+    max-height:210px !important;
+  }
+  .profile-identity.profile-identity-quick{
+    grid-template-columns:210px minmax(0,1fr) !important;
+    gap:8px !important;
+  }
+}
