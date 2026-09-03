@@ -1,3 +1,13 @@
+# Plant Secretary v118
+
+## v118 — Backup Data
+- Added fourth bottom-navigation destination: Backup.
+- Save as New Backup exports all `plantSecretary.*` persistent local data to a validated JSON backup.
+- Replace Existing Backup uses direct file overwrite where the browser grants file-system write access; iPhone/Safari uses an explicit safe fallback because websites cannot directly overwrite an arbitrary selected Files document.
+- Import validates the Plant Secretary backup structure before confirmation and restore. Invalid files do not change current data.
+- Import clears/replaces Plant Secretary localStorage keys only, then reloads the app.
+- Added a coherent botanical file/download navigation icon.
+
 # Plant Secretary
 
 A free, mobile-first Progressive Web App for iPhone, designed for plant watering checks in Altona, Victoria.

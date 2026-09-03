@@ -881,7 +881,215 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=117').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=118').catch(()=>{}));}
+
+
+// v118 — complete Plant Secretary backup / restore
+const PS_BACKUP_FORMAT = 'plant-secretary-backup';
+const PS_BACKUP_FORMAT_VERSION = 1;
+
+function psBackupStatus(message, isError=false){
+  const box=document.getElementById('backupStatus');
+  if(!box)return;
+  box.textContent=message||'';
+  box.classList.toggle('is-error',!!isError);
+}
+
+function psBackupTimestamp(date=new Date()){
+  const pad=n=>String(n).padStart(2,'0');
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}-${pad(date.getHours())}${pad(date.getMinutes())}`;
+}
+
+function psBackupFileName(){ return `Plant-Secretary-Backup-${psBackupTimestamp()}.json`; }
+
+function psCollectBackupData(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key && key.startsWith('plantSecretary.')) data[key]=localStorage.getItem(key);
+  }
+  return {
+    format:PS_BACKUP_FORMAT,
+    formatVersion:PS_BACKUP_FORMAT_VERSION,
+    app:'Plant Secretary',
+    createdAt:new Date().toISOString(),
+    data
+  };
+}
+
+function psBackupJson(){ return JSON.stringify(psCollectBackupData(),null,2); }
+function psBackupFile(name=psBackupFileName()){
+  return new File([psBackupJson()],name,{type:'application/json'});
+}
+
+async function psWriteFileHandle(handle, file){
+  const writable=await handle.createWritable();
+  try{ await writable.write(file); await writable.close(); }
+  catch(err){ try{await writable.abort();}catch(e){} throw err; }
+}
+
+function psDownloadFile(file){
+  const url=URL.createObjectURL(file);
+  const a=document.createElement('a');
+  a.href=url;a.download=file.name;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+async function psShareOrDownload(file){
+  if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({files:[file],title:'Plant Secretary backup'});
+      return 'shared';
+    }catch(err){
+      if(err && err.name==='AbortError') return 'cancelled';
+    }
+  }
+  psDownloadFile(file);
+  return 'downloaded';
+}
+
+async function psSaveNewBackup(){
+  psBackupStatus('');
+  const file=psBackupFile();
+  try{
+    if(window.showSaveFilePicker){
+      const handle=await window.showSaveFilePicker({
+        suggestedName:file.name,
+        types:[{description:'Plant Secretary backup',accept:{'application/json':['.json']}}]
+      });
+      await psWriteFileHandle(handle,file);
+      psBackupStatus(`Backup saved as ${file.name}.`);
+      return;
+    }
+    const result=await psShareOrDownload(file);
+    if(result==='shared') psBackupStatus('Backup created. Use the share sheet to save it to Files or another location.');
+    else if(result==='downloaded') psBackupStatus(`Backup created as ${file.name}. Check your browser Downloads/Files.`);
+  }catch(err){
+    if(err && err.name==='AbortError') return;
+    console.error('Backup save failed',err);
+    psBackupStatus('The backup could not be saved. Your app data was not changed.',true);
+  }
+}
+
+async function psReplaceExistingBackup(){
+  psBackupStatus('');
+  try{
+    if(window.showOpenFilePicker){
+      const [handle]=await window.showOpenFilePicker({
+        multiple:false,
+        types:[{description:'Plant Secretary backup',accept:{'application/json':['.json']}}]
+      });
+      if(!handle)return;
+      const existing=await handle.getFile();
+      const replacement=psBackupFile(existing.name || psBackupFileName());
+      await psWriteFileHandle(handle,replacement);
+      psBackupStatus(`Existing backup replaced: ${replacement.name}.`);
+      return;
+    }
+    document.getElementById('backupReplaceInput')?.click();
+  }catch(err){
+    if(err && err.name==='AbortError') return;
+    console.error('Backup replace failed',err);
+    psBackupStatus('The existing backup could not be replaced. Your app data was not changed.',true);
+  }
+}
+
+async function psReplaceFallbackFromFile(file){
+  if(!file)return;
+  // Browsers such as iPhone Safari do not expose write access to an arbitrarily selected file.
+  // Preserve the selected filename and hand the fresh file to the browser/share sheet so the user can replace it safely in Files.
+  const replacement=psBackupFile(file.name || psBackupFileName());
+  const result=await psShareOrDownload(replacement);
+  if(result==='shared') psBackupStatus('A current backup was prepared with the same filename. On iPhone, choose Save to Files and replace the older file when iOS prompts. Safari does not allow this website to overwrite the selected file directly.');
+  else if(result==='downloaded') psBackupStatus('A current backup was downloaded with the same filename. This browser does not allow websites to overwrite a selected file directly; replace the older copy in Files/Downloads manually.');
+}
+
+function psValidateBackupObject(obj){
+  if(!obj || typeof obj!=='object') return 'This is not a valid backup file.';
+  if(obj.format!==PS_BACKUP_FORMAT || obj.app!=='Plant Secretary') return 'This file is not a Plant Secretary backup.';
+  if(obj.formatVersion!==PS_BACKUP_FORMAT_VERSION) return 'This backup format is not supported by this version of Plant Secretary.';
+  if(!obj.data || typeof obj.data!=='object' || Array.isArray(obj.data)) return 'The backup does not contain valid Plant Secretary data.';
+  const keys=Object.keys(obj.data);
+  if(!keys.length) return 'The backup contains no Plant Secretary data.';
+  if(keys.some(k=>!k.startsWith('plantSecretary.'))) return 'The backup contains unexpected data and was not imported.';
+  if(Object.values(obj.data).some(v=>typeof v!=='string')) return 'The backup contains malformed saved values and was not imported.';
+  if(!Object.prototype.hasOwnProperty.call(obj.data,'plantSecretary.v2')) return 'The backup is missing the main Plant Secretary state and was not imported.';
+  try{ JSON.parse(obj.data['plantSecretary.v2']); }catch(e){ return 'The backup main state is damaged and was not imported.'; }
+  return '';
+}
+
+async function psReadBackupFile(file){
+  if(!file)throw new Error('No file selected');
+  if(file.size>40*1024*1024)throw new Error('This backup is unusually large and was not imported.');
+  let obj;
+  try{ obj=JSON.parse(await file.text()); }
+  catch(e){ throw new Error('The selected file is not valid JSON.'); }
+  const problem=psValidateBackupObject(obj);
+  if(problem)throw new Error(problem);
+  return obj;
+}
+
+function psRestoreBackupData(obj){
+  // Only Plant Secretary keys are touched. Other website/app localStorage is left alone.
+  const existing=[];
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key && key.startsWith('plantSecretary.')) existing.push(key);
+  }
+  existing.forEach(key=>localStorage.removeItem(key));
+  Object.entries(obj.data).forEach(([key,value])=>localStorage.setItem(key,value));
+}
+
+async function psImportBackupFile(file){
+  psBackupStatus('Checking backup…');
+  try{
+    const obj=await psReadBackupFile(file);
+    const when=obj.createdAt ? new Date(obj.createdAt).toLocaleString('en-AU') : 'unknown date';
+    const ok=window.confirm(`Restore this Plant Secretary backup?\n\nBackup created: ${when}\n\nThis will replace the Plant Secretary data currently saved on this device. Other website data will not be changed.`);
+    if(!ok){ psBackupStatus('Import cancelled. Current Plant Secretary data was not changed.'); return; }
+    psRestoreBackupData(obj);
+    psBackupStatus('Backup restored. Reloading Plant Secretary…');
+    setTimeout(()=>window.location.reload(),180);
+  }catch(err){
+    console.error('Backup import failed',err);
+    psBackupStatus(err && err.message ? err.message : 'The backup could not be imported. Current data was not changed.',true);
+  }
+}
+
+function psSetupBackupTools(){
+  const saveBtn=document.getElementById('backupSaveNewBtn');
+  const replaceBtn=document.getElementById('backupReplaceBtn');
+  const importBtn=document.getElementById('backupImportBtn');
+  const importInput=document.getElementById('backupImportInput');
+  const replaceInput=document.getElementById('backupReplaceInput');
+  const replaceNote=document.getElementById('backupReplaceNote');
+  if(!saveBtn || !replaceBtn || !importBtn || !importInput || !replaceInput)return;
+
+  if(replaceNote && !window.showOpenFilePicker){
+    replaceNote.textContent='Choose an existing backup. On iPhone/Safari, Plant Secretary will prepare a current file with the same name so you can replace the old copy in Files.';
+  }
+
+  saveBtn.addEventListener('click',psSaveNewBackup);
+  replaceBtn.addEventListener('click',psReplaceExistingBackup);
+  importBtn.addEventListener('click',()=>importInput.click());
+  importInput.addEventListener('change',async()=>{
+    const file=importInput.files&&importInput.files[0];
+    importInput.value='';
+    if(file)await psImportBackupFile(file);
+  });
+  replaceInput.addEventListener('change',async()=>{
+    const file=replaceInput.files&&replaceInput.files[0];
+    replaceInput.value='';
+    if(file){
+      try{ await psReplaceFallbackFromFile(file); }
+      catch(err){ psBackupStatus('A replacement backup could not be created. Your app data was not changed.',true); }
+    }
+  });
+}
+
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',psSetupBackupTools,{once:true});
+else psSetupBackupTools();
 
 
 // v57 — dynamic plant collection management

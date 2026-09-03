@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
   <link rel="manifest" href="manifest.json?v=53" />
   <link rel="apple-touch-icon" href="icon.svg?v=53" />
-  <link rel="stylesheet" href="style.css?v=117" />
+  <link rel="stylesheet" href="style.css?v=118" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -64,6 +64,47 @@
       <p class="fortnight-note">Prediction assumes the soil is not damp when each check is due. If the soil is still damp, delay watering and recheck.</p>
       <div id="fortnightGrid" class="fortnight-grid" aria-live="polite"></div>
     </section>
+
+    <section id="backupView" class="app-view backup-view" aria-labelledby="backupTitle" hidden>
+      <div class="backup-heading">
+        <span class="eyebrow">Protect your Plant Secretary data</span>
+        <h2 id="backupTitle">Backup data</h2>
+        <p>Save a copy of your watering history, plant edits, custom plants and uploaded photos, or restore them from a Plant Secretary backup.</p>
+      </div>
+
+      <div class="backup-action-list">
+        <button id="backupSaveNewBtn" class="backup-action-card" type="button">
+          <span class="backup-action-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="img"><path d="M14 7.5h14l7 7V39H14z"/><path d="M28 7.5V15h7"/><path d="M24 20v12"/><path d="m19.5 27.5 4.5 4.5 4.5-4.5"/></svg>
+          </span>
+          <span><strong>Save as New Backup</strong><small>Create a new Plant Secretary backup file.</small></span>
+          <span class="backup-action-arrow" aria-hidden="true">›</span>
+        </button>
+
+        <button id="backupReplaceBtn" class="backup-action-card" type="button">
+          <span class="backup-action-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="img"><path d="M14 7.5h14l7 7V39H14z"/><path d="M28 7.5V15h7"/><path d="M18.5 27a7 7 0 0 1 11.8-5"/><path d="m30.3 17.5.2 5-5-.1"/><path d="M29.5 29a7 7 0 0 1-11.8 5"/><path d="m17.7 38.5-.2-5 5 .1"/></svg>
+          </span>
+          <span><strong>Replace Existing Backup</strong><small id="backupReplaceNote">Choose an existing backup and update it with your current data.</small></span>
+          <span class="backup-action-arrow" aria-hidden="true">›</span>
+        </button>
+
+        <button id="backupImportBtn" class="backup-action-card" type="button">
+          <span class="backup-action-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="img"><path d="M14 7.5h14l7 7V39H14z"/><path d="M28 7.5V15h7"/><path d="M24 32V20"/><path d="m19.5 24.5 4.5-4.5 4.5 4.5"/></svg>
+          </span>
+          <span><strong>Import Backup File</strong><small>Validate and restore a Plant Secretary backup.</small></span>
+          <span class="backup-action-arrow" aria-hidden="true">›</span>
+        </button>
+      </div>
+
+      <div id="backupStatus" class="backup-status" role="status" aria-live="polite"></div>
+      <div class="backup-info-card">
+        <strong>Included in backups</strong>
+        <p>Plant Secretary saves all app data stored on this device, including watering records, custom and deleted plants, uploaded photos, edited display names, edited botanical names and related persistent settings.</p>
+        <p class="backup-browser-note">Import replaces the current Plant Secretary data only after the selected file passes validation and you confirm the restore.</p>
+      </div>
+    </section>
   </main>
 
   <nav class="bottom-nav" aria-label="Primary navigation">
@@ -74,7 +115,11 @@
       </button>
 
     <button data-view="fortnightView" type="button"><span class="nav-icon"><img class="nav-calendar-approved" src="assets/icons/calendar-droplet-approved.png" alt="" aria-hidden="true"></span><span>Fortnight</span></button>
+    <button data-view="backupView" type="button" aria-label="Backup Data"><span class="nav-icon"><img class="nav-backup-approved" src="assets/icons/backup-data-approved.svg" alt="" aria-hidden="true"></span><span>Backup</span></button>
   </nav>
+
+  <input id="backupImportInput" type="file" accept="application/json,.json" hidden>
+  <input id="backupReplaceInput" type="file" accept="application/json,.json" hidden>
 
   <section id="profileScreen" class="profile-screen" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="profileName">
     <div class="profile-sticky-stack">
@@ -88,7 +133,7 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=117" defer></script>
+  <script src="app.js?v=118" defer></script>
 
 <div id="addPlantModal" class="plant-modal" hidden>
   <div class="plant-modal-backdrop" data-close-add-modal></div>
