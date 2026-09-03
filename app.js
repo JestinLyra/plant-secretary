@@ -554,6 +554,29 @@ function careCard(icon,label,content){
   const safeContent=(content===undefined || content===null || content==='') ? '—' : content;
   return `<article class="care-mini"><div class="care-icon" aria-hidden="true">${icon}</div><div><span class="care-label">${label}</span><p>${safeContent}</p></div></article>`;
 }
+function quickGuideIcon(type){
+  const common='viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"';
+  const stroke='stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"';
+  const icons={
+    light:`<svg ${common} class="quick-illustration" ${stroke}><circle cx="24" cy="24" r="8"/><path d="M24 5v6M24 37v6M5 24h6M37 24h6M10.6 10.6l4.2 4.2M33.2 33.2l4.2 4.2M37.4 10.6l-4.2 4.2M14.8 33.2l-4.2 4.2"/></svg>`,
+    watering:`<svg ${common} class="quick-illustration" ${stroke}><path d="M24 5C18 14 12 21 12 29a12 12 0 0 0 24 0c0-8-6-15-12-24Z"/><path d="M18 30c1 4 3.7 6 7.5 6"/></svg>`,
+    soil:`<svg ${common} class="quick-illustration" ${stroke}><path d="M24 41V22M24 28c-5-1-8-4-9-9 5 0 8 2 9 6M24 31c5-1 8-4 9-9-5 0-8 2-9 6"/><path d="M8 41h32M12 38c3-5 6-7 12-7s9 2 12 7"/><path d="M19 41c-1-4-3-6-6-8M29 41c1-4 3-6 6-8"/></svg>`,
+    ph:`<svg ${common} class="quick-illustration" ${stroke}><rect x="10" y="7" width="16" height="29" rx="4"/><path d="M14 14h8M14 20h8M14 26h5"/><path d="M18 36v5M13 41h10"/><path d="M33 10v22a5 5 0 0 0 10 0V10"/><path d="M33 28h10"/></svg>`,
+    feeding:`<svg ${common} class="quick-illustration" ${stroke}><path d="M17 12h14v6l3 4v19H14V22l3-4v-6Z"/><path d="M19 7h10v5H19zM18 27h12M24 23v8M20 35h8"/></svg>`,
+    maintenance:`<svg ${common} class="quick-illustration" ${stroke}><circle cx="14" cy="33" r="6"/><circle cx="34" cy="33" r="6"/><path d="M18 29 34 8M30 29 14 8M24 21l7-9M24 21l-7-9"/></svg>`,
+    tip:`<svg ${common} class="quick-illustration" ${stroke}><path d="M24 42V24"/><path d="M24 29c-6-1-10-5-11-11 6 0 10 3 11 8M24 25c6-1 10-5 11-11-6 0-10 3-11 8"/><path d="M15 42h18"/></svg>`
+  };
+  return icons[type]||'';
+}
+function quickInfoCard(type,label,content,extraClass=''){
+  const safeContent=(content===undefined || content===null || content==='') ? '—' : content;
+  return `<article class="quick-info-card quick-info-${type} ${extraClass}"><div class="quick-info-icon">${quickGuideIcon(type)}</div><div class="quick-info-copy"><span class="quick-info-label">${label}</span><p>${safeContent}</p></div></article>`;
+}
+function quickFullSection(type,label,content,extraClass=''){
+  const safeContent=(content===undefined || content===null || content==='') ? '—' : content;
+  return `<article class="quick-full-card ${extraClass}"><div class="quick-full-heading">${quickGuideIcon(type)}<span>${label}</span></div><div class="quick-full-body">${safeContent}</div></article>`;
+}
+
 function profilePageButton(n,label){return `<button class="profile-tab" type="button" data-profile-page="${n}">${label}</button>`;}
 function renderProfile(id,page=1){
  const p=plants.find(x=>x.id===id);if(!p)return;
@@ -568,7 +591,7 @@ function renderProfile(id,page=1){
   : `<section class="profile-identity" aria-label="${safeName} identity"><div class="profile-top-actions"><span class="profile-eyebrow">PLANT PROFILE</span></div><h2 id="profileName">${safeName}</h2><p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span>${photoMarkup}</section>`;
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  let body='';
- if(page===1) body=`<article class="profile-poster"><div class="quick-care-row"><div><b>${sunlight[p.id]||p.sun||'🌤️'}</b><span>${g.position.split('.')[0]}</span></div><div><b>💧</b><span>${g.moisture}</span></div><div><b>pH</b><span>${phFor(p,g)}</span></div></div><section class="poster-grid poster-grid-rows"><div class="quick-card quick-card-position">${careCard('☀️','POSITION',g.position)}</div><div class="quick-card quick-card-watering">${careCard('💧','WATERING',g.water)}</div><div class="quick-card quick-card-feeding">${careCard('🌿','FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}</div><div class="quick-card quick-card-soil">${careCard('🪴','SOIL',g.soil)}</div></section><article class="grow-tip"><b>💡 GROW TIP</b><p>${g.grow}</p></article></article>`;
+ if(page===1) body=`<article class="profile-poster quick-guide-v110"><section class="quick-info-grid">${quickInfoCard('light','LIGHT',g.position)}${quickInfoCard('watering','WATERING',`${g.moisture}. ${g.water}`)}${quickInfoCard('soil','SOIL',g.soil)}${quickInfoCard('ph','pH',phFor(p,g))}</section>${quickFullSection('feeding','FEEDING',`<p><strong>${g.feed}</strong></p><p>${g.feedNote}</p>`,'quick-feeding-card')}${quickFullSection('maintenance','HANDS-ON CARE',`<ul>${(g.maint||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`,'quick-maintenance-card')}${quickFullSection('tip','GROW TIP',`<p>${g.grow}</p>`,'quick-grow-card')}</article>`;
  if(page===2) body=`<section class="detail-stack"><h2>${safeName} — Care Guide</h2>${careCard('☀️','POSITION',g.position)}${careCard('🪴','SOIL + pH',`${g.soil}<br><strong>${phFor(p,g)}</strong>`)}${careCard('💧','WATERING',`${g.water}<br><small>Watering Check interval remains ${p.base} days; always confirm soil moisture first.</small>`)}${careCard('🌿','FERTILISING / FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}${careCard('💡','GROWING TIPS',g.grow)}${careCard('🪴','REPOTTING',g.repot)}${careCard('🌱','REPLANTING / PROPAGATION',g.prop)}<article class="profile-panel"><span class="care-label">✂️ MAINTENANCE</span><ul>${g.maint.map(x=>`<li>${x}</li>`).join('')}</ul></article><article class="evidence-note"><b>Evidence standard</b><p>Care is structured around Gardening Australia, Australian botanic-garden guidance, Altona/Melbourne seasonal conditions, and product-label directions. Product availability is a practical shopping reference; always follow the current pack/registered label.</p></article></section>`;
  if(page===3) body=`<section class="detail-stack"><h2>Common Pests — Symptoms & Solutions</h2><p class="section-intro">Only pests relevant to this plant type are shown. Confirm the pest before treating.</p>${g.pests.map(k=>{const x=pestData[k];return `<article class="pest-card"><div class="pest-thumb" role="img" aria-label="${x[1]} reference">${x[0]}</div><div><h3>${x[1]}</h3><p><b>Symptoms:</b> ${x[2]}</p><p><b>Inspect:</b> ${x[3]}</p><p><b>Care / treatment:</b> ${x[4]}</p></div></article>`}).join('')}<article class="evidence-note"><b>Product safety</b><p>No pesticide dilution or schedule is invented in Plant Secretary. Use only products whose current APVMA-approved label covers the pest and use situation, and follow that label.</p></article></section>`;
  if(page===4) body=`<section class="detail-stack"><h2>Common Problems & Troubleshooting</h2><div class="trouble-list">${g.problems.map(k=>{const x=problemData[k];return `<article class="trouble-card"><h3>${x[0]}</h3><p><b>Likely causes</b><br>${x[1]}</p><p><b>What to do</b><br>${x[2]}</p></article>`}).join('')}</div><article class="evidence-note"><b>Diagnostic rule</b><p>Similar symptoms can have different causes. Check soil moisture, roots, light and pests before treating or feeding.</p></article></section>`;

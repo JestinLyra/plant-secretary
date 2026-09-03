@@ -573,3 +573,12 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 - Botanical name remains independently editable and remains the field used for profile-care classification.
 - Saving a profile re-renders all name-bearing views immediately.
 - Bumped app/CSS/service-worker cache references to v109.
+
+
+## v110
+- Redesigned Plant Profile → Quick only into illustrated botanical information cards inspired by the supplied Flora Insights layout.
+- Preserved the existing profile identity/photo header and all other pages and functionality.
+- Replaced Quick care emoji icons with inline SVG line illustrations for Light, Watering, Soil, pH, Feeding, Hands-on Care, and Grow Tip.
+- Removed duplicated Quick summary/card presentation: Light, Watering, Soil and pH are compact cards; Feeding, Hands-on Care and Grow Tip are full-width.
+- Fixed a malformed legacy v105 Quick CSS brace so later scoped rules parse predictably.
+- Bumped app/CSS/service-worker cache references to v110.
