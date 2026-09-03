@@ -557,3 +557,10 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 - Photo crop and botanical-name overrides persist locally per plant.
 - Botanical-name overrides feed the existing profile care classifier for Quick, Care, Pests and Problems when the entered botanical name matches a supported plant group; unknown names do not receive invented species-specific product recommendations.
 - Plant IDs, common names, watering state/history, Watering Check, Fortnight, Undo and navigation are unchanged.
+
+
+## v108
+- Moved profile editor Cancel and Save controls to the upper-right of the editor header.
+- Matched editable botanical-name text more closely to profile botanical-name typography.
+- No plant data or other app functionality changed.
+- Bumped app/CSS/service-worker cache references to v108.

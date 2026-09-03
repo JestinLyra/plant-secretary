@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
   <link rel="manifest" href="manifest.json?v=53" />
   <link rel="apple-touch-icon" href="icon.svg?v=53" />
-  <link rel="stylesheet" href="style.css?v=105" />
+  <link rel="stylesheet" href="style.css?v=108" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -85,7 +85,7 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=105" defer></script>
+  <script src="app.js?v=108" defer></script>
 
 <div id="addPlantModal" class="plant-modal" hidden>
   <div class="plant-modal-backdrop" data-close-add-modal></div>
@@ -117,7 +117,7 @@
 <div id="profilePhotoMenu" class="profile-photo-menu" hidden>
   <div class="profile-photo-backdrop" data-close-photo-menu></div>
   <section class="profile-photo-sheet profile-editor-sheet" role="dialog" aria-modal="true" aria-labelledby="profilePhotoMenuTitle">
-    <h2 id="profilePhotoMenuTitle">Edit plant profile</h2>
+    <div class="profile-editor-header"><h2 id="profilePhotoMenuTitle">Edit plant profile</h2><div class="profile-editor-actions"><button id="profileCancelPhotoBtn" class="secondary" type="button">Cancel</button><button id="profileSavePhotoBtn" class="primary" type="button">Save</button></div></div>
     <label class="profile-botanical-field"><span>Botanical name</span><input id="profileBotanicalInput" type="text" autocomplete="off" spellcheck="false"></label>
     <div id="profileCropControls" class="profile-crop-controls" hidden>
       <div class="profile-crop-preview"><img id="profileCropImage" alt="Photo crop preview"></div>
@@ -127,7 +127,6 @@
     </div>
     <button id="profileUploadPhotoBtn" type="button">Change Photo</button>
     <button id="profileDeletePhotoBtn" class="danger" type="button">Delete Photo</button>
-    <div class="profile-editor-actions"><button id="profileCancelPhotoBtn" class="secondary" type="button">Cancel</button><button id="profileSavePhotoBtn" class="primary" type="button">Save</button></div>
   </section>
 </div>
 </body>
