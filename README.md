@@ -584,12 +584,28 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 - Bumped app/CSS/service-worker cache references to v110.
 
 
-## v113
+
+## v111
 - Moved the existing Quick / Care / Pests / Problems profile tab bar above the plant identity/photo block on all four profile pages.
 - Tab labels, styling, navigation behaviour, photo/name editing, and all profile content remain unchanged.
-- Bumped app/CSS/service-worker cache references to v113.
+- Bumped app/CSS/service-worker cache references to v111.
 
-## v113
+## v112
 - Quick Guide only: swapped Feeding and pH positions without changing their stored care content or SVG illustration types.
 - Plant Profile only: standardized the editable profile photo circle to exactly 210 × 210 px on Quick, Care, Pests and Problems, including narrow screens.
 - No Home collection photo sizing or plant data/storage logic changed.
+- Bumped app/CSS/service-worker cache references to v112.
+
+## v113
+- Anchored the Quick / Care / Pests / Problems tab bar in the sticky Plant Profile header stack so it stays above the 210 px profile photo while scrolling.
+- Reflowed the Quick Guide into two independent columns so pH uses the space beneath Feeding.
+- Preserved existing care content, illustrations, profile editing, watering data, and navigation behaviour.
+- Bumped app/CSS/service-worker cache references to v113.
+
+## v114
+- Added horizontal swipe navigation between Plant Profiles while the profile screen is open.
+- Swipe left opens the next plant in collection order; swipe right opens the previous plant. The sequence is Indoor alphabetically, then Outdoor alphabetically, matching the Home collection, and does not wrap at either end.
+- The currently selected Quick / Care / Pests / Problems tab is preserved when moving between plants.
+- A deliberate horizontal threshold prevents normal vertical scrolling from triggering plant navigation, and swipes starting on interactive controls are ignored.
+- No plant data, watering history, profile content, editing behaviour, or non-profile navigation was changed.
+- Bumped app/CSS/service-worker cache references to v114.

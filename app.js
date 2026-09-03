@@ -691,6 +691,59 @@ function openProfile(id){
 }
 function closeProfile(){el('profileScreen').classList.remove('open');el('profileScreen').setAttribute('aria-hidden','true');document.body.classList.remove('profile-open');currentProfile=null;}
 el('profileBack').addEventListener('click',closeProfile);
+
+// v114: horizontal swipe navigation between plant profiles.
+// Sequence mirrors the collection: Indoor plants alphabetically, then Outdoor plants alphabetically.
+// The ends do not wrap. Vertical scrolling and controls remain untouched.
+function psProfileSequence(){
+  const placeRank={indoor:0,outdoor:1};
+  return [...plants].sort((a,b)=>(placeRank[a.place]??9)-(placeRank[b.place]??9)||psDisplayName(a).localeCompare(psDisplayName(b),'en',{sensitivity:'base'}));
+}
+function psActiveProfilePage(){
+  const active=document.querySelector('#profileTabsMount .profile-tab.active');
+  const page=Number(active&&active.dataset.profilePage);
+  return page>=1&&page<=4?page:1;
+}
+function psNavigateAdjacentProfile(direction){
+  if(!currentProfile || (direction!==1&&direction!==-1)) return false;
+  const sequence=psProfileSequence();
+  const index=sequence.findIndex(p=>p.id===currentProfile);
+  if(index<0) return false;
+  const nextIndex=index+direction;
+  if(nextIndex<0 || nextIndex>=sequence.length) return false;
+  const next=sequence[nextIndex];
+  const page=psActiveProfilePage();
+  currentProfile=next.id;
+  renderProfile(next.id,page);
+  const screen=el('profileScreen');
+  if(screen) screen.scrollTo(0,0);
+  return true;
+}
+(function psEnableProfileSwipe(){
+  const screen=el('profileScreen');
+  if(!screen) return;
+  let startX=0,startY=0,startTarget=null,tracking=false;
+  const interactiveSelector='button, input, textarea, select, a, [role="button"], [contenteditable="true"]';
+  screen.addEventListener('touchstart',(event)=>{
+    if(event.touches.length!==1 || !screen.classList.contains('open')){tracking=false;return;}
+    if(!el('profilePhotoMenu').hidden){tracking=false;return;}
+    startTarget=event.target;
+    if(startTarget.closest(interactiveSelector)){tracking=false;return;}
+    startX=event.touches[0].clientX;
+    startY=event.touches[0].clientY;
+    tracking=true;
+  },{passive:true});
+  screen.addEventListener('touchend',(event)=>{
+    if(!tracking || event.changedTouches.length!==1){tracking=false;return;}
+    tracking=false;
+    const dx=event.changedTouches[0].clientX-startX;
+    const dy=event.changedTouches[0].clientY-startY;
+    const ax=Math.abs(dx),ay=Math.abs(dy);
+    // Require a deliberate, predominantly horizontal swipe so vertical scrolling is unaffected.
+    if(ax<60 || ax<=ay*1.25) return;
+    psNavigateAdjacentProfile(dx<0?1:-1);
+  },{passive:true});
+})();
 el('filterSelect').addEventListener('change',renderWateringCubes);
 el('undoWateringBtn').addEventListener('click',undoLastWatering);
 updateWateringUndoButton();
