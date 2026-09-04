@@ -624,3 +624,11 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 - Replaced the Backup control artwork with the approved cloud-download botanical icon.
 - Moved Backup from the bottom navigation to the far right of the Plant Secretary top header.
 - Bottom navigation now contains Home, Watering Check and Fortnight only and is explicitly fixed to the bottom of the viewport, including iPhone safe-area padding.
+
+
+## v120
+
+- Separated Quick soil content from Care soil content to remove duplication.
+- Quick → Soil now shows the concise plant-specific soil requirement plus the practical product name only.
+- Care → Soil + pH now provides structured detail for composition/structure, drainage/aeration, pH, practical product rationale, signs the soil may be unsuitable, and soil-management/repotting guidance.
+- Existing care classification, products, plant IDs, watering, persistence, navigation and all non-soil profile sections are unchanged.

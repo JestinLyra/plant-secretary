@@ -573,13 +573,19 @@ function individualProfileFor(p){
   if(legacy.soil) g.soil=legacy.soil;
   if(legacy.water) g.water=legacy.water;
   if(legacy.fertiliser){ g.feed=legacy.fertiliser; g.feedNote='Use the plant-appropriate product according to its current label directions.'; }
+
+  // v120 — separate the concise Quick soil summary from the detailed Care soil guidance.
+  // This is presentation-only; care classification and persistent plant data are unchanged.
+  g.soilRequirement=g.soil;
   const products=verifiedProductsFor(p);
+  g.soilProduct=products?.soil || '';
+  g.soilProductNote=products?.soilNote || '';
   if(products){
-    g.soil=`${g.soil}\n\nPractical product: ${products.soil}. ${products.soilNote}`;
+    g.soilQuick=`${g.soilRequirement}\n\nPractical product: ${products.soil}.`;
     g.feed=products.feed;
     g.feedNote=products.feedNote;
   }else{
-    g.soil=`${g.soil}\n\nProduct recommendation: Species not reliably identified — no species-specific soil product added.`;
+    g.soilQuick=`${g.soilRequirement}\n\nSpecies not reliably identified — no species-specific soil product added.`;
     g.feed='No species-specific product recommended';
     g.feedNote='Species not reliably identified. Do not guess; identify the plant first, then follow the current product label.';
   }
@@ -588,6 +594,43 @@ function individualProfileFor(p){
   if(Array.isArray(legacy.propagation) && legacy.propagation.length) g.prop=legacy.propagation.join(' ');
   return g;
 }
+
+function soilDrainageDetail(group){
+  const details={
+    pothos:'The mix should drain freely while retaining some moisture. Added perlite or bark helps preserve air spaces around roots; use a pot with drainage.',
+    tropical:'Aim for an airy, chunky mix that drains excess water promptly but does not become bone-dry immediately. Perlite and bark help keep oxygen around the roots.',
+    fern:'Use a moisture-retentive mix that still drains freely. The goal is steady moisture without a saturated, airless root zone.',
+    orchid:'Use coarse bark-based media with abundant air around the roots and rapid drainage. Do not substitute ordinary fine potting soil.',
+    succulent:'Use a coarse, fast-draining mix with strong aeration and a pot with drainage holes. The root zone should dry well between waterings.',
+    snake:'Use a very free-draining mix and a drainage-hole pot. Avoid dense media or oversized containers that hold moisture around the rhizomes for long periods.',
+    gardenia:'The mix should hold even moisture while still draining promptly. Avoid dense, waterlogged media and alkaline amendments that raise root-zone pH.',
+    citrus:'Container citrus roots need both moisture and oxygen. Use a free-draining citrus/fruit mix; avoid dense garden soil and containers without effective drainage.',
+    edible:'Use a fertile container mix that drains freely while holding enough moisture for steady growth. Avoid compacted garden soil in pots.',
+    bougainvillea:'Prioritise rapid drainage and root aeration. Use a premium potting mix and add an aeration amendment if the container remains wet too long.'
+  };
+  return details[group]||details.tropical;
+}
+
+function careSoilDetail(p,g){
+  const group=groupForPlant(p);
+  const signs={
+    pothos:'Mix stays wet for many days, becomes compacted or stale-smelling, attracts fungus gnats, or coincides with yellowing and drooping from root stress.',
+    tropical:'Mix stays wet for many days, compacts around roots, smells stale, or coincides with persistent yellowing or drooping. Very rapid drying can also indicate a crowded or degraded root ball.',
+    fern:'The mix becomes waterlogged and airless or dries too quickly. Watch for persistent wilting despite wet mix, stale-smelling media, or repeated brown/crisp fronds.',
+    orchid:'Fine or decomposed media stays wet too long and excludes air. Warning signs include soft or dark roots, stale odour, or repeated root-rot symptoms.',
+    succulent:'The mix remains damp too long or compacts around roots. Warning signs include soft tissue, yellowing, root/base rot, fungus gnats, or a pot that remains heavy and wet long after watering.',
+    snake:'The mix remains wet for too long or the pot is oversized. Watch for soft roots or crown, yellowing, stale-smelling media, or very slow drying.',
+    gardenia:'Soil is alkaline, poorly drained, or inconsistent in moisture. Watch for new-leaf chlorosis, persistent waterlogging, stale-smelling mix, bud drop, or very rapid drying from a crowded pot.',
+    citrus:'Container mix is dense or remains saturated. Watch for prolonged wetness, yellowing, weak growth, or water that either ponds on the surface or runs straight through a degraded/root-bound mix.',
+    edible:'The mix compacts, stays waterlogged, or dries too fast for steady growth. Watch for persistent wilting despite wet soil, yellowing, poor vigour, fungus gnats, or rapid drying in a crowded pot.',
+    bougainvillea:'The mix remains wet and airless for too long. Watch for prolonged dampness, yellowing or leaf drop, weak growth, or other signs of root stress.'
+  };
+  const product=g.soilProduct
+    ? `<p><b>Practical product</b><br>${g.soilProduct}</p>${g.soilProductNote?`<p><b>Why it suits</b><br>${g.soilProductNote}</p>`:''}`
+    : '<p><b>Practical product</b><br>No species-specific soil product is shown because the species is not reliably identified.</p>';
+  return `<p><b>Composition & structure</b><br>${g.soilRequirement}</p><p><b>Drainage & aeration</b><br>${soilDrainageDetail(group)}</p><p><b>pH</b><br>${phFor(p,g)}</p>${product}<p><b>Signs the soil may be unsuitable</b><br>${signs[group]||signs.tropical}</p><p><b>Soil management / repotting</b><br>${g.repot}</p>`;
+}
+
 function careCard(icon,label,content){
   const safeContent=(content===undefined || content===null || content==='') ? '—' : content;
   return `<article class="care-mini"><div class="care-icon" aria-hidden="true">${icon}</div><div><span class="care-label">${label}</span><p>${safeContent}</p></div></article>`;
@@ -644,8 +687,8 @@ function renderProfile(id,page=1){
  const identity=`<section class="profile-identity profile-identity-quick" aria-label="${safeName} identity"><div class="quick-identity-photo">${photoMarkup}</div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${safeName}</h2>${otherNames}<p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`;
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  let body='';
- if(page===1) body=`<article class="profile-poster quick-guide-v110"><section class="quick-info-grid quick-info-columns"><div class="quick-info-column">${quickInfoCard('light','LIGHT',g.position)}${quickInfoCard('soil','SOIL',g.soil)}</div><div class="quick-info-column">${quickInfoCard('watering','WATERING',`${g.moisture}. ${g.water}`)}<article class="quick-info-card quick-info-feeding quick-feeding-card"><div class="quick-info-icon">${quickGuideIcon('feeding')}</div><div class="quick-info-copy"><span class="quick-info-label">FEEDING</span><p><strong>${g.feed}</strong></p><p>${g.feedNote}</p></div></article>${quickInfoCard('ph','pH',phFor(p,g),'quick-ph-card')}</div></section>${quickFullSection('maintenance','HANDS-ON CARE',`<ul>${(g.maint||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`,'quick-maintenance-card')}${quickFullSection('tip','GROW TIP',`<p>${g.grow}</p>`,'quick-grow-card')}</article>`;
- if(page===2) body=`<section class="detail-stack profile-cohesive"><h2>${safeName} — Care Guide</h2>${profileCareCard('position','POSITION',g.position)}${profileCareCard('soil','SOIL + pH',`${g.soil}<br><strong>${phFor(p,g)}</strong>`)}${profileCareCard('water','WATERING',`${g.water}<br><small>Watering Check interval remains ${p.base} days; always confirm soil moisture first.</small>`)}${profileCareCard('fertilising','FERTILISING / FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}${profileCareCard('repot','REPOTTING',g.repot)}${profileCareCard('propagation','REPLANTING / PROPAGATION',g.prop)}<article class="profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('maintenance')}</div><div class="profile-card-copy"><span class="care-label">MAINTENANCE</span><ul>${g.maint.map(x=>`<li>${x}</li>`).join('')}</ul></div></article><article class="evidence-note"><b>Evidence standard</b><p>Care is structured around Gardening Australia, Australian botanic-garden guidance, Altona/Melbourne seasonal conditions, and product-label directions. Product availability is a practical shopping reference; always follow the current pack/registered label.</p></article></section>`;
+ if(page===1) body=`<article class="profile-poster quick-guide-v110"><section class="quick-info-grid quick-info-columns"><div class="quick-info-column">${quickInfoCard('light','LIGHT',g.position)}${quickInfoCard('soil','SOIL',g.soilQuick)}</div><div class="quick-info-column">${quickInfoCard('watering','WATERING',`${g.moisture}. ${g.water}`)}<article class="quick-info-card quick-info-feeding quick-feeding-card"><div class="quick-info-icon">${quickGuideIcon('feeding')}</div><div class="quick-info-copy"><span class="quick-info-label">FEEDING</span><p><strong>${g.feed}</strong></p><p>${g.feedNote}</p></div></article>${quickInfoCard('ph','pH',phFor(p,g),'quick-ph-card')}</div></section>${quickFullSection('maintenance','HANDS-ON CARE',`<ul>${(g.maint||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`,'quick-maintenance-card')}${quickFullSection('tip','GROW TIP',`<p>${g.grow}</p>`,'quick-grow-card')}</article>`;
+ if(page===2) body=`<section class="detail-stack profile-cohesive"><h2>${safeName} — Care Guide</h2>${profileCareCard('position','POSITION',g.position)}${profileCareCard('soil','SOIL + pH',careSoilDetail(p,g))}${profileCareCard('water','WATERING',`${g.water}<br><small>Watering Check interval remains ${p.base} days; always confirm soil moisture first.</small>`)}${profileCareCard('fertilising','FERTILISING / FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}${profileCareCard('repot','REPOTTING',g.repot)}${profileCareCard('propagation','REPLANTING / PROPAGATION',g.prop)}<article class="profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('maintenance')}</div><div class="profile-card-copy"><span class="care-label">MAINTENANCE</span><ul>${g.maint.map(x=>`<li>${x}</li>`).join('')}</ul></div></article><article class="evidence-note"><b>Evidence standard</b><p>Care is structured around Gardening Australia, Australian botanic-garden guidance, Altona/Melbourne seasonal conditions, and product-label directions. Product availability is a practical shopping reference; always follow the current pack/registered label.</p></article></section>`;
  if(page===3) body=`<section class="detail-stack profile-cohesive"><h2>Common Pests — Symptoms & Solutions</h2><p class="section-intro">Only pests relevant to this plant type are shown. Confirm the pest before treating.</p>${g.pests.map(k=>{const x=pestData[k];return `<article class="pest-card profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('pest')}</div><div class="profile-card-copy"><h3>${x[1]}</h3><p><b>Symptoms:</b> ${x[2]}</p><p><b>Inspect:</b> ${x[3]}</p><p><b>Care / treatment:</b> ${x[4]}</p></div></article>`}).join('')}<article class="evidence-note"><b>Product safety</b><p>No pesticide dilution or schedule is invented in Plant Secretary. Use only products whose current APVMA-approved label covers the pest and use situation, and follow that label.</p></article></section>`;
  if(page===4) body=`<section class="detail-stack profile-cohesive"><h2>Common Problems & Troubleshooting</h2><div class="trouble-list">${g.problems.map(k=>{const x=problemData[k];return `<article class="trouble-card profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('problem')}</div><div class="profile-card-copy"><h3>${x[0]}</h3><p><b>Likely causes</b><br>${x[1]}</p><p><b>What to do</b><br>${x[2]}</p></div></article>`}).join('')}</div><article class="evidence-note"><b>Diagnostic rule</b><p>Similar symptoms can have different causes. Check soil moisture, roots, light and pests before treating or feeding.</p></article></section>`;
  const tabsMount=el('profileTabsMount');
@@ -881,7 +924,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=119').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=120').catch(()=>{}));}
 
 
 // v118 — complete Plant Secretary backup / restore
