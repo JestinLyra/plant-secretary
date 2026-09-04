@@ -2280,3 +2280,114 @@ body.profile-open{
     width:min(760px,100%) !important;
   }
 }
+
+/* v121 — Bloom & Harvest Schedule */
+.profile-season-entry{
+  width:100%;display:grid;grid-template-columns:44px minmax(0,1fr) 20px;align-items:center;gap:10px;
+  margin:2px 0 12px;padding:10px 12px;border:1px solid #d7e1d5;border-radius:17px;background:#f4f6e7;
+  color:#173d2d;text-align:left;box-shadow:0 2px 8px rgba(31,72,47,.045);
+}
+.profile-season-entry-icon{width:42px;height:42px;border-radius:13px;background:#e6efdf;display:grid;place-items:center;color:#2b6240;}
+.profile-season-entry-icon .season-line-icon{width:30px;height:30px;display:block;}
+.profile-season-entry strong{display:block;font-size:13px;line-height:1.25;color:#174d2d;}
+.profile-season-entry small{display:block;margin-top:2px;font-size:11px;line-height:1.35;color:#66736c;}
+.profile-season-entry-arrow{font-size:25px;color:#7a927f;text-align:right;}
+
+.season-page{display:grid;gap:12px;min-width:0;padding-bottom:4px;}
+.season-title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:2px 2px 0;}
+.season-title-row h2{font-family:Georgia,"Times New Roman",serif;color:#174d2d;font-size:25px;line-height:1.08;margin:4px 0 0;}
+.season-year-switcher{display:flex;align-items:center;gap:5px;flex:0 0 auto;background:#eef3e8;border:1px solid #d7e2d5;border-radius:14px;padding:3px;}
+.season-year-switcher button{border:0;background:transparent;color:#24563a;width:31px;height:31px;border-radius:10px;font-size:23px;line-height:1;}
+.season-year-switcher button:active{background:#dde9d9;}
+.season-year-switcher strong{font-size:12px;min-width:58px;text-align:center;color:#274a36;}
+.season-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;}
+.season-summary-card{display:grid;grid-template-columns:42px minmax(0,1fr);gap:9px;align-items:start;min-width:0;padding:11px;border:1px solid #dce4d9;border-radius:17px;background:#f7f8f1;box-shadow:0 2px 8px rgba(31,72,47,.04);}
+.season-summary-card.harvest{background:#fff8df;border-color:#eee1b4;}
+.season-summary-card.climate{background:#eef4eb;}
+.season-summary-icon{width:40px;height:40px;border-radius:50%;background:#e3eee0;color:#326345;display:grid;place-items:center;}
+.season-summary-card.harvest .season-summary-icon{background:#fff0b7;color:#9a6a05;}
+.season-summary-icon .season-line-icon{width:27px;height:27px;display:block;}
+.season-summary-label{display:block;font-size:10px;font-weight:900;letter-spacing:.065em;color:#165432;margin:1px 0 4px;}
+.season-summary-card.harvest .season-summary-label{color:#835b08;}
+.season-summary-card strong{display:block;font-size:12px;line-height:1.25;color:#244637;}
+.season-summary-card span+strong,.season-summary-card strong+span{font-size:11px;color:#59695f;}
+.season-summary-card p{margin:4px 0 0;font-size:10.5px;line-height:1.35;color:#5f6b64;overflow-wrap:anywhere;}
+
+.season-calendar-scroll{width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;border:1px solid #dce5da;border-radius:17px;background:#fffdf8;box-shadow:0 2px 9px rgba(31,72,47,.04);}
+.season-calendar-grid{display:grid;grid-template-columns:145px repeat(12,48px);grid-auto-rows:minmax(43px,auto);min-width:721px;align-items:stretch;}
+.season-corner,.season-month,.season-row-label,.season-cell{border-right:1px solid #edf0e9;border-bottom:1px solid #edf0e9;}
+.season-corner{position:sticky;left:0;z-index:4;background:#f8faf4;}
+.season-month{display:grid;place-items:center;background:#f8faf4;color:#43594c;font-size:10px;font-weight:800;position:relative;}
+.season-month.current-month{box-shadow:inset 2px 0 #4a7757,inset -2px 0 #4a7757,inset 0 2px #4a7757;}
+.season-row-label{position:sticky;left:0;z-index:3;background:#f6f8f1;display:flex;align-items:center;gap:7px;padding:7px 9px;color:#244b36;font-size:10.5px;font-weight:800;line-height:1.15;}
+.season-row-label span{width:24px;height:24px;border-radius:50%;background:#e7f0e3;display:grid;place-items:center;color:#3c6a4b;flex:0 0 auto;}
+.season-row-label .season-line-icon{width:17px;height:17px;display:block;}
+.season-cell{min-height:43px;background:#fbfbf7;position:relative;display:grid;place-items:center;}
+.season-cell.expected.bloom{background:#bdd3a8;}
+.season-cell.expected.harvest{background:#f6ce55;}
+.season-cell.actual.bloom{background:#5f865c;}
+.season-cell.actual.harvest{background:#eaaa16;}
+.season-cell.current-month{box-shadow:inset 2px 0 #4a7757,inset -2px 0 #4a7757;}
+.season-calendar-grid .season-cell.current-month:last-child{box-shadow:inset 2px 0 #4a7757,inset -2px 0 #4a7757,inset 0 -2px #4a7757;}
+.season-cell-mark{width:25px;height:25px;color:#fff;display:grid;place-items:center;}
+.season-cell-mark .season-line-icon{width:22px;height:22px;display:block;}
+.season-legend{display:flex;flex-wrap:wrap;gap:7px 12px;padding:0 3px;color:#5d6d63;font-size:10px;}
+.season-legend span{display:flex;align-items:center;gap:5px;}
+.season-legend i{width:15px;height:11px;border-radius:4px;border:1px solid rgba(0,0,0,.04);}
+.season-legend .expected-bloom{background:#bdd3a8}.season-legend .actual-bloom{background:#5f865c}.season-legend .expected-harvest{background:#f6ce55}.season-legend .actual-harvest{background:#eaaa16}
+.season-precision-note,.season-evidence-note{border-radius:15px;padding:10px 12px;background:#f4f1df;border:1px solid #e6dfc5;color:#536057;}
+.season-evidence-note{background:#edf4ea;border-color:#d8e5d4;}
+.season-precision-note strong,.season-evidence-note strong{display:block;font-size:11px;color:#275039;}
+.season-precision-note p,.season-evidence-note p{margin:4px 0 0;font-size:10.5px;line-height:1.4;}
+.season-records-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.season-record-card{min-width:0;border:1px solid #dce4d9;border-radius:17px;background:#fffdf8;padding:11px;}
+.season-record-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.season-record-head h3{display:flex;align-items:center;gap:6px;margin:0;color:#214b34;font-size:12px;text-transform:none;}
+.season-record-head h3 .season-line-icon{width:23px;height:23px;color:#47744e;}
+.season-add-btn{flex:0 0 auto;border:0;border-radius:14px;padding:7px 9px;font-size:10.5px;font-weight:800;background:#5d835c;color:#fff;}
+.season-add-btn.harvest{background:#e3a716;color:#2e2b1e;}
+.season-record-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:7px;padding:8px 2px;border-top:1px solid #eef0e9;}
+.season-record-row strong{display:block;font-size:10.5px;line-height:1.3;color:#344c3e;}
+.season-record-row span,.season-record-row small{display:block;margin-top:2px;font-size:9.5px;line-height:1.3;color:#69746e;overflow-wrap:anywhere;}
+.season-record-actions{display:flex;gap:4px;}
+.season-record-actions button{border:1px solid #dbe4d9;background:#f8faf5;color:#365d44;border-radius:9px;padding:5px 6px;font-size:9px;}
+.season-empty{margin:3px 0 1px;color:#7a837e;font-size:10.5px;}
+
+.season-record-modal[hidden]{display:none!important;}
+.season-record-modal{position:fixed;inset:0;z-index:1500;display:grid;align-items:end;justify-items:center;}
+.season-modal-backdrop{position:absolute;inset:0;background:rgba(18,38,27,.42);}
+.season-modal-sheet{position:relative;z-index:1;width:min(520px,100%);max-height:88vh;overflow:auto;background:#fffdf8;border-radius:24px 24px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(19,49,31,.18);}
+.season-modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.season-modal-head h2{font-family:Georgia,"Times New Roman",serif;color:#174d2d;font-size:22px;margin:0;}
+.season-modal-head button{border:0;background:#edf3e9;color:#315641;width:34px;height:34px;border-radius:50%;font-size:22px;}
+#seasonRecordForm{display:grid;gap:10px;}
+#seasonRecordForm label{display:grid;gap:5px;color:#385142;font-size:11px;font-weight:800;}
+#seasonRecordForm label span{font-weight:500;color:#79837d;}
+#seasonRecordForm input,#seasonRecordForm select,#seasonRecordForm textarea{width:100%;box-sizing:border-box;border:1px solid #cedbd0;border-radius:12px;background:#fff;color:#263d31;padding:10px 11px;font:inherit;font-size:13px;}
+#seasonRecordForm textarea{resize:vertical;min-height:70px;}
+.season-form-pair{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+#seasonRecordForm .season-check{display:flex;grid-template-columns:auto 1fr;align-items:center;gap:8px;font-weight:700;}
+#seasonRecordForm .season-check input{width:18px;height:18px;margin:0;}
+#seasonRecordForm .is-disabled{opacity:.5;}
+.season-form-error{min-height:0;color:#8a332d;font-size:11px;line-height:1.35;}
+.season-form-error:not(:empty){background:#fff0ec;border:1px solid #f0d2ca;border-radius:10px;padding:8px 9px;}
+.season-modal-save{border:0;border-radius:14px;background:#346b46;color:#fff;padding:11px 14px;font-size:13px;font-weight:900;}
+
+@media(max-width:520px){
+  .season-summary-grid{grid-template-columns:1fr;}
+  .season-summary-card{grid-template-columns:38px minmax(0,1fr);padding:10px;}
+  .season-summary-icon{width:36px;height:36px;}
+  .season-summary-card p{font-size:10.5px;}
+  .season-records-grid{grid-template-columns:1fr;}
+}
+@media(max-width:360px){
+  .profile-season-entry{grid-template-columns:39px minmax(0,1fr) 16px;padding:9px;gap:8px;}
+  .profile-season-entry-icon{width:38px;height:38px;}
+  .season-title-row{align-items:flex-start;flex-direction:column;gap:8px;}
+  .season-title-row h2{font-size:22px;}
+  .season-year-switcher{align-self:flex-end;}
+  .season-calendar-grid{grid-template-columns:132px repeat(12,46px);min-width:684px;}
+  .season-form-pair{grid-template-columns:1fr;}
+}
+/* v121 overlap fix: the full-screen Plant Profile must remain above the fixed primary navigation. */
+.profile-screen{z-index:130 !important;}

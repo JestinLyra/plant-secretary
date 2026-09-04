@@ -675,6 +675,216 @@ function quickFullSection(type,label,content,extraClass=''){
   return `<article class="quick-full-card ${extraClass}"><div class="quick-full-heading">${quickGuideIcon(type)}<span>${label}</span></div><div class="quick-full-body">${safeContent}</div></article>`;
 }
 
+// v121 — Bloom & Harvest Schedule. Expected horticultural timing is kept separate
+// from the user's individual observations. Month numbers are normal calendar months (1-12).
+// Evidence used for built-in expected windows is deliberately conservative:
+// - Gardening Australia: Gardenia flowering = spring/summer/autumn.
+// - Gardening Australia: Capsicum flowering = summer; most chilli fruit = Dec-Apr.
+// - Gardening Australia: Citrus flowering can occur across all seasons; lemon harvest is
+//   typically autumn/winter, with cultivar-dependent year-round crops possible.
+// - Plantmark (Melbourne/Victoria): Bougainvillea flowering = spring into summer;
+//   Calamondin flowers in spring. Daleys: dwarf calamondin harvest = Aug-Dec.
+// - Plantmark: rosemary flowering = winter into spring.
+// Unidentified Begonia/Mentha species, indoor foliage plants and hybrid Phalaenopsis are
+// not given false month-by-month precision; their actual blooms can still be recorded.
+const PS_SEASON_KEY='plantSecretary.seasonRecords.v1';
+const PS_SEASON_MONTHS=[9,10,11,12,1,2,3,4,5,6,7,8];
+const PS_SEASON_MONTH_LABELS=['Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'];
+const PS_HARVEST_PLANTS=new Set(['calamansi','chilli-firecracker','habanero','jalapeno','regular-lemon','dwarf-lemon','thai-peppers','chilli-timble']);
+const psSeasonExpected={
+  'gardenia-radicans':{
+    bloom:{months:[9,10,11,12,1,2,3,4,5],season:'Spring – Autumn',monthsLabel:'Sep – May',description:'Fragrant flowers are expected through the warmer growing seasons.',basis:'Gardening Australia lists Gardenia flowering in spring, summer and autumn.'}
+  },
+  'bougainvillea':{
+    bloom:{months:[9,10,11,12,1,2],season:'Spring – Summer',monthsLabel:'Sep – Feb',description:'Flowering is strongest with warmth and full sun; the exact flush varies with weather.',basis:'Australian nursery guidance describes flowering beginning in spring and continuing through summer.'}
+  },
+  'calamansi':{
+    bloom:{months:[9,10,11],season:'Spring',monthsLabel:'Sep – Nov',description:'Fragrant white citrus flowers are commonly produced in spring.',basis:'Victorian nursery guidance describes Calamondin flowering in spring.'},
+    harvest:{months:[8,9,10,11,12],season:'Late Winter – Early Summer',monthsLabel:'Aug – Dec',description:'Dwarf calamondin can carry crops beyond this window; harvest timing varies with plant and microclimate.',basis:'Australian dwarf calamondin guidance lists harvest from August through December.'}
+  },
+  'chilli-firecracker':{
+    bloom:{months:[12,1,2],season:'Summer',monthsLabel:'Dec – Feb',description:'Warm weather supports flowering and fruit set.',basis:'Gardening Australia lists Capsicum flowering in summer.'},
+    harvest:{months:[12,1,2,3,4],season:'Summer – Mid Autumn',monthsLabel:'Dec – Apr',description:'Most chilli fruit production occurs through the warm season.',basis:'Gardening Australia states most chilli fruit is produced from December through April.'}
+  },
+  'habanero':{
+    bloom:{months:[12,1,2],season:'Summer',monthsLabel:'Dec – Feb',description:'Warm weather supports flowering and fruit set.',basis:'Gardening Australia lists Capsicum flowering in summer.'},
+    harvest:{months:[12,1,2,3,4],season:'Summer – Mid Autumn',monthsLabel:'Dec – Apr',description:'Most chilli fruit production occurs through the warm season.',basis:'Gardening Australia states most chilli fruit is produced from December through April.'}
+  },
+  'jalapeno':{
+    bloom:{months:[12,1,2],season:'Summer',monthsLabel:'Dec – Feb',description:'Warm weather supports flowering and fruit set.',basis:'Gardening Australia lists Capsicum flowering in summer.'},
+    harvest:{months:[12,1,2,3,4],season:'Summer – Mid Autumn',monthsLabel:'Dec – Apr',description:'Most chilli fruit production occurs through the warm season.',basis:'Gardening Australia states most chilli fruit is produced from December through April.'}
+  },
+  'thai-peppers':{
+    bloom:{months:[12,1,2],season:'Summer',monthsLabel:'Dec – Feb',description:'Warm weather supports flowering and fruit set.',basis:'Gardening Australia lists Capsicum flowering in summer.'},
+    harvest:{months:[12,1,2,3,4],season:'Summer – Mid Autumn',monthsLabel:'Dec – Apr',description:'Most chilli fruit production occurs through the warm season.',basis:'Gardening Australia states most chilli fruit is produced from December through April.'}
+  },
+  'chilli-timble':{
+    bloom:{months:[12,1,2],season:'Summer',monthsLabel:'Dec – Feb',description:'Warm weather supports flowering and fruit set.',basis:'Gardening Australia lists Capsicum flowering in summer.'},
+    harvest:{months:[12,1,2,3,4],season:'Summer – Mid Autumn',monthsLabel:'Dec – Apr',description:'Most chilli fruit production occurs through the warm season.',basis:'Gardening Australia states most chilli fruit is produced from December through April.'}
+  },
+  'regular-lemon':{
+    bloom:{months:[9,10,11,12,1,2,3,4,5,6,7,8],season:'Potentially year-round',monthsLabel:'Sep – Aug',description:'Citrus can flower in more than one flush; timing depends strongly on cultivar and conditions.',basis:'Gardening Australia lists Citrus flowering across all four seasons.'},
+    harvest:{months:[3,4,5,6,7,8],season:'Main season: Autumn – Winter',monthsLabel:'Mar – Aug',description:'Many Australian lemon cultivars have their main crop in autumn/winter; some can fruit year-round.',basis:'Gardening Australia lists lemon harvest in autumn/winter and notes cultivar-dependent year-round crops.'}
+  },
+  'dwarf-lemon':{
+    bloom:{months:[9,10,11,12,1,2,3,4,5,6,7,8],season:'Potentially year-round',monthsLabel:'Sep – Aug',description:'Citrus can flower in more than one flush; timing depends strongly on cultivar and conditions.',basis:'Gardening Australia lists Citrus flowering across all four seasons.'},
+    harvest:{months:[3,4,5,6,7,8],season:'Main season: Autumn – Winter',monthsLabel:'Mar – Aug',description:'Many Australian lemon cultivars have their main crop in autumn/winter; dwarfing does not by itself define the fruiting cultivar.',basis:'Gardening Australia lists lemon harvest in autumn/winter; exact cultivar can shift the crop.'}
+  },
+  'rosemary':{
+    bloom:{months:[6,7,8,9,10,11],season:'Winter – Spring',monthsLabel:'Jun – Nov',description:'Purple-blue flowers commonly appear through the cool season into spring.',basis:'Victorian nursery guidance describes rosemary flowering in winter and into spring.'}
+  }
+};
+const psSeasonNoReliable={
+  'begonia':'Your Begonia is not identified to a species/cultivar with a reliable Melbourne month-by-month flowering window.',
+  'birkin-green':'Philodendron Birkin is grown mainly for foliage; indoor flowering is uncommon and not reliably seasonal.',
+  'birkin-white':'Philodendron Birkin is grown mainly for foliage; indoor flowering is uncommon and not reliably seasonal.',
+  'golden-pothos':'Indoor pothos flowering is uncommon and not reliably seasonal.',
+  'maidenhair':'Maidenhair ferns do not produce flowers.',
+  'marble-queen':'Indoor pothos flowering is uncommon and not reliably seasonal.',
+  'many':'Indoor Monstera flowering is uncommon and timing is not reliable enough for a Melbourne month meter.',
+  'konti':'Indoor Monstera flowering is uncommon and timing is not reliable enough for a Melbourne month meter.',
+  'moon-valley':'This Pilea is primarily a foliage plant; a useful Melbourne month-by-month bloom window is not well established.',
+  'orchid-purple':'Phalaenopsis hybrid flowering indoors is strongly influenced by cultivar and growing conditions; a generic month meter would overstate precision.',
+  'orchid-white':'Phalaenopsis hybrid flowering indoors is strongly influenced by cultivar and growing conditions; a generic month meter would overstate precision.',
+  'peace-lily':'Peace Lily can flower intermittently indoors when conditions suit; a fixed Melbourne month-by-month schedule would be misleading.',
+  'pink-lady':'Callisia is primarily grown for foliage and a reliable Melbourne flowering calendar is not established for this individual plant.',
+  'baby-snake':'Snake Plant flowering indoors is uncommon and unpredictable.',
+  'mama-snake':'Snake Plant flowering indoors is uncommon and unpredictable.',
+  'string-of-pearls':'String of Pearls flowering indoors is variable and not reliable enough for a fixed Melbourne month meter.',
+  'zz-thick':'ZZ Plant flowering indoors is uncommon and unpredictable.',
+  'zz-thin':'ZZ Plant flowering indoors is uncommon and unpredictable.',
+  'mint':'The plant is identified only as Mentha spp.; flowering season differs by species, so no species-specific month meter is shown.',
+  'parsley':'Parsley flowering depends on plant age and bolting; it is usually grown for leaves rather than a predictable ornamental bloom season.'
+};
+function psGetSeasonRecords(){
+  try{
+    const value=JSON.parse(localStorage.getItem(PS_SEASON_KEY)||'{}')||{};
+    value.blooms=value.blooms||{};value.harvests=value.harvests||{};
+    return value;
+  }catch(e){return {blooms:{},harvests:{}};}
+}
+function psSaveSeasonRecords(value){localStorage.setItem(PS_SEASON_KEY,JSON.stringify(value));}
+function psGrowingYearStart(date=new Date()){return date.getMonth()>=8?date.getFullYear():date.getFullYear()-1;}
+let psSeasonYearStart=psGrowingYearStart();
+function psSeasonYearRange(startYear){return {start:new Date(startYear,8,1,0,0,0,0),end:new Date(startYear+1,7,31,23,59,59,999)};}
+function psDateFromISO(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(String(value||'')))return null;const d=parseDateOnly(value);return Number.isNaN(d.getTime())?null:d;}
+function psSeasonDateLabel(value){const d=psDateFromISO(value);return d?d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}):'—';}
+function psSeasonId(prefix){return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;}
+function psSeasonIcon(type){
+  const common='viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"';
+  const stroke='stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"';
+  const icons={
+    bloom:`<svg ${common} class="season-line-icon" ${stroke}><circle cx="24" cy="24" r="4"/><path d="M24 20c-7-2-9-9-5-13 5 1 8 5 7 11M28 23c2-7 9-9 13-5-1 5-5 8-11 7M24 28c7 2 9 9 5 13-5-1-8-5-7-11M20 25c-2 7-9 9-13 5 1-5 5-8 11-7"/></svg>`,
+    harvest:`<svg ${common} class="season-line-icon" ${stroke}><path d="M28 9c-2 5-6 7-11 7 1-5 5-8 11-7Z"/><path d="M25 15c6 2 10 8 9 15-1 8-7 12-13 11-7-1-10-7-9-14 1-8 6-13 13-12Z"/><path d="M25 15c0-3 1-6 4-8"/></svg>`,
+    climate:`<svg ${common} class="season-line-icon" ${stroke}><path d="M20 10a5 5 0 0 1 10 0v18a9 9 0 1 1-10 0V10Z"/><path d="M25 16v17M20 36h10"/></svg>`,
+    calendar:`<svg ${common} class="season-line-icon" ${stroke}><rect x="7" y="10" width="34" height="31" rx="5"/><path d="M15 6v8M33 6v8M7 19h34M15 27h5M27 27h6M15 34h5"/></svg>`
+  };
+  return icons[type]||icons.calendar;
+}
+function psSeasonExpectedCells(spec,type){
+  return PS_SEASON_MONTHS.map(m=>`<div class="season-cell ${spec&&spec.months.includes(m)?`expected ${type}`:''}"></div>`).join('');
+}
+function psSeasonMonthDate(startYear,index){const month=PS_SEASON_MONTHS[index];const year=month>=9?startYear:startYear+1;return new Date(year,month-1,1,12);}
+function psBloomTouchesMonth(record,startYear,index){
+  const start=psDateFromISO(record.start);if(!start)return false;
+  const end=record.ongoing?new Date():psDateFromISO(record.end)||start;
+  const monthStart=psSeasonMonthDate(startYear,index);const monthEnd=new Date(monthStart.getFullYear(),monthStart.getMonth()+1,0,23,59,59,999);
+  return start<=monthEnd&&end>=monthStart;
+}
+function psHarvestInMonth(record,startYear,index){
+  const date=psDateFromISO(record.date);if(!date)return false;
+  const month=psSeasonMonthDate(startYear,index);return date.getFullYear()===month.getFullYear()&&date.getMonth()===month.getMonth();
+}
+function psSeasonActualCells(records,type,startYear){
+  return PS_SEASON_MONTHS.map((m,index)=>{
+    const hit=(records||[]).some(r=>type==='bloom'?psBloomTouchesMonth(r,startYear,index):psHarvestInMonth(r,startYear,index));
+    return `<div class="season-cell ${hit?`actual ${type}`:''}">${hit?`<span class="season-cell-mark">${psSeasonIcon(type)}</span>`:''}</div>`;
+  }).join('');
+}
+function psSeasonCurrentCellClass(startYear,index){
+  const d=psSeasonMonthDate(startYear,index),now=new Date();
+  return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()?' current-month':'';
+}
+function psSeasonGrid(p,schedule,records,startYear){
+  const blooms=records.blooms[p.id]||[];const harvests=records.harvests[p.id]||[];const hasHarvest=PS_HARVEST_PLANTS.has(p.id);
+  const header=PS_SEASON_MONTH_LABELS.map((label,index)=>`<div class="season-month${psSeasonCurrentCellClass(startYear,index)}">${label}</div>`).join('');
+  const row=(label,cells,kind)=>`<div class="season-row-label"><span>${psSeasonIcon(kind)}</span>${label}</div>${PS_SEASON_MONTHS.map((m,index)=>cells[index].replace('class="season-cell','class="season-cell'+psSeasonCurrentCellClass(startYear,index))).join('')}`;
+  const expBloom=PS_SEASON_MONTHS.map(m=>`<div class="season-cell ${schedule.bloom&&schedule.bloom.months.includes(m)?'expected bloom':''}"></div>`);
+  const actualBloom=PS_SEASON_MONTHS.map((m,index)=>{const hit=blooms.some(r=>psBloomTouchesMonth(r,startYear,index));return `<div class="season-cell ${hit?'actual bloom':''}">${hit?`<span class="season-cell-mark">${psSeasonIcon('bloom')}</span>`:''}</div>`;});
+  const expHarvest=PS_SEASON_MONTHS.map(m=>`<div class="season-cell ${schedule.harvest&&schedule.harvest.months.includes(m)?'expected harvest':''}"></div>`);
+  const actualHarvest=PS_SEASON_MONTHS.map((m,index)=>{const hit=harvests.some(r=>psHarvestInMonth(r,startYear,index));return `<div class="season-cell ${hit?'actual harvest':''}">${hit?`<span class="season-cell-mark">${psSeasonIcon('harvest')}</span>`:''}</div>`;});
+  return `<div class="season-calendar-scroll" aria-label="Bloom and harvest calendar"><div class="season-calendar-grid"><div class="season-corner"></div>${header}${row('Expected bloom',expBloom,'bloom')}${row('My actual blooms',actualBloom,'bloom')}${hasHarvest?row('Expected harvest',expHarvest,'harvest')+row('My actual harvests',actualHarvest,'harvest'):''}</div></div>`;
+}
+function psSeasonSummaryCard(type,title,spec,fallback){
+  const text=spec?`<strong>${psEscapeHTML(spec.season)}</strong><span>${psEscapeHTML(spec.monthsLabel)}</span><p>${psEscapeHTML(spec.description)}</p>`:`<strong>No reliable fixed window</strong><p>${psEscapeHTML(fallback||'Timing is not reliable enough for a month-by-month recommendation.')}</p>`;
+  return `<article class="season-summary-card ${type}"><div class="season-summary-icon">${psSeasonIcon(type)}</div><div><span class="season-summary-label">${title}</span>${text}</div></article>`;
+}
+function psSeasonRecordOverlapsYear(record,type,startYear){
+  const range=psSeasonYearRange(startYear);
+  if(type==='harvest'){const d=psDateFromISO(record.date);return !!d&&d>=range.start&&d<=range.end;}
+  const start=psDateFromISO(record.start);if(!start)return false;const end=record.ongoing?new Date():psDateFromISO(record.end)||start;return start<=range.end&&end>=range.start;
+}
+function psSeasonRecordLists(p,records,startYear){
+  const blooms=(records.blooms[p.id]||[]).filter(r=>psSeasonRecordOverlapsYear(r,'bloom',startYear)).sort((a,b)=>String(b.start).localeCompare(String(a.start)));
+  const harvests=(records.harvests[p.id]||[]).filter(r=>psSeasonRecordOverlapsYear(r,'harvest',startYear)).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const bloomRows=blooms.length?blooms.map(r=>`<div class="season-record-row"><div><strong>${psSeasonDateLabel(r.start)} – ${r.ongoing?'Still blooming':psSeasonDateLabel(r.end||r.start)}</strong>${r.note?`<small>${psEscapeHTML(r.note)}</small>`:''}</div><div class="season-record-actions"><button type="button" data-season-edit="bloom" data-record-id="${r.id}">Edit</button><button type="button" data-season-delete="bloom" data-record-id="${r.id}">Delete</button></div></div>`).join(''):'<p class="season-empty">No bloom records for this growing year.</p>';
+  const harvestRows=harvests.length?harvests.map(r=>{const qty=[r.quantity,r.unit].filter(Boolean).join(' ');return `<div class="season-record-row"><div><strong>${psSeasonDateLabel(r.date)}</strong>${qty?`<span>${psEscapeHTML(qty)}</span>`:''}${r.note?`<small>${psEscapeHTML(r.note)}</small>`:''}</div><div class="season-record-actions"><button type="button" data-season-edit="harvest" data-record-id="${r.id}">Edit</button><button type="button" data-season-delete="harvest" data-record-id="${r.id}">Delete</button></div></div>`}).join(''):'<p class="season-empty">No harvest records for this growing year.</p>';
+  return `<div class="season-records-grid"><section class="season-record-card"><div class="season-record-head"><h3>${psSeasonIcon('bloom')} My flowering records</h3><button type="button" class="season-add-btn bloom" data-season-add="bloom">+ Add bloom</button></div>${bloomRows}</section>${PS_HARVEST_PLANTS.has(p.id)?`<section class="season-record-card"><div class="season-record-head"><h3>${psSeasonIcon('harvest')} My harvest records</h3><button type="button" class="season-add-btn harvest" data-season-add="harvest">+ Add harvest</button></div>${harvestRows}</section>`:''}</div>`;
+}
+function psSeasonPage(p){
+  const schedule=psSeasonExpected[p.id]||{};const records=psGetSeasonRecords();const fallback=psSeasonNoReliable[p.id]||'No sufficiently specific Australian month-by-month flowering window is stored for this plant.';
+  const hasHarvest=PS_HARVEST_PLANTS.has(p.id);
+  const yearLabel=`${psSeasonYearStart}–${String(psSeasonYearStart+1).slice(-2)}`;
+  const evidence=[schedule.bloom&&schedule.bloom.basis,schedule.harvest&&schedule.harvest.basis].filter(Boolean).join(' ');
+  return `<section class="season-page"><div class="season-title-row"><div><span class="profile-eyebrow">INDIVIDUAL PLANT HISTORY</span><h2>Bloom & Harvest Schedule</h2></div><div class="season-year-switcher"><button type="button" data-season-year="-1" aria-label="Previous growing year">‹</button><strong>${yearLabel}</strong><button type="button" data-season-year="1" aria-label="Next growing year">›</button></div></div><div class="season-summary-grid">${psSeasonSummaryCard('bloom','BLOOMS',schedule.bloom,fallback)}${hasHarvest?psSeasonSummaryCard('harvest','HARVEST',schedule.harvest,'A reliable expected harvest window has not been established for this plant.'):''}<article class="season-summary-card climate"><div class="season-summary-icon">${psSeasonIcon('climate')}</div><div><span class="season-summary-label">MELBOURNE NOTE</span><strong>Altona / Melbourne</strong><p>Timing can shift with temperature, light, cultivar, plant maturity and the plant’s microclimate.</p></div></article></div>${psSeasonGrid(p,schedule,records,psSeasonYearStart)}<div class="season-legend"><span><i class="expected-bloom"></i>Expected bloom</span><span><i class="actual-bloom"></i>My bloom</span>${hasHarvest?'<span><i class="expected-harvest"></i>Expected harvest</span><span><i class="actual-harvest"></i>My harvest</span>':''}</div>${!schedule.bloom?`<article class="season-precision-note"><strong>No false precision</strong><p>${psEscapeHTML(fallback)} You can still record your plant’s own flowering dates and build an individual history.</p></article>`:''}${evidence?`<article class="season-evidence-note"><strong>Expected timing basis</strong><p>${psEscapeHTML(evidence)}</p></article>`:''}${psSeasonRecordLists(p,records,psSeasonYearStart)}</section>`;
+}
+function psEnsureSeasonModal(){
+  if(el('seasonRecordModal'))return;
+  const wrap=document.createElement('div');wrap.id='seasonRecordModal';wrap.className='season-record-modal';wrap.hidden=true;
+  wrap.innerHTML=`<div class="season-modal-backdrop" data-season-close></div><section class="season-modal-sheet" role="dialog" aria-modal="true" aria-labelledby="seasonModalTitle"><div class="season-modal-head"><h2 id="seasonModalTitle">Record bloom</h2><button type="button" data-season-close aria-label="Close">×</button></div><form id="seasonRecordForm"><input id="seasonRecordType" type="hidden"><input id="seasonRecordId" type="hidden"><div id="seasonBloomFields"><label>Bloom start date<input id="seasonBloomStart" type="date"></label><label id="seasonBloomEndLabel">Bloom end date<input id="seasonBloomEnd" type="date"></label><label class="season-check"><input id="seasonBloomOngoing" type="checkbox"> Still blooming</label></div><div id="seasonHarvestFields" hidden><label>Harvest date<input id="seasonHarvestDate" type="date"></label><div class="season-form-pair"><label>Quantity <span>(optional)</span><input id="seasonHarvestQty" type="number" min="0" step="any" inputmode="decimal"></label><label>Unit <span>(optional)</span><select id="seasonHarvestUnit"><option value="">Not specified</option><option value="fruit">fruit</option><option value="chillies">chillies</option><option value="lemons">lemons</option><option value="g">grams</option><option value="kg">kilograms</option></select></label></div></div><label>Note <span>(optional)</span><textarea id="seasonRecordNote" rows="3"></textarea></label><div id="seasonFormError" class="season-form-error" role="alert"></div><button class="season-modal-save" type="submit">Save record</button></form></section>`;
+  document.body.appendChild(wrap);
+  wrap.querySelectorAll('[data-season-close]').forEach(x=>x.addEventListener('click',psCloseSeasonModal));
+  el('seasonBloomOngoing').addEventListener('change',()=>{el('seasonBloomEnd').disabled=el('seasonBloomOngoing').checked;el('seasonBloomEndLabel').classList.toggle('is-disabled',el('seasonBloomOngoing').checked);});
+  el('seasonRecordForm').addEventListener('submit',psSubmitSeasonRecord);
+}
+function psOpenSeasonModal(p,type,id=''){
+  psEnsureSeasonModal();const records=psGetSeasonRecords();const isBloom=type==='bloom';
+  el('seasonRecordType').value=type;el('seasonRecordId').value=id;el('seasonModalTitle').textContent=id?`Edit ${isBloom?'bloom':'harvest'}`:`Add ${isBloom?'bloom':'harvest'}`;
+  el('seasonBloomFields').hidden=!isBloom;el('seasonHarvestFields').hidden=isBloom;el('seasonFormError').textContent='';
+  el('seasonBloomStart').value='';el('seasonBloomEnd').value='';el('seasonBloomOngoing').checked=false;el('seasonBloomEnd').disabled=false;el('seasonHarvestDate').value='';el('seasonHarvestQty').value='';el('seasonHarvestUnit').value='';el('seasonRecordNote').value='';
+  const record=id?((isBloom?records.blooms[p.id]:records.harvests[p.id])||[]).find(r=>r.id===id):null;
+  if(record){if(isBloom){el('seasonBloomStart').value=record.start||'';el('seasonBloomEnd').value=record.end||'';el('seasonBloomOngoing').checked=!!record.ongoing;el('seasonBloomEnd').disabled=!!record.ongoing;}else{el('seasonHarvestDate').value=record.date||'';el('seasonHarvestQty').value=record.quantity||'';el('seasonHarvestUnit').value=record.unit||'';}el('seasonRecordNote').value=record.note||'';}
+  el('seasonRecordModal').dataset.plantId=p.id;el('seasonRecordModal').hidden=false;
+}
+function psCloseSeasonModal(){const modal=el('seasonRecordModal');if(modal)modal.hidden=true;}
+function psSubmitSeasonRecord(event){
+  event.preventDefault();const modal=el('seasonRecordModal');const plantId=modal&&modal.dataset.plantId;const p=plants.find(x=>x.id===plantId);if(!p)return;
+  const type=el('seasonRecordType').value,id=el('seasonRecordId').value,records=psGetSeasonRecords();let record;
+  if(type==='bloom'){
+    const start=el('seasonBloomStart').value,end=el('seasonBloomEnd').value,ongoing=el('seasonBloomOngoing').checked;
+    if(!start){el('seasonFormError').textContent='Choose the bloom start date.';return;}
+    if(!ongoing&&!end){el('seasonFormError').textContent='Choose an end date or select Still blooming.';return;}
+    if(!ongoing&&end<start){el('seasonFormError').textContent='The bloom end date cannot be before the start date.';return;}
+    record={id:id||psSeasonId('bloom'),start,end:ongoing?'':end,ongoing,note:el('seasonRecordNote').value.trim()};records.blooms[p.id]=records.blooms[p.id]||[];const i=records.blooms[p.id].findIndex(r=>r.id===record.id);if(i>=0)records.blooms[p.id][i]=record;else records.blooms[p.id].push(record);
+  }else{
+    const date=el('seasonHarvestDate').value;if(!date){el('seasonFormError').textContent='Choose the harvest date.';return;}
+    record={id:id||psSeasonId('harvest'),date,quantity:el('seasonHarvestQty').value.trim(),unit:el('seasonHarvestUnit').value,note:el('seasonRecordNote').value.trim()};records.harvests[p.id]=records.harvests[p.id]||[];const i=records.harvests[p.id].findIndex(r=>r.id===record.id);if(i>=0)records.harvests[p.id][i]=record;else records.harvests[p.id].push(record);
+  }
+  psSaveSeasonRecords(records);psCloseSeasonModal();renderProfile(p.id,5);
+}
+function psDeleteSeasonRecord(p,type,id){
+  const records=psGetSeasonRecords(),key=type==='bloom'?'blooms':'harvests';const list=records[key][p.id]||[];const record=list.find(r=>r.id===id);if(!record)return;
+  if(!confirm(`Delete this ${type} record?`))return;records[key][p.id]=list.filter(r=>r.id!==id);psSaveSeasonRecords(records);renderProfile(p.id,5);
+}
+function psBindSeasonPage(p){
+  document.querySelectorAll('[data-open-season]').forEach(btn=>btn.addEventListener('click',()=>{psSeasonYearStart=psGrowingYearStart();renderProfile(p.id,5);}));
+  if(!document.querySelector('.season-page'))return;
+  document.querySelectorAll('[data-season-year]').forEach(btn=>btn.addEventListener('click',()=>{psSeasonYearStart+=Number(btn.dataset.seasonYear);renderProfile(p.id,5);}));
+  document.querySelectorAll('[data-season-add]').forEach(btn=>btn.addEventListener('click',()=>psOpenSeasonModal(p,btn.dataset.seasonAdd)));
+  document.querySelectorAll('[data-season-edit]').forEach(btn=>btn.addEventListener('click',()=>psOpenSeasonModal(p,btn.dataset.seasonEdit,btn.dataset.recordId)));
+  document.querySelectorAll('[data-season-delete]').forEach(btn=>btn.addEventListener('click',()=>psDeleteSeasonRecord(p,btn.dataset.seasonDelete,btn.dataset.recordId)));
+}
+
 function profilePageButton(n,label){return `<button class="profile-tab" type="button" data-profile-page="${n}">${label}</button>`;}
 function renderProfile(id,page=1){
  const p=plants.find(x=>x.id===id);if(!p)return;
@@ -686,17 +896,20 @@ function renderProfile(id,page=1){
  const photoMarkup=`<button class="profile-photo-wrap profile-photo-trigger ${photo?'has-photo':''}" type="button" data-profile-photo-edit="${p.id}" aria-label="Edit ${safeName} profile">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${safeName} photo">`:`<span class="profile-photo-fallback" aria-label="No saved plant photo">${psEscapeHTML(psPlantInitials(displayName))}</span>`}</button>`;
  const identity=`<section class="profile-identity profile-identity-quick" aria-label="${safeName} identity"><div class="quick-identity-photo">${photoMarkup}</div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${safeName}</h2>${otherNames}<p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`;
  const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
+ const seasonEntry=page===5?'':`<button class="profile-season-entry" type="button" data-open-season><span class="profile-season-entry-icon">${psSeasonIcon('calendar')}</span><span><strong>Bloom &amp; Harvest Schedule</strong><small>Compare expected timing with this plant’s actual records</small></span><span class="profile-season-entry-arrow" aria-hidden="true">›</span></button>`;
  let body='';
  if(page===1) body=`<article class="profile-poster quick-guide-v110"><section class="quick-info-grid quick-info-columns"><div class="quick-info-column">${quickInfoCard('light','LIGHT',g.position)}${quickInfoCard('soil','SOIL',g.soilQuick)}</div><div class="quick-info-column">${quickInfoCard('watering','WATERING',`${g.moisture}. ${g.water}`)}<article class="quick-info-card quick-info-feeding quick-feeding-card"><div class="quick-info-icon">${quickGuideIcon('feeding')}</div><div class="quick-info-copy"><span class="quick-info-label">FEEDING</span><p><strong>${g.feed}</strong></p><p>${g.feedNote}</p></div></article>${quickInfoCard('ph','pH',phFor(p,g),'quick-ph-card')}</div></section>${quickFullSection('maintenance','HANDS-ON CARE',`<ul>${(g.maint||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`,'quick-maintenance-card')}${quickFullSection('tip','GROW TIP',`<p>${g.grow}</p>`,'quick-grow-card')}</article>`;
  if(page===2) body=`<section class="detail-stack profile-cohesive"><h2>${safeName} — Care Guide</h2>${profileCareCard('position','POSITION',g.position)}${profileCareCard('soil','SOIL + pH',careSoilDetail(p,g))}${profileCareCard('water','WATERING',`${g.water}<br><small>Watering Check interval remains ${p.base} days; always confirm soil moisture first.</small>`)}${profileCareCard('fertilising','FERTILISING / FEEDING',`<strong>${g.feed}</strong><br>${g.feedNote}`)}${profileCareCard('repot','REPOTTING',g.repot)}${profileCareCard('propagation','REPLANTING / PROPAGATION',g.prop)}<article class="profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('maintenance')}</div><div class="profile-card-copy"><span class="care-label">MAINTENANCE</span><ul>${g.maint.map(x=>`<li>${x}</li>`).join('')}</ul></div></article><article class="evidence-note"><b>Evidence standard</b><p>Care is structured around Gardening Australia, Australian botanic-garden guidance, Altona/Melbourne seasonal conditions, and product-label directions. Product availability is a practical shopping reference; always follow the current pack/registered label.</p></article></section>`;
  if(page===3) body=`<section class="detail-stack profile-cohesive"><h2>Common Pests — Symptoms & Solutions</h2><p class="section-intro">Only pests relevant to this plant type are shown. Confirm the pest before treating.</p>${g.pests.map(k=>{const x=pestData[k];return `<article class="pest-card profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('pest')}</div><div class="profile-card-copy"><h3>${x[1]}</h3><p><b>Symptoms:</b> ${x[2]}</p><p><b>Inspect:</b> ${x[3]}</p><p><b>Care / treatment:</b> ${x[4]}</p></div></article>`}).join('')}<article class="evidence-note"><b>Product safety</b><p>No pesticide dilution or schedule is invented in Plant Secretary. Use only products whose current APVMA-approved label covers the pest and use situation, and follow that label.</p></article></section>`;
  if(page===4) body=`<section class="detail-stack profile-cohesive"><h2>Common Problems & Troubleshooting</h2><div class="trouble-list">${g.problems.map(k=>{const x=problemData[k];return `<article class="trouble-card profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('problem')}</div><div class="profile-card-copy"><h3>${x[0]}</h3><p><b>Likely causes</b><br>${x[1]}</p><p><b>What to do</b><br>${x[2]}</p></div></article>`}).join('')}</div><article class="evidence-note"><b>Diagnostic rule</b><p>Similar symptoms can have different causes. Check soil moisture, roots, light and pests before treating or feeding.</p></article></section>`;
+ if(page===5) body=psSeasonPage(p);
  const tabsMount=el('profileTabsMount');
  if(tabsMount) tabsMount.innerHTML=tabs;
- el('profileContent').innerHTML=`${identity}<div class="profile-page">${body}</div><button id="profileWaterBtn" class="profile-water-btn" type="button"><span class="profile-water-icon" aria-hidden="true">${quickGuideIcon('watering')}</span><span>${watered}</span></button>`;
+ el('profileContent').innerHTML=`${identity}${seasonEntry}<div class="profile-page">${body}</div>${page===5?'':`<button id="profileWaterBtn" class="profile-water-btn" type="button"><span class="profile-water-icon" aria-hidden="true">${quickGuideIcon('watering')}</span><span>${watered}</span></button>`}`;
  document.querySelectorAll('.profile-tab').forEach(b=>{b.classList.toggle('active',Number(b.dataset.profilePage)===page);b.addEventListener('click',()=>renderProfile(id,Number(b.dataset.profilePage)));});
- el('profileWaterBtn').addEventListener('click',()=>{state.watered[p.id]=localDateOnly();save();renderAll();renderProfile(p.id,page);});
+ const profileWaterBtn=el('profileWaterBtn');if(profileWaterBtn)profileWaterBtn.addEventListener('click',()=>{state.watered[p.id]=localDateOnly();save();renderAll();renderProfile(p.id,page);});
  document.querySelectorAll('[data-profile-photo-edit]').forEach(btn=>btn.addEventListener('click',()=>psOpenProfilePhotoMenu(p.id)));
+ psBindSeasonPage(p);
 }
 
 let psEditingPhotoPlantId=null;
@@ -924,7 +1137,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=120').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=121').catch(()=>{}));}
 
 
 // v118 — complete Plant Secretary backup / restore
