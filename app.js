@@ -447,9 +447,20 @@ const australianOtherNames={
   'mint':['Common Mint','Garden Mint','Spearmint'],
   'parsley':['Garden Parsley']
 };
+const PS_OTHER_NAMES_KEY='plantSecretary.otherNames.v1';
+function psGetOtherNameOverrides(){try{return JSON.parse(localStorage.getItem(PS_OTHER_NAMES_KEY)||'{}')||{};}catch(e){return {};}}
+function psSaveOtherNameOverrides(names){localStorage.setItem(PS_OTHER_NAMES_KEY,JSON.stringify(names));}
+function psNormaliseOtherNames(value){
+  const values=Array.isArray(value)?value:String(value??'').split(',');
+  const seen=new Set(),out=[];
+  values.forEach(raw=>{const name=String(raw||'').trim();const key=name.toLocaleLowerCase('en-AU');if(name&&!seen.has(key)){seen.add(key);out.push(name);}});
+  return out;
+}
 function psOtherNames(p){
+  const saved=psGetOtherNameOverrides();
+  const source=Object.prototype.hasOwnProperty.call(saved,p.id)?psNormaliseOtherNames(saved[p.id]):(australianOtherNames[p.id]||[]);
   const main=psDisplayName(p).trim().toLocaleLowerCase('en-AU');
-  return (australianOtherNames[p.id]||[]).filter(name=>String(name).trim().toLocaleLowerCase('en-AU')!==main);
+  return source.filter(name=>String(name).trim().toLocaleLowerCase('en-AU')!==main);
 }
 function psOtherNamesMarkup(p){
   const names=psOtherNames(p);
@@ -965,8 +976,8 @@ function psGetCareHistory(){return psReadObject(PS_CARE_HISTORY_KEY);}
 function psSaveCareHistory(v){localStorage.setItem(PS_CARE_HISTORY_KEY,JSON.stringify(v||{}));}
 function psCareId(){return `care-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;}
 function psTodayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-function psDateAU(value){if(!value)return '—';const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value);if(!m)return psEscapeHTML(value);return new Intl.DateTimeFormat('en-AU',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(Number(m[1]),Number(m[2])-1,Number(m[3])));}
-function psMonthAU(value){if(!value)return '—';const m=/^(\d{4})-(\d{2})$/.exec(value);if(!m)return psEscapeHTML(value);return new Intl.DateTimeFormat('en-AU',{month:'short',year:'numeric'}).format(new Date(Number(m[1]),Number(m[2])-1,1));}
+function psDateAU(value){if(!value)return '—';const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value);if(!m)return psEscapeHTML(value);const d=Number(m[3]),mon=new Intl.DateTimeFormat('en-AU',{month:'short',timeZone:'UTC'}).format(new Date(Date.UTC(Number(m[1]),Number(m[2])-1,1))),yr=String(m[1]).slice(-2);return `${d} ${mon} ${yr}`;}
+function psMonthAU(value){if(!value)return '—';const m=/^(\d{4})-(\d{2})$/.exec(value);if(!m)return psEscapeHTML(value);const mon=new Intl.DateTimeFormat('en-AU',{month:'short',timeZone:'UTC'}).format(new Date(Date.UTC(Number(m[1]),Number(m[2])-1,1))),yr=String(m[1]).slice(-2);return `${mon} ${yr}`;}
 function psMonthsWithMe(value,mode){
   if(!value||!['exact','approx'].includes(mode))return '';
   const m=mode==='exact'?/^(\d{4})-(\d{2})-(\d{2})$/.exec(value):/^(\d{4})-(\d{2})$/.exec(value);if(!m)return '';
@@ -974,7 +985,7 @@ function psMonthsWithMe(value,mode){
   let months=(now.getFullYear()-start.getFullYear())*12+(now.getMonth()-start.getMonth());if(mode==='exact'&&now.getDate()<start.getDate())months--;
   months=Math.max(0,months);const y=Math.floor(months/12),mo=months%12;return `${y?`${y} yr${y===1?'':'s'} `:''}${mo} mo with me`;
 }
-function psInfoDateLabel(mode,value,emptyLabel){if(mode==='exact')return psDateAU(value);if(mode==='approx')return `Approx. ${psMonthAU(value)}`;if(mode==='unknown')return 'Unknown';if(mode==='not-propagated')return 'Not propagated';return emptyLabel||'Not recorded';}
+function psInfoDateLabel(mode,value,emptyLabel){if(mode==='exact')return psDateAU(value);if(mode==='approx')return psMonthAU(value);if(mode==='unknown')return 'Unknown';if(mode==='not-propagated')return 'Not propagated';return emptyLabel||'Not recorded';}
 const PS_PROP_METHODS=['Stem cutting','Leaf cutting','Division','Offset / pup','Seed','Water propagation','Soil propagation','Other'];
 const PS_CARE_TYPES={pruned:{label:'Pruned',icon:'✂️'},pinched:{label:'Pinched',icon:'🤏'},wiped:{label:'Wiped leaves',icon:'🧤'},rotated:{label:'Rotated',icon:'🔄'},other:{label:'Other care',icon:'＋'}};
 function psDaysAgo(date){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(date||'');if(!m)return '';const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));const t=new Date();t.setHours(0,0,0,0);const n=Math.round((t-d)/86400000);if(n<0)return 'future date';if(n===0)return 'today';if(n===1)return '1 day ago';return `${n} days ago`;}
@@ -985,7 +996,8 @@ function psMyPlantInfoMarkup(p){
   const withMe=psMonthsWithMe(x.acquiredMode,x.acquiredMode==='exact'?x.acquiredDate:x.acquiredMonth);
   const propagated=psInfoDateLabel(x.propagatedMode,x.propagatedDate||x.propagatedMonth,'Not recorded');
   let method='—';if(x.propagationMethod){method=x.propagationMethod==='Other'?(x.propagationCustom||'Other'):x.propagationMethod;}
-  return `<section class="myplant-card"><div class="myplant-section-head"><div><span class="profile-eyebrow">INDIVIDUAL PLANT RECORD</span><h2>My Plant Information</h2></div><button class="myplant-edit-btn" type="button" data-myplant-edit>✎ <span>Edit</span></button></div><div class="myplant-info-grid"><article><span class="myplant-info-icon" aria-hidden="true">▣</span><small>Date acquired</small><strong>${psEscapeHTML(acquired)}</strong>${withMe?`<p>${psEscapeHTML(withMe)}</p>`:''}</article><article><span class="myplant-info-icon" aria-hidden="true">⌁</span><small>Date propagated</small><strong>${psEscapeHTML(propagated)}</strong></article><article><span class="myplant-info-icon" aria-hidden="true">⌘</span><small>Propagation method</small><strong>${psEscapeHTML(method)}</strong></article></div><article class="myplant-notes"><small>Notes</small><p>${x.notes?psEscapeHTML(x.notes):'<span class="myplant-muted">No personal notes yet.</span>'}</p></article></section>`;
+  const propagatedMethod=(x.propagationMode==='not-propagated')?'Not propagated':method;
+  return `<section class="myplant-card"><div class="myplant-section-head"><div><span class="profile-eyebrow">INDIVIDUAL PLANT RECORD</span><h2>My Plant Information</h2></div><button class="myplant-edit-btn" type="button" data-myplant-edit>✎ <span>Edit</span></button></div><div class="myplant-info-grid"><article><span class="myplant-info-icon" aria-hidden="true">▣</span><small>Date acquired</small><strong>${psEscapeHTML(acquired)}</strong>${withMe?`<p>${psEscapeHTML(withMe)}</p>`:''}</article><article><span class="myplant-info-icon" aria-hidden="true">⌁</span><small>Date propagated &amp; method</small><strong>${psEscapeHTML(propagated)}</strong><p>${psEscapeHTML(propagatedMethod)}</p></article></div><article class="myplant-notes"><small>Notes (optional)</small><p>${x.notes?psEscapeHTML(x.notes):'<span class="myplant-muted">No personal notes yet.</span>'}</p></article></section>`;
 }
 function psCareHistoryMarkup(p){
   const all=psGetCareHistory(),list=[...(all[p.id]||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||'').localeCompare(a.createdAt||''));
@@ -1085,6 +1097,7 @@ function psOpenProfilePhotoMenu(id){
   if(!menu||!p)return;
   el('profileCommonNameInput').value=psDisplayName(p);
   el('profileBotanicalInput').value=psBotanicalName(p);
+  el('profileOtherNamesInput').value=psOtherNames(p).join(', ');
   const saved=psSavedPlantPhoto(id);
   const sources=psGetPlantPhotoSources();
   const crops=psGetPlantPhotoCrops();
@@ -1250,6 +1263,9 @@ el('profileSavePhotoBtn').addEventListener('click',async()=>{
   if(commonName===String(p.name||'').trim()) delete commonNames[id]; else commonNames[id]=commonName;
   psSaveCommonNames(commonNames);
   const names=psGetBotanicalNames();names[id]=botanical;psSaveBotanicalNames(names);
+  const otherNameOverrides=psGetOtherNameOverrides();
+  otherNameOverrides[id]=psNormaliseOtherNames(el('profileOtherNamesInput').value).join(', ');
+  psSaveOtherNameOverrides(otherNameOverrides);
   const photos=psGetPlantPhotos();
   const sources=psGetPlantPhotoSources();
   const crops=psGetPlantPhotoCrops();
@@ -1300,7 +1316,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 el('filterSelect').value='due';
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=126').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=127').catch(()=>{}));}
 
 
 // v118 — complete Plant Secretary backup / restore

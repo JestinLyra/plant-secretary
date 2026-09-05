@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Plant Secretary" />
   <link rel="manifest" href="manifest.json?v=53" />
   <link rel="apple-touch-icon" href="icon.svg?v=53" />
-  <link rel="stylesheet" href="style.css?v=126" />
+  <link rel="stylesheet" href="style.css?v=127" />
   <title>Plant Secretary</title>
 </head>
 <body>
@@ -137,7 +137,7 @@
     <div id="profileContent" class="profile-content"></div>
   </section>
 
-  <script src="app.js?v=126" defer></script>
+  <script src="app.js?v=127" defer></script>
 
 <div id="addPlantModal" class="plant-modal" hidden>
   <div class="plant-modal-backdrop" data-close-add-modal></div>
@@ -172,6 +172,7 @@
     <div class="profile-editor-header"><h2 id="profilePhotoMenuTitle">Edit plant profile</h2><div class="profile-editor-actions"><button id="profileCancelPhotoBtn" class="secondary" type="button">Cancel</button><button id="profileSavePhotoBtn" class="primary" type="button">Save</button></div></div>
     <label class="profile-botanical-field profile-common-name-field"><span>Plant name</span><input id="profileCommonNameInput" type="text" autocomplete="off" spellcheck="false"></label>
     <label class="profile-botanical-field"><span>Botanical name</span><input id="profileBotanicalInput" type="text" autocomplete="off" spellcheck="false"></label>
+    <label class="profile-botanical-field profile-other-names-field"><span>Other names</span><input id="profileOtherNamesInput" type="text" autocomplete="off" spellcheck="false" placeholder=""><small>Add alternate common names, separated by commas.</small></label>
     <div id="profileCropControls" class="profile-crop-controls" hidden>
       <div class="profile-crop-preview"><img id="profileCropImage" alt="Photo crop preview"></div>
       <label><span>Resize</span><input id="profileCropZoom" type="range" min="0.35" max="2.5" step="0.01" value="1"></label>

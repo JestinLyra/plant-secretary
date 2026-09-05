@@ -1834,6 +1834,7 @@ body.profile-open{
 .profile-editor-sheet{max-height:min(88vh,760px);overflow-y:auto;}
 .profile-botanical-field,.profile-crop-controls label{display:grid;gap:6px;color:#315c49;font-size:13px;font-weight:750;}
 .profile-botanical-field input{width:100%;min-height:44px;border:1px solid #ccd6c7;border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;color:#173d2a;background:#fff;box-sizing:border-box;}
+.profile-other-names-field small{font-size:11px;font-weight:500;color:#718078;line-height:1.35;margin-top:-1px;}
 .profile-crop-controls{display:grid;gap:10px;}
 .profile-crop-controls[hidden]{display:none!important;}
 .profile-crop-preview{width:190px;aspect-ratio:1/1;margin:2px auto 4px;border-radius:50%;overflow:hidden;background:#fff;border:1.5px solid #8eb29e;position:relative;}
@@ -2401,7 +2402,7 @@ body.profile-open{
 .myplant-section-head h2{margin:3px 0 0;color:#0b5031;font-size:21px;line-height:1.1;}
 .myplant-edit-btn,.myplant-add-btn{border:1px solid #d9e6d9;background:#edf4e9;color:#174f34;border-radius:999px;padding:8px 11px;font:inherit;font-size:12px;font-weight:800;white-space:nowrap;}
 .myplant-add-btn{background:#245f3e;color:#fff;border-color:#245f3e;}
-.myplant-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.myplant-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
 .myplant-info-grid article{min-width:0;background:#f5f8f1;border:1px solid #e1e8dd;border-radius:15px;padding:12px 10px;min-height:118px;display:flex;flex-direction:column;align-items:flex-start;}
 .myplant-info-icon{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#e3eee0;color:#245f3e;font-size:15px;margin-bottom:8px;}
 .myplant-info-grid small,.myplant-notes small,.care-last-card small{font-size:10.5px;font-weight:800;color:#456456;text-transform:uppercase;letter-spacing:.04em;}
@@ -2437,8 +2438,10 @@ body.profile-open{
   .profile-tabs-mount .profile-tabs{gap:3px !important;}
   .profile-tab{padding:8px 3px;font-size:10px !important;}
   .myplant-card{padding:12px;}
-  .myplant-info-grid{grid-template-columns:1fr;}
-  .myplant-info-grid article{min-height:auto;}
+  .myplant-info-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;}
+  .myplant-info-grid article{min-height:108px;padding:10px 8px;}
+  .myplant-info-grid small{font-size:9.5px;}
+  .myplant-info-grid strong{font-size:12px;}
   .care-last-grid{grid-template-columns:1fr;}
   .myplant-section-head{align-items:center;}
 }

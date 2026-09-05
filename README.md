@@ -656,3 +656,11 @@ Built-in expected timing basis: Gardening Australia (Gardenia; Capsicum/chillies
 
 ## v126
 Bloom/Harvest schedule visibility is now plant-aware. Plants without a useful bloom/harvest calendar in normal Melbourne growing conditions no longer show the schedule; this includes Maidenhair Fern, both Birkins, Golden Pothos, Marble Queen Pothos and both ZZ Plants. Bloom-only plants display a Bloom Schedule; productive plants display Bloom & Harvest. Future custom plants are classified conservatively from their common/botanical name, and unknown plants do not get a schedule until identification supports one. Window Boat / Haworthia cymbiformis is recognised as a flowering succulent with a supported spring–early summer bloom window.
+
+
+## v127
+- Added editable Other names to Edit plant profile between Botanical name and Photo.
+- Other-name overrides persist under `plantSecretary.otherNames.v1`; an intentionally blank override hides built-in alternate names without changing the stable plant ID.
+- My Plant Information now uses two side-by-side tiles: Date acquired and Date propagated & method, with Notes full width beneath.
+- Personal-history dates display as `D MMM YY` (for example `14 Sep 26`) and approximate month/year as `MMM YY`. Stored dates are unchanged.
+- Existing non-destructive photo editing, watering, Bloom/Harvest, care history, and backup namespace behaviour are preserved.
