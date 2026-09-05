@@ -2448,3 +2448,12 @@ body.profile-open{
 .myplant-care-head-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
 .myplant-secondary-btn{border:1px solid #d9e6d9;background:#fff;color:#35684d;border-radius:999px;padding:8px 10px;font:inherit;font-size:11px;font-weight:800;white-space:nowrap;}
 @media(max-width:380px){.myplant-care-head-actions{gap:4px}.myplant-secondary-btn,.myplant-add-btn{font-size:10px;padding:7px 8px;}}
+
+
+/* v128 — My Plant modal visibility fix.
+   v123/v127 created My Plant + Care dialogs with class .season-modal, while only
+   .season-record-modal had the fixed overlay/z-index rules. The click handlers
+   were firing, but the dialogs rendered underneath the full-screen profile. */
+.season-modal[hidden]{display:none!important;}
+.season-modal{position:fixed;inset:0;z-index:1500;display:grid;align-items:end;justify-items:center;}
+.myplant-info-modal,.care-record-modal{z-index:1500;}

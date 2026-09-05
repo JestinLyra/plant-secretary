@@ -664,3 +664,11 @@ Bloom/Harvest schedule visibility is now plant-aware. Plants without a useful bl
 - My Plant Information now uses two side-by-side tiles: Date acquired and Date propagated & method, with Notes full width beneath.
 - Personal-history dates display as `D MMM YY` (for example `14 Sep 26`) and approximate month/year as `MMM YY`. Stored dates are unchanged.
 - Existing non-destructive photo editing, watering, Bloom/Harvest, care history, and backup namespace behaviour are preserved.
+
+
+## v128 — My Plant controls bug fix
+- Fixed **Edit**, **+ Record care**, **+ Other care**, and care-record **Edit** controls appearing unresponsive inside the My Plant tab.
+- Root cause: these dialogs were created with `.season-modal`, but the fixed overlay/z-index rules were only attached to `.season-record-modal`; the dialogs opened underneath the full-screen Plant Profile (`z-index:130`).
+- My Plant Information and Care Record dialogs now use the same tested fixed modal layer as Bloom/Harvest dialogs (`z-index:1500`).
+- Added a defensive `.season-modal` overlay rule for compatibility.
+- No My Plant data schema, care history, watering, season records, plant IDs, or photo-editing logic was changed.
