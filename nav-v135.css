@@ -1,0 +1,90 @@
+/* Plant Secretary v135 — bottom navigation only
+   Preserve v134 icon sizing; correct Watering Check vertical alignment as a unit. */
+.brand-identity h1::after{content:"v135"!important}
+
+.bottom-nav button{
+  grid-template-rows:42px 24px!important;
+  align-content:center!important;
+  justify-items:center!important;
+}
+
+.bottom-nav .nav-icon{
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  min-height:42px!important;
+  display:grid!important;
+  place-items:center!important;
+  align-self:start!important;
+  margin:0 auto!important;
+  padding:0!important;
+  background:transparent!important;
+}
+
+.bottom-nav .nav-icon img{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  max-width:none!important;
+  max-height:none!important;
+  background:transparent!important;
+}
+
+.bottom-nav .nav-icon img.nav-home-approved{
+  width:40px!important;
+  height:40px!important;
+  min-width:40px!important;
+  min-height:40px!important;
+  transform:none!important;
+}
+
+.bottom-nav .nav-icon img.nav-watering-approved{
+  width:33px!important;
+  height:33px!important;
+  min-width:33px!important;
+  min-height:33px!important;
+  transform:translateY(-5px)!important;
+}
+
+.bottom-nav .nav-icon img.nav-calendar-approved{
+  width:35px!important;
+  height:35px!important;
+  min-width:35px!important;
+  min-height:35px!important;
+  transform:none!important;
+}
+
+.bottom-nav .nav-icon img.nav-project-uploaded{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  content:url("assets/icons/project-nav-v133.png?v=135")!important;
+  background:transparent!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+
+.bottom-nav .project-nav-icon,
+.bottom-nav .project-nav-btn,
+.bottom-nav .project-nav-btn .nav-icon{
+  background-color:transparent!important;
+}
+
+.bottom-nav button>span:last-child{
+  height:24px!important;
+  padding-top:1px!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+}
+
+/* The Watering Check source artwork has extra internal top padding.
+   Move its visible circle and label together so their horizontal rows match Home/Fortnight/Project. */
+.bottom-nav button[data-view="wateringView"] .nav-icon,
+.bottom-nav button[data-view="wateringView"]>span:last-child{
+  transform:translateY(-18px)!important;
+}
