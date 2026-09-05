@@ -1,4 +1,5 @@
 /* Plant Secretary v129 — Projects */
+.brand-identity h1::after{content:"v129";display:inline-block;margin-left:6px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;font-size:9px;font-weight:500;letter-spacing:.02em;color:rgba(22,59,36,.42);vertical-align:middle;transform:translateY(-1px)}
 .bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:2px!important;padding-left:8px!important;padding-right:8px!important}
 .bottom-nav button{min-width:0!important;padding-left:2px!important;padding-right:2px!important;font-size:10px!important}
 .bottom-nav .nav-icon{width:38px!important;height:38px!important}
