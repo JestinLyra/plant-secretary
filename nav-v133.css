@@ -1,0 +1,42 @@
+/* Plant Secretary v133 — bottom navigation visual alignment */
+.brand-identity h1::after{content:"v133"!important}
+.bottom-nav .nav-icon,
+.bottom-nav .nav-icon img,
+.bottom-nav .nav-icon img.nav-watering-approved,
+.bottom-nav .nav-icon img.nav-project-uploaded{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  max-width:38px!important;
+  max-height:38px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  transform:none!important;
+}
+.bottom-nav button{
+  grid-template-rows:40px 24px!important;
+  align-content:center!important;
+  justify-items:center!important;
+}
+.bottom-nav .nav-icon{
+  display:grid!important;
+  place-items:center!important;
+  align-self:start!important;
+  margin-top:1px!important;
+}
+.bottom-nav button>span:last-child{
+  height:24px!important;
+  padding-top:1px!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+}
+.bottom-nav .nav-icon img.nav-project-uploaded{
+  content:url("assets/icons/project-nav-v133.png")!important;
+  background:#fff!important;
+  border-radius:0!important;
+}
+.project-nav-icon{background:transparent!important}
