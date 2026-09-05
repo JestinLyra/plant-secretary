@@ -1,4 +1,4 @@
-const CACHE='plant-secretary-v130';
+const CACHE='plant-secretary-v131';
 const ASSETS=[
   './',
   './index.html',
@@ -14,13 +14,13 @@ const ASSETS=[
   'assets/icons/watering-check-approved.png',
   'assets/icons/home-leaf-circle-approved.png',
   'assets/icons/undo-watering-approved.png',
-  'assets/icons/project-approved.svg?v=130'
-  ,'assets/icons/direct-sun-pencil.png'
-  ,'assets/icons/indirect-sun-pencil.png'
-  ,'assets/icons/minimal-sun-pencil.png'
-  ,'assets/icons/ph-acidic-approved.png'
-  ,'assets/icons/ph-slight-neutral-approved.png'
-  ,'assets/icons/ph-alkaline-approved.png'
+  'assets/icons/project-approved.svg?v=130',
+  'assets/icons/direct-sun-pencil.png',
+  'assets/icons/indirect-sun-pencil.png',
+  'assets/icons/minimal-sun-pencil.png',
+  'assets/icons/ph-acidic-approved.png',
+  'assets/icons/ph-slight-neutral-approved.png',
+  'assets/icons/ph-alkaline-approved.png'
 ];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
