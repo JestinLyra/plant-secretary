@@ -639,3 +639,9 @@ Quick Plant Profile layout bug-fix only: repaired the malformed v103 CSS separat
 Adds an individual-plant Bloom & Harvest Schedule accessible from Plant Profile without replacing Quick / Care / Pests / Problems. The calendar runs Sep–Aug, highlights the current month, separates expected timing from the user's actual records, supports year-by-year bloom and harvest history, edit/delete, ongoing blooms, and per-plant stable-ID storage. Fruiting plants receive harvest tracking. Expected Australian timing is deliberately conservative: schedules are only shown where sufficiently specific Australian guidance was found; foliage plants and unidentified/hybrid plants show a no-false-precision note instead. New records use `plantSecretary.seasonRecords.v1`, so the existing dynamic backup system automatically exports/imports them.
 
 Built-in expected timing basis: Gardening Australia (Gardenia; Capsicum/chillies; Citrus/lemons), Plantmark Victoria/Melbourne (Bougainvillea, Calamondin, Rosemary), and Daleys Fruit Tree Nursery (dwarf Calamondin harvest).
+
+
+## v122 — Watering Checks default filter
+- Changed the Watering Checks default/current filter from **All plants** to **Check today**.
+- The filter remains user-selectable after the view loads.
+- No watering logic, intervals, history, Undo, Home, Fortnight, profiles, or Backup behaviour was changed.

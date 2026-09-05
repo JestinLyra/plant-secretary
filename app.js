@@ -1135,9 +1135,11 @@ document.querySelectorAll('.bottom-nav [data-view], .top-backup-btn[data-view]')
 
 el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
+// v122 — Watering Checks now opens with ‘Check today’ as the default filter.
+el('filterSelect').value='due';
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=121').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=122').catch(()=>{}));}
 
 
 // v118 — complete Plant Secretary backup / restore
