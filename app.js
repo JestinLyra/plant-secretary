@@ -171,6 +171,8 @@ const plantImages={
 };
 
 const PS_PHOTO_KEY = 'plantSecretary.plantPhotos.v1';
+const PS_PHOTO_SOURCE_KEY = 'plantSecretary.plantPhotoSources.v1';
+const PS_PHOTO_CROP_KEY = 'plantSecretary.plantPhotoCrops.v1';
 const PS_PHOTO_RESET_V100_KEY = 'plantSecretary.photoReset.v100';
 const PS_PHOTO_RESET_V101_KEY = 'plantSecretary.photoReset.v102';
 
@@ -193,6 +195,20 @@ function psGetPlantPhotos(){
 }
 function psSavePlantPhotos(photos){
   localStorage.setItem(PS_PHOTO_KEY, JSON.stringify(photos));
+}
+function psGetPlantPhotoSources(){
+  try{return JSON.parse(localStorage.getItem(PS_PHOTO_SOURCE_KEY)||'{}')||{};}
+  catch(e){return {};}
+}
+function psSavePlantPhotoSources(sources){
+  localStorage.setItem(PS_PHOTO_SOURCE_KEY, JSON.stringify(sources));
+}
+function psGetPlantPhotoCrops(){
+  try{return JSON.parse(localStorage.getItem(PS_PHOTO_CROP_KEY)||'{}')||{};}
+  catch(e){return {};}
+}
+function psSavePlantPhotoCrops(crops){
+  localStorage.setItem(PS_PHOTO_CROP_KEY, JSON.stringify(crops));
 }
 function psPlantPhoto(id){
   const photos=psGetPlantPhotos();
@@ -985,14 +1001,17 @@ let psCropSource='';
 let psCropImage=null;
 let psPhotoDirty=false;
 
-function psSetCropSource(src){
+function psSetCropSource(src,crop){
   psCropSource=src||'';
   const preview=el('profileCropImage');
   const controls=el('profileCropControls');
   if(!preview||!controls)return;
   if(!src){preview.removeAttribute('src');controls.hidden=true;psCropImage=null;return;}
   preview.src=src;controls.hidden=false;
-  el('profileCropZoom').value='1';el('profileCropX').value='0';el('profileCropY').value='0';
+  const c=crop||{};
+  el('profileCropZoom').value=String(Number.isFinite(Number(c.zoom))?Number(c.zoom):1);
+  el('profileCropX').value=String(Number.isFinite(Number(c.x))?Number(c.x):0);
+  el('profileCropY').value=String(Number.isFinite(Number(c.y))?Number(c.y):0);
   psCropImage=new Image();psCropImage.onload=psUpdateCropPreview;psCropImage.src=src;
   psUpdateCropPreview();
 }
@@ -1024,8 +1043,15 @@ function psOpenProfilePhotoMenu(id){
   el('profileCommonNameInput').value=psDisplayName(p);
   el('profileBotanicalInput').value=psBotanicalName(p);
   const saved=psSavedPlantPhoto(id);
+  const sources=psGetPlantPhotoSources();
+  const crops=psGetPlantPhotoCrops();
+  // v125: edit from the preserved pre-crop source whenever available. Older
+  // photos saved before v125 only have the already-cropped square and cannot
+  // regain pixels that were discarded; choosing Change Photo once establishes
+  // a preserved source for all future edits.
+  const editableSource=sources[id]||saved;
   el('profileDeletePhotoBtn').disabled=!saved;
-  psSetCropSource(saved);
+  psSetCropSource(editableSource,crops[id]);
   psPhotoDirty=false;
   menu.hidden=false;
 }
@@ -1040,7 +1066,7 @@ function psRenderCroppedPhoto(src,zoom,xPct,yPct,size=900,quality=.86){
  return new Promise((resolve,reject)=>{
   const img=new Image();img.onerror=()=>reject(new Error('Could not crop photo.'));img.onload=()=>{
    const canvas=document.createElement('canvas');canvas.width=size;canvas.height=size;const ctx=canvas.getContext('2d');
-   // v124: allow true zoom-out below the old 1.0 cover scale. JPEG cannot retain
+   // v125: allow true zoom-out below the old 1.0 cover scale. JPEG cannot retain
    // transparency, so use a clean white background where the image no longer fills
    // the square crop. This also makes zoom-out work on previously saved square photos.
    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,size,size);
@@ -1161,7 +1187,13 @@ el('profileUploadPhotoBtn').addEventListener('click',()=>{
 });
 el('profilePhotoInput').addEventListener('change',async(e)=>{
   const file=e.target.files&&e.target.files[0];if(!file||!psEditingPhotoPlantId)return;
-  try{psSetCropSource(await psReadPhotoFile(file));psPhotoDirty=true;el('profileDeletePhotoBtn').disabled=false;}catch(err){alert('That photo could not be opened. Please try another image.');}
+  try{
+    // Preserve an uncropped, reasonably sized source so reopening the editor can
+    // pan/zoom against the original composition instead of the last square crop.
+    const source=await psResizePhoto(file,1400,.82);
+    psSetCropSource(source,{zoom:1,x:0,y:0});
+    psPhotoDirty=true;el('profileDeletePhotoBtn').disabled=false;
+  }catch(err){alert('That photo could not be opened. Please try another image.');}
 });
 ['profileCropZoom','profileCropX','profileCropY'].forEach(id=>el(id).addEventListener('input',()=>{psPhotoDirty=true;psUpdateCropPreview();}));
 el('profileDeletePhotoBtn').addEventListener('click',()=>{
@@ -1176,11 +1208,25 @@ el('profileSavePhotoBtn').addEventListener('click',async()=>{
   psSaveCommonNames(commonNames);
   const names=psGetBotanicalNames();names[id]=botanical;psSaveBotanicalNames(names);
   const photos=psGetPlantPhotos();
+  const sources=psGetPlantPhotoSources();
+  const crops=psGetPlantPhotoCrops();
   try{
     if(psPhotoDirty){
-      if(psCropSource){photos[id]=await psRenderCroppedPhoto(psCropSource,Number(el('profileCropZoom').value),Number(el('profileCropX').value),Number(el('profileCropY').value));}
-      else{photos[id]='__NONE__';}
+      if(psCropSource){
+        const zoom=Number(el('profileCropZoom').value),x=Number(el('profileCropX').value),y=Number(el('profileCropY').value);
+        photos[id]=await psRenderCroppedPhoto(psCropSource,zoom,x,y);
+        // Keep the pre-crop source plus its non-destructive crop settings. This is
+        // what allows Move left/right and Move up/down to remain useful after Save.
+        sources[id]=psCropSource;
+        crops[id]={zoom,x,y};
+      }else{
+        photos[id]='__NONE__';
+        delete sources[id];
+        delete crops[id];
+      }
       psSavePlantPhotos(photos);
+      psSavePlantPhotoSources(sources);
+      psSavePlantPhotoCrops(crops);
     }
     psCloseProfilePhotoMenu();psRefreshPlantPhotoViews(id);
   }catch(err){alert('That photo could not be saved. Please try again.');}
@@ -1211,7 +1257,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 el('filterSelect').value='due';
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=124').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=125').catch(()=>{}));}
 
 
 // v118 — complete Plant Secretary backup / restore
