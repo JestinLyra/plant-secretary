@@ -1,4 +1,4 @@
-// Plant Secretary v129 — Projects
+// Plant Secretary v132 — Projects
 (() => {
   'use strict';
 
@@ -9,7 +9,7 @@
 
   const q = (sel, root=document) => root.querySelector(sel);
   const qa = (sel, root=document) => [...root.querySelectorAll(sel)];
-  const esc = value => String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+  const esc = value => String(value ?? '').replace(/[&<>'\"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[ch]));
 
   function readProjects(){
     try { return JSON.parse(localStorage.getItem(PROJECTS_KEY) || '[]'); }
@@ -61,7 +61,7 @@
     button.type = 'button';
     button.dataset.view = 'projectView';
     button.setAttribute('aria-label', 'Project');
-    button.innerHTML = `<span class="nav-icon project-nav-icon" aria-hidden="true"><span class="project-rocket">🚀</span><span class="project-plus">+</span></span><span>Project</span>`;
+    button.innerHTML = `<span class="nav-icon project-nav-icon" aria-hidden="true"><img class="nav-project-uploaded" alt=""></span><span>Project</span>`;
     nav.appendChild(button);
     button.addEventListener('click', () => {
       if (typeof showView === 'function') showView('projectView');
