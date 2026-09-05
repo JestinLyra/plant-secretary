@@ -652,3 +652,7 @@ Built-in expected timing basis: Gardening Australia (Gardenia; Capsicum/chillies
 - Added per-plant care history for pruning, pinching, wiping, rotating and custom care records.
 - Added Silver Dollar Eucalyptus (Eucalyptus cinerea) as a 13th outdoor plant with stable ID `silver-dollar-eucalyptus`.
 - All new persistent data uses `plantSecretary.*` keys so the existing backup collector includes it.
+
+
+## v126
+Bloom/Harvest schedule visibility is now plant-aware. Plants without a useful bloom/harvest calendar in normal Melbourne growing conditions no longer show the schedule; this includes Maidenhair Fern, both Birkins, Golden Pothos, Marble Queen Pothos and both ZZ Plants. Bloom-only plants display a Bloom Schedule; productive plants display Bloom & Harvest. Future custom plants are classified conservatively from their common/botanical name, and unknown plants do not get a schedule until identification supports one. Window Boat / Haworthia cymbiformis is recognised as a flowering succulent with a supported spring–early summer bloom window.
