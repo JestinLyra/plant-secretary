@@ -1040,6 +1040,10 @@ function psRenderCroppedPhoto(src,zoom,xPct,yPct,size=900,quality=.86){
  return new Promise((resolve,reject)=>{
   const img=new Image();img.onerror=()=>reject(new Error('Could not crop photo.'));img.onload=()=>{
    const canvas=document.createElement('canvas');canvas.width=size;canvas.height=size;const ctx=canvas.getContext('2d');
+   // v124: allow true zoom-out below the old 1.0 cover scale. JPEG cannot retain
+   // transparency, so use a clean white background where the image no longer fills
+   // the square crop. This also makes zoom-out work on previously saved square photos.
+   ctx.fillStyle='#ffffff';ctx.fillRect(0,0,size,size);
    const base=Math.max(size/img.width,size/img.height);const scale=base*zoom;
    const w=img.width*scale,h=img.height*scale;
    const maxX=Math.max(0,(w-size)/2),maxY=Math.max(0,(h-size)/2);
@@ -1207,7 +1211,7 @@ el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 el('filterSelect').value='due';
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=123').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=124').catch(()=>{}));}
 
 
 // v118 — complete Plant Secretary backup / restore

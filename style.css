@@ -1836,7 +1836,7 @@ body.profile-open{
 .profile-botanical-field input{width:100%;min-height:44px;border:1px solid #ccd6c7;border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;color:#173d2a;background:#fff;box-sizing:border-box;}
 .profile-crop-controls{display:grid;gap:10px;}
 .profile-crop-controls[hidden]{display:none!important;}
-.profile-crop-preview{width:190px;aspect-ratio:1/1;margin:2px auto 4px;border-radius:50%;overflow:hidden;background:#eef2ea;border:1.5px solid #8eb29e;position:relative;}
+.profile-crop-preview{width:190px;aspect-ratio:1/1;margin:2px auto 4px;border-radius:50%;overflow:hidden;background:#fff;border:1.5px solid #8eb29e;position:relative;}
 .profile-crop-preview img{position:absolute;display:block;max-width:none;max-height:none;transform-origin:center center;}
 .profile-crop-controls input[type="range"]{width:100%;accent-color:#315c2f;}
 .profile-editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
