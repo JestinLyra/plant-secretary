@@ -1,11 +1,11 @@
-const CACHE='plant-secretary-v131';
+const CACHE='plant-secretary-v132';
 const ASSETS=[
   './',
   './index.html',
-  './style.css?v=129',
-  './project.css?v=129',
-  './app.js?v=129',
-  './project.js?v=129',
+  './style.css?v=132',
+  './project.css?v=132',
+  './app.js?v=132',
+  './project.js?v=132',
   './manifest.json',
   './icon.svg',
   'assets/icons/calendar-droplet-approved.png',
@@ -14,7 +14,6 @@ const ASSETS=[
   'assets/icons/watering-check-approved.png',
   'assets/icons/home-leaf-circle-approved.png',
   'assets/icons/undo-watering-approved.png',
-  'assets/icons/project-approved.svg?v=130',
   'assets/icons/direct-sun-pencil.png',
   'assets/icons/indirect-sun-pencil.png',
   'assets/icons/minimal-sun-pencil.png',
