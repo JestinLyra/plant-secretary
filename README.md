@@ -641,7 +641,14 @@ Adds an individual-plant Bloom & Harvest Schedule accessible from Plant Profile 
 Built-in expected timing basis: Gardening Australia (Gardenia; Capsicum/chillies; Citrus/lemons), Plantmark Victoria/Melbourne (Bougainvillea, Calamondin, Rosemary), and Daleys Fruit Tree Nursery (dwarf Calamondin harvest).
 
 
-## v122 — Watering Checks default filter
+## v123 — Watering Checks default filter
 - Changed the Watering Checks default/current filter from **All plants** to **Check today**.
 - The filter remains user-selectable after the view loads.
 - No watering logic, intervals, history, Undo, Home, Fortnight, profiles, or Backup behaviour was changed.
+
+
+## v123 — My Plant information and care history
+- Added a new My Plant profile tab for individual acquisition and propagation information.
+- Added per-plant care history for pruning, pinching, wiping, rotating and custom care records.
+- Added Silver Dollar Eucalyptus (Eucalyptus cinerea) as a 13th outdoor plant with stable ID `silver-dollar-eucalyptus`.
+- All new persistent data uses `plantSecretary.*` keys so the existing backup collector includes it.

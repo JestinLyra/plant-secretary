@@ -28,6 +28,7 @@ const plants=[
 {id:'mint',name:'Mint',place:'outdoor',base:3,sun:'🌤️'},
 {id:'parsley',name:'Parsley',place:'outdoor',base:3,sun:'🌤️'},
 {id:'rosemary',name:'Rosemary — purple flowers',place:'outdoor',base:8,sun:'☀️'},
+{id:'silver-dollar-eucalyptus',name:'Silver Dollar Eucalyptus',place:'outdoor',base:7,sun:'☀️'},
 {id:'thai-peppers',name:'Thai Peppers',place:'outdoor',base:3,sun:'☀️'},
 {id:'chilli-timble',name:'Timble — Chilli',place:'outdoor',base:3,sun:'☀️'}
 ];
@@ -58,7 +59,7 @@ const sunlight={
   'zz-thick':'☁️','zz-thin':'☁️','maidenhair':'⛅️','begonia':'⛅️',
   'orchid-purple':'⛅️','orchid-white':'⛅️','pink-lady':'🌤️','string-of-pearls':'🌤️',
   'bougainvillea':'☀️','dwarf-lemon':'☀️','regular-lemon':'☀️','calamansi':'☀️',
-  'rosemary':'☀️','mint':'🌤️','parsley':'🌤️','thai-peppers':'☀️',
+  'rosemary':'☀️','silver-dollar-eucalyptus':'☀️','mint':'🌤️','parsley':'🌤️','thai-peppers':'☀️',
   'chilli-timble':'☀️','chilli-firecracker':'☀️','habanero':'☀️','jalapeno':'☀️'
 };
 
@@ -313,6 +314,7 @@ const maintenanceIcons={
   'mint':["✂️", "🤏"],
   'parsley':["✂️"],
   'rosemary':["✂️", "🤏"],
+  'silver-dollar-eucalyptus':["✂️"],
   'thai-peppers':["✂️", "🤏"],
   'chilli-timble':["✂️", "🤏"]
 };
@@ -401,7 +403,7 @@ let currentProfile=null;
 
 // v76 — professional four-page plant profiles. Watering intervals/history remain untouched.
 const botanicalNames={
-'begonia':'Begonia spp.','birkin-green':"Philodendron ‘Birkin’",'birkin-white':"Philodendron ‘Birkin’",'gardenia-radicans':'Gardenia jasminoides','golden-pothos':'Epipremnum aureum','maidenhair':'Adiantum spp.','marble-queen':"Epipremnum aureum ‘Marble Queen’",'many':'Monstera deliciosa','konti':'Monstera deliciosa','moon-valley':"Pilea involucrata ‘Moon Valley’",'orchid-purple':'Phalaenopsis spp.','orchid-white':'Phalaenopsis spp.','peace-lily':'Spathiphyllum spp.','pink-lady':'Callisia repens','baby-snake':'Dracaena trifasciata','mama-snake':'Dracaena trifasciata','string-of-pearls':"Curio rowleyanus ‘Variegatus’",'zz-thick':'Zamioculcas zamiifolia','zz-thin':'Zamioculcas zamiifolia','bougainvillea':'Bougainvillea spp.','calamansi':'Citrus × microcarpa','chilli-firecracker':'Capsicum annuum','habanero':'Capsicum chinense','jalapeno':'Capsicum annuum','regular-lemon':'Citrus limon','dwarf-lemon':'Citrus limon','mint':'Mentha spp.','parsley':'Petroselinum crispum','rosemary':'Salvia rosmarinus','thai-peppers':'Capsicum annuum','chilli-timble':'Capsicum annuum'};
+'begonia':'Begonia spp.','birkin-green':"Philodendron ‘Birkin’",'birkin-white':"Philodendron ‘Birkin’",'gardenia-radicans':'Gardenia jasminoides','golden-pothos':'Epipremnum aureum','maidenhair':'Adiantum spp.','marble-queen':"Epipremnum aureum ‘Marble Queen’",'many':'Monstera deliciosa','konti':'Monstera deliciosa','moon-valley':"Pilea involucrata ‘Moon Valley’",'orchid-purple':'Phalaenopsis spp.','orchid-white':'Phalaenopsis spp.','peace-lily':'Spathiphyllum spp.','pink-lady':'Callisia repens','baby-snake':'Dracaena trifasciata','mama-snake':'Dracaena trifasciata','string-of-pearls':"Curio rowleyanus ‘Variegatus’",'zz-thick':'Zamioculcas zamiifolia','zz-thin':'Zamioculcas zamiifolia','bougainvillea':'Bougainvillea spp.','calamansi':'Citrus × microcarpa','chilli-firecracker':'Capsicum annuum','habanero':'Capsicum chinense','jalapeno':'Capsicum annuum','regular-lemon':'Citrus limon','dwarf-lemon':'Citrus limon','mint':'Mentha spp.','parsley':'Petroselinum crispum','rosemary':'Salvia rosmarinus','silver-dollar-eucalyptus':'Eucalyptus cinerea','thai-peppers':'Capsicum annuum','chilli-timble':'Capsicum annuum'};
 
 // v109 — per-plant common/display-name overrides. The stable plant ID and care identity remain unchanged.
 // v117 — verified Australian alternative/common names shown on Plant Profile identity only.
@@ -425,6 +427,7 @@ const australianOtherNames={
   'zz-thin':['Zanzibar Gem'],
   'bougainvillea':['Lesser Bougainvillea','Paper Flower'],
   'calamansi':['Calamondin','Limau Kesturi','Must Lime'],
+  'silver-dollar-eucalyptus':['Silver Dollar Gum','Argyle Apple'],
   'mint':['Common Mint','Garden Mint','Spearmint'],
   'parsley':['Garden Parsley']
 };
@@ -458,6 +461,7 @@ function psBotanicalGroup(name){
  if(/gardenia/.test(n))return 'gardenia';
  if(/citrus/.test(n))return 'citrus';
  if(/bougainvillea/.test(n))return 'bougainvillea';
+ if(/eucalyptus\s+cinerea|eucalyptus/.test(n))return 'eucalyptus';
  if(/capsicum|mentha|petroselinum|salvia\s+rosmarinus|rosmarinus/.test(n))return 'edible';
  if(/curio|senecio\s+rowleyanus|callisia|zamioculcas/.test(n))return 'succulent';
  if(/monstera|philodendron|spathiphyllum|pilea|begonia/.test(n))return 'tropical';
@@ -474,7 +478,8 @@ const profileGroups={
  gardenia:{position:'Very bright light with gentle direct sun; protect from harsh afternoon heat and drying wind.',soil:'Use a premium potting mix formulated for acid-loving plants; add perlite if extra drainage is needed. Avoid alkaline amendments.',ph:'Acidic • about pH 5.0–6.0',moisture:'Evenly moist',water:'Keep evenly moist but not saturated. Check the upper mix and water before the root ball becomes bone dry.',feed:'Scotts Osmocote Roses, Gardenias, Azaleas & Camellias Controlled Release Fertiliser',feedNote:'Formulated for acid-loving plants. The current Bunnings listing states up to 6 months feeding; apply at the pack label rate.',grow:'Stable moisture and acidic root conditions help reduce bud drop and chlorosis.',repot:'Repot when root-bound, one pot size up, using fresh acid-loving potting mix with excellent drainage.',prop:'Take healthy semi-ripe cuttings and root in a humid, free-draining propagation medium.',maint:['Deadhead spent flowers','Prune lightly after flowering','Remove yellow leaves','Watch new leaves for chlorosis'],pests:['scale','aphid','spider','mealy'],problems:['yellow','budDrop','brown','noFlower']},
  citrus:{position:'Full outdoor sun, ideally 6+ hours, with airflow and protection from severe frost.',soil:'Premium citrus/fruit potting mix with excellent drainage. In containers, avoid dense garden soil.',ph:'Slightly acidic • about pH 5.5–6.5',moisture:'Even moisture in active growth',water:'Water deeply when the upper mix begins to dry. In hot Altona weather, container citrus may need checking more often.',feed:'Yates Dynamic Lifter Plant Food Pellets Fruit & Citrus',feedNote:'A fruit/citrus-specific option sold at Bunnings. Apply only according to the current pack label.',grow:'Sun, consistent watering and regular citrus nutrition support flowering and fruit development.',repot:'Repot a container plant when root-bound. Increase one pot size and use fresh citrus potting mix.',prop:'Named citrus is commonly grafted. Seedlings may not reproduce the parent reliably; maintain the graft union above soil.',maint:['Remove dead/crossing growth','Remove shoots below graft','Check leaves for pests','Thin congested growth lightly'],pests:['scale','aphid','mite','leafminer'],problems:['yellow','leafDrop','noFruit','curl']},
  edible:{position:'Sunny outdoor position; aim for strong light and good airflow.',soil:'Premium vegetable/herb potting mix enriched with compost; add perlite if a container mix drains slowly.',ph:'Slightly acidic to neutral • about pH 6.0–7.0',moisture:'Regular moisture',water:'Check frequently in warm weather. Water deeply when the surface begins to dry; avoid repeated wilting.',feed:'Yates Thrive Natural Vegie & Herb Liquid Plant Food',feedNote:'Suitable for home-grown vegetables and herbs. Follow the current label for dilution, frequency and edible-crop directions.',grow:'Harvesting/pruning and steady moisture encourage productive new growth. Avoid letting small pots overheat and dry out.',repot:'Move to a larger container when roots fill the pot; use fresh vegetable/herb potting mix with drainage.',prop:'Use seed, division or cuttings according to the crop; select healthy, pest-free material.',maint:['Harvest/prune regularly','Remove damaged leaves','Check flower/leaf tips for pests','Stake fruiting plants if needed'],pests:['aphid','whitefly','spider','gnat'],problems:['yellow','curl','droop','noFruit']},
- bougainvillea:{position:'Full sun in the warmest, brightest practical outdoor position.',soil:'Premium free-draining potting mix with added perlite/pumice if needed. Do not keep roots constantly wet.',ph:'Slightly acidic to neutral',moisture:'Dry slightly between watering',water:'Water deeply, then allow the upper mix to dry. Established plants flower better without constantly wet roots.',feed:'Yates Thrive All Purpose Soluble Plant Food',feedNote:'Suitable for many flowering potted plants. Follow the current label and avoid excessive nitrogen.',grow:'Strong sun and restrained watering support flowering; excessive feeding can favour leaves over bracts.',repot:'Bougainvillea tolerates being somewhat pot-bound. Repot only when necessary and minimise root disturbance.',prop:'Semi-hardwood cuttings can be rooted in a free-draining propagation mix.',maint:['Prune after flowering flushes','Wear gloves around thorns','Train/support long stems','Remove dead wood'],pests:['aphid','scale','mealy','spider'],problems:['noFlower','leafDrop','yellow','root']}
+ bougainvillea:{position:'Full sun in the warmest, brightest practical outdoor position.',soil:'Premium free-draining potting mix with added perlite/pumice if needed. Do not keep roots constantly wet.',ph:'Slightly acidic to neutral',moisture:'Dry slightly between watering',water:'Water deeply, then allow the upper mix to dry. Established plants flower better without constantly wet roots.',feed:'Yates Thrive All Purpose Soluble Plant Food',feedNote:'Suitable for many flowering potted plants. Follow the current label and avoid excessive nitrogen.',grow:'Strong sun and restrained watering support flowering; excessive feeding can favour leaves over bracts.',repot:'Bougainvillea tolerates being somewhat pot-bound. Repot only when necessary and minimise root disturbance.',prop:'Semi-hardwood cuttings can be rooted in a free-draining propagation mix.',maint:['Prune after flowering flushes','Wear gloves around thorns','Train/support long stems','Remove dead wood'],pests:['aphid','scale','mealy','spider'],problems:['noFlower','leafDrop','yellow','root']},
+ eucalyptus:{position:'Full outdoor sun with good airflow.',soil:'Free-draining potting mix or soil. Avoid keeping the root zone continuously wet.',ph:'Slightly acidic to neutral',moisture:'Allow some drying between deep watering',water:'Water deeply when the upper mix has dried; established Eucalyptus cinerea is drought tolerant, but container plants still need regular checks in hot weather.',feed:'Feed only if growth or container conditions indicate a need',feedNote:'Avoid unnecessary heavy feeding. If fertiliser is used, follow the current product label.',grow:'Pruning or coppicing can be used to maintain juvenile silver foliage and a compact shape.',repot:'Repot container plants when root-bound, using a free-draining mix and a stable pot.',prop:'Propagation is generally by seed; maintain the identity of this individual plant by its stable Plant Secretary record.',maint:['Prune to shape or encourage juvenile foliage','Remove dead or damaged growth','Check ties/support as stems enlarge'],pests:['scale','aphid','spider'],problems:['yellow','leafDrop','root']}
 };
 
 function groupForPlant(p){
@@ -487,7 +492,7 @@ function groupForPlant(p){
  if(['baby-snake','mama-snake'].includes(p.id))return 'snake'; if(p.id==='gardenia-radicans')return 'gardenia';
  if(['calamansi','regular-lemon','dwarf-lemon'].includes(p.id))return 'citrus';
  if(['chilli-firecracker','habanero','jalapeno','mint','parsley','thai-peppers','chilli-timble','rosemary'].includes(p.id))return 'edible';
- if(p.id==='bougainvillea')return 'bougainvillea'; return p.place==='outdoor'?'edible':'tropical';
+ if(p.id==='bougainvillea')return 'bougainvillea'; if(p.id==='silver-dollar-eucalyptus')return 'eucalyptus'; return p.place==='outdoor'?'edible':'tropical';
 }
 const pestData={spider:['🕷️','Spider mites','Fine webbing; pale stippling/bronzing; leaves may dry.','Check leaf undersides and stem junctions.','Isolate; rinse/wipe foliage. If a pesticide is needed, select an APVMA-registered product listing the pest and plant/use situation; follow its label exactly.'],mite:['🔎','Mites','Fine stippling, bronzing or distorted new growth.','Inspect undersides with a hand lens.','Improve plant vigour and use only a registered mite treatment whose label covers the crop.'],mealy:['⚪','Mealybugs','White cottony clusters, sticky honeydew, weakened/distorted growth.','Inspect leaf axils, stems, roots and pot rim.','Remove small colonies manually. For larger infestations use a registered product whose label covers mealybugs and the plant.'],scale:['🟤','Scale insects','Brown/white fixed bumps, sticky honeydew, sooty mould, yellowing.','Check stems, veins and leaf undersides.','Physically remove light infestations; use a registered horticultural oil/insecticide only as its label directs.'],aphid:['🟢','Aphids','Clusters on soft new growth; curled leaves; sticky honeydew.','Inspect shoot tips, buds and leaf undersides.','Hose off small colonies; if treatment is needed, use an APVMA-registered aphid product suitable for the plant/crop and obey withholding periods.'],whitefly:['🪽','Whitefly','Tiny white adults fly up when disturbed; nymphs beneath leaves; honeydew.','Check undersides of younger leaves.','Remove heavily infested leaves and use a registered product only where the label permits.'],gnat:['🪰','Fungus gnats','Small dark flies around moist potting mix; larvae live in damp organic media.','Check soil surface and drainage conditions.','Let the surface dry where the plant tolerates it; improve drainage. Use only a registered treatment if needed.'],leafminer:['〰️','Citrus leafminer','Silvery serpentine mines and distorted young citrus leaves.','Inspect fresh flushes of growth.','Protect new flush using a registered citrus leafminer product strictly according to label directions.']};
 const problemData={yellow:['Yellow leaves','Overwatering/root stress, ageing leaves or nutrient/pH issues.','Check soil moisture first. If wet for days, improve drainage; if only old leaves yellow, remove them. Look at new-growth pattern before adding fertiliser.'],brown:['Brown tips/edges','Dry air, inconsistent watering, salt build-up or heat/sun scorch.','Check whether damage is crisp/dry versus soft. Correct watering and position first; flush accumulated salts when appropriate.'],droop:['Drooping/wilting','Dry root ball, saturated roots, heat or transplant stress.','Feel the mix before watering. Dry mix needs a thorough drink; wet mix plus wilt suggests root/oxygen stress.'],slow:['Slow growth','Low light, cool season, root crowding or depleted nutrition.','Compare seasonal growth, check light and roots, then feed only if the plant is actively growing.'],curl:['Curling/distorted leaves','Moisture stress, heat, pests or root problems.','Inspect undersides and new growth for pests; then check soil moisture and heat exposure.'],root:['Soft base/root rot signs','Prolonged wet mix and poor aeration.','Stop routine watering, inspect roots, remove rotten tissue where practical and repot into fresh free-draining mix.'],noFlower:['No flowers','Insufficient light, wrong season, excess nitrogen or plant immaturity.','Increase appropriate light, avoid overfeeding and confirm the species’ normal flowering season.'],noFruit:['Poor flowering/fruit set','Insufficient sun, nutrition/water stress or pollination conditions.','Maximise sun, keep moisture steady during flowering and use crop-appropriate fertiliser at label rates.'],budDrop:['Bud drop','Moisture swings, heat/cold stress or sudden environmental change.','Keep moisture and position stable; avoid moving the plant repeatedly while budding.'],leafDrop:['Leaf drop','Water stress, cold/heat shock, root problems or pest pressure.','Check moisture and roots, then inspect stems/leaves for pests and recent environmental changes.'],wrinkle:['Wrinkled leaves','Dehydration or damaged roots unable to take up water.','Inspect roots before simply watering more; healthy dry roots need water, rotten roots need corrective repotting.'],shrivel:['Shrivelling','Extended dryness or compromised roots.','Check whether roots are healthy and mix is dry before watering thoroughly.'],stretch:['Stretched/leggy growth','Insufficient light.','Increase light gradually and rotate the plant; prune stretched growth if appropriate.']};
@@ -534,6 +539,12 @@ const verifiedCareProducts={
     feed:'Scotts Osmocote 2.5L Pour+Feed for Tomato & Herb',
     feedNote:'A current Bunnings Australia ready-to-use feed listed for edible plants including herbs and chillies. Current listing directions: apply one capful directly to moist soil around the plant, then water as required; for best results feed every 2 weeks. No dilution is required.'
   },
+  eucalyptus:{
+    soil:'Scotts Osmocote 25L Native Premium Potting Mix',
+    soilNote:'A current Bunnings Australia native-plant premium mix with a free-draining formulation and lower phosphorus, intended for a wide range of Australian native species. Use the current bag directions.',
+    feed:'Scotts Osmocote 500g Native Controlled Release Fertiliser',
+    feedNote:'A current Bunnings Australia controlled-release fertiliser for phosphorus-sensitive/native plants. Apply only according to the current pack label; no unverified rate is supplied.'
+  },
   bougainvillea:{
     soil:'Scotts Osmocote 25L Premium Potting Mix + Brunnings 5L Perlite (if extra drainage is needed)',
     soilNote:'Both are current Bunnings Australia products. Use a premium Australian-standard potting mix; perlite can improve aeration/drainage where the container mix stays too wet. No authoritative fixed ratio is claimed here.',
@@ -546,7 +557,7 @@ const productClassByPlant={
   'string-of-pearls':'succulent','pink-lady':'succulent','zz-thick':'succulent','zz-thin':'succulent','baby-snake':'succulent','mama-snake':'succulent',
   'calamansi':'citrus','regular-lemon':'citrus','dwarf-lemon':'citrus',
   'chilli-firecracker':'edible','habanero':'edible','jalapeno':'edible','mint':'edible','parsley':'edible','rosemary':'edible','thai-peppers':'edible','chilli-timble':'edible',
-  'bougainvillea':'bougainvillea'
+  'bougainvillea':'bougainvillea','silver-dollar-eucalyptus':'eucalyptus'
 };
 function verifiedProductsFor(p){
   // Built-ins have a known care identity. Custom plants do not receive a species-specific
@@ -555,7 +566,7 @@ function verifiedProductsFor(p){
   if(edited){
     const mapped=psBotanicalGroup(edited);
     if(!mapped)return null;
-    const productKey=['gardenia','orchid','succulent','citrus','edible','bougainvillea'].includes(mapped)?mapped:'indoor';
+    const productKey=['gardenia','orchid','succulent','citrus','edible','bougainvillea','eucalyptus'].includes(mapped)?mapped:'indoor';
     return verifiedCareProducts[productKey] || verifiedCareProducts.indoor;
   }
   if(!botanicalNames[p.id]) return null;
@@ -754,7 +765,8 @@ const psSeasonNoReliable={
   'zz-thick':'ZZ Plant flowering indoors is uncommon and unpredictable.',
   'zz-thin':'ZZ Plant flowering indoors is uncommon and unpredictable.',
   'mint':'The plant is identified only as Mentha spp.; flowering season differs by species, so no species-specific month meter is shown.',
-  'parsley':'Parsley flowering depends on plant age and bolting; it is usually grown for leaves rather than a predictable ornamental bloom season.'
+  'parsley':'Parsley flowering depends on plant age and bolting; it is usually grown for leaves rather than a predictable ornamental bloom season.',
+  'silver-dollar-eucalyptus':'Silver Dollar Eucalyptus flowering timing varies with cultivated form and subspecies; Australian references give conflicting seasonal windows, so no false month-by-month bloom meter is shown.'
 };
 function psGetSeasonRecords(){
   try{
@@ -885,6 +897,60 @@ function psBindSeasonPage(p){
   document.querySelectorAll('[data-season-delete]').forEach(btn=>btn.addEventListener('click',()=>psDeleteSeasonRecord(p,btn.dataset.seasonDelete,btn.dataset.recordId)));
 }
 
+
+// v123 — individual My Plant Information + actual care history.
+// These records are user observations/history only. They never alter evidence-based care guidance.
+const PS_MY_PLANT_KEY='plantSecretary.myPlantInfo.v1';
+const PS_CARE_HISTORY_KEY='plantSecretary.careHistory.v1';
+function psReadObject(key){try{const v=JSON.parse(localStorage.getItem(key)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}}
+function psGetMyPlantInfo(){return psReadObject(PS_MY_PLANT_KEY);}
+function psSaveMyPlantInfo(v){localStorage.setItem(PS_MY_PLANT_KEY,JSON.stringify(v||{}));}
+function psGetCareHistory(){return psReadObject(PS_CARE_HISTORY_KEY);}
+function psSaveCareHistory(v){localStorage.setItem(PS_CARE_HISTORY_KEY,JSON.stringify(v||{}));}
+function psCareId(){return `care-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;}
+function psTodayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function psDateAU(value){if(!value)return '—';const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value);if(!m)return psEscapeHTML(value);return new Intl.DateTimeFormat('en-AU',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(Number(m[1]),Number(m[2])-1,Number(m[3])));}
+function psMonthAU(value){if(!value)return '—';const m=/^(\d{4})-(\d{2})$/.exec(value);if(!m)return psEscapeHTML(value);return new Intl.DateTimeFormat('en-AU',{month:'short',year:'numeric'}).format(new Date(Number(m[1]),Number(m[2])-1,1));}
+function psMonthsWithMe(value,mode){
+  if(!value||!['exact','approx'].includes(mode))return '';
+  const m=mode==='exact'?/^(\d{4})-(\d{2})-(\d{2})$/.exec(value):/^(\d{4})-(\d{2})$/.exec(value);if(!m)return '';
+  const start=new Date(Number(m[1]),Number(m[2])-1,mode==='exact'?Number(m[3]):1),now=new Date();if(start>now)return '';
+  let months=(now.getFullYear()-start.getFullYear())*12+(now.getMonth()-start.getMonth());if(mode==='exact'&&now.getDate()<start.getDate())months--;
+  months=Math.max(0,months);const y=Math.floor(months/12),mo=months%12;return `${y?`${y} yr${y===1?'':'s'} `:''}${mo} mo with me`;
+}
+function psInfoDateLabel(mode,value,emptyLabel){if(mode==='exact')return psDateAU(value);if(mode==='approx')return `Approx. ${psMonthAU(value)}`;if(mode==='unknown')return 'Unknown';if(mode==='not-propagated')return 'Not propagated';return emptyLabel||'Not recorded';}
+const PS_PROP_METHODS=['Stem cutting','Leaf cutting','Division','Offset / pup','Seed','Water propagation','Soil propagation','Other'];
+const PS_CARE_TYPES={pruned:{label:'Pruned',icon:'✂️'},pinched:{label:'Pinched',icon:'🤏'},wiped:{label:'Wiped leaves',icon:'🧤'},rotated:{label:'Rotated',icon:'🔄'},other:{label:'Other care',icon:'＋'}};
+function psDaysAgo(date){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(date||'');if(!m)return '';const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));const t=new Date();t.setHours(0,0,0,0);const n=Math.round((t-d)/86400000);if(n<0)return 'future date';if(n===0)return 'today';if(n===1)return '1 day ago';return `${n} days ago`;}
+function psCareDisplayName(r){return r.type==='other'?(r.customType||'Other care'):(PS_CARE_TYPES[r.type]?.label||'Care');}
+function psMyPlantInfoMarkup(p){
+  const all=psGetMyPlantInfo(),x=all[p.id]||{};
+  const acquired=psInfoDateLabel(x.acquiredMode,x.acquiredDate||x.acquiredMonth,'Not recorded');
+  const withMe=psMonthsWithMe(x.acquiredMode,x.acquiredMode==='exact'?x.acquiredDate:x.acquiredMonth);
+  const propagated=psInfoDateLabel(x.propagatedMode,x.propagatedDate||x.propagatedMonth,'Not recorded');
+  let method='—';if(x.propagationMethod){method=x.propagationMethod==='Other'?(x.propagationCustom||'Other'):x.propagationMethod;}
+  return `<section class="myplant-card"><div class="myplant-section-head"><div><span class="profile-eyebrow">INDIVIDUAL PLANT RECORD</span><h2>My Plant Information</h2></div><button class="myplant-edit-btn" type="button" data-myplant-edit>✎ <span>Edit</span></button></div><div class="myplant-info-grid"><article><span class="myplant-info-icon" aria-hidden="true">▣</span><small>Date acquired</small><strong>${psEscapeHTML(acquired)}</strong>${withMe?`<p>${psEscapeHTML(withMe)}</p>`:''}</article><article><span class="myplant-info-icon" aria-hidden="true">⌁</span><small>Date propagated</small><strong>${psEscapeHTML(propagated)}</strong></article><article><span class="myplant-info-icon" aria-hidden="true">⌘</span><small>Propagation method</small><strong>${psEscapeHTML(method)}</strong></article></div><article class="myplant-notes"><small>Notes</small><p>${x.notes?psEscapeHTML(x.notes):'<span class="myplant-muted">No personal notes yet.</span>'}</p></article></section>`;
+}
+function psCareHistoryMarkup(p){
+  const all=psGetCareHistory(),list=[...(all[p.id]||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||'').localeCompare(a.createdAt||''));
+  const latest={};for(const r of list){const key=r.type==='other'?`other:${(r.customType||'Other care').toLowerCase()}`:r.type;if(!latest[key])latest[key]=r;}
+  const summaries=Object.values(latest).slice(0,4).map(r=>`<article class="care-last-card"><span>${PS_CARE_TYPES[r.type]?.icon||'＋'}</span><div><small>Last ${psEscapeHTML(psCareDisplayName(r).toLowerCase())}</small><strong>${psDateAU(r.date)}</strong><p>${psEscapeHTML(psDaysAgo(r.date))}</p></div></article>`).join('');
+  const rows=list.map(r=>`<article class="care-history-row"><span class="care-history-icon">${PS_CARE_TYPES[r.type]?.icon||'＋'}</span><div class="care-history-copy"><strong>${psEscapeHTML(psCareDisplayName(r))}</strong><small>${psDateAU(r.date)} · ${psEscapeHTML(psDaysAgo(r.date))}</small>${r.note?`<p>${psEscapeHTML(r.note)}</p>`:''}</div><div class="care-history-actions"><button type="button" data-care-edit="${psEscapeHTML(r.id)}" aria-label="Edit care record">Edit</button><button type="button" data-care-delete="${psEscapeHTML(r.id)}" aria-label="Delete care record">Delete</button></div></article>`).join('');
+  return `<section class="myplant-card care-history-card"><div class="myplant-section-head"><div><span class="profile-eyebrow">ACTUAL CARE — NOT RECOMMENDED CARE</span><h2>My Plant Care History</h2></div><div class="myplant-care-head-actions"><button class="myplant-secondary-btn" type="button" data-care-add-other>+ Other care</button><button class="myplant-add-btn" type="button" data-care-add>+ Record care</button></div></div>${summaries?`<div class="care-last-grid">${summaries}</div>`:'<p class="myplant-empty">No care actions recorded for this individual plant yet.</p>'}<div class="care-history-list">${rows}</div></section>`;
+}
+function psMyPlantPage(p){return `<section class="myplant-page">${psMyPlantInfoMarkup(p)}${psCareHistoryMarkup(p)}<article class="myplant-separation-note"><strong>Recommended care stays separate</strong><p>Quick and Care contain horticultural guidance. This page records what you actually did to this individual plant and does not rewrite those recommendations.</p></article></section>`;}
+function psEnsureMyPlantInfoModal(){if(el('myPlantInfoModal'))return;const wrap=document.createElement('div');wrap.id='myPlantInfoModal';wrap.className='season-modal';wrap.hidden=true;wrap.innerHTML=`<div class="season-modal-backdrop" data-myplant-close></div><section class="season-modal-sheet" role="dialog" aria-modal="true"><div class="season-modal-head"><h2>Edit My Plant Information</h2><button type="button" data-myplant-close aria-label="Close">×</button></div><form id="myPlantInfoForm"><label>Date acquired status<select id="myPlantAcquiredMode"><option value="">Not recorded</option><option value="exact">Exact date</option><option value="approx">Approximate month/year</option><option value="unknown">Unknown date</option></select></label><label id="myPlantAcquiredExactWrap">Exact date<input id="myPlantAcquiredDate" type="date"></label><label id="myPlantAcquiredApproxWrap">Approximate month/year<input id="myPlantAcquiredMonth" type="month"></label><label>Date propagated status<select id="myPlantPropMode"><option value="not-propagated">Not propagated</option><option value="exact">Exact date</option><option value="approx">Approximate month/year</option><option value="unknown">Unknown date</option></select></label><label id="myPlantPropExactWrap">Exact date<input id="myPlantPropDate" type="date"></label><label id="myPlantPropApproxWrap">Approximate month/year<input id="myPlantPropMonth" type="month"></label><label>Propagation method<select id="myPlantPropMethod"><option value="">Not specified</option>${PS_PROP_METHODS.map(x=>`<option>${x}</option>`).join('')}</select></label><label id="myPlantPropCustomWrap">Custom propagation method<input id="myPlantPropCustom" type="text" maxlength="80"></label><label>Notes <span>(optional)</span><textarea id="myPlantNotes" rows="4" maxlength="1000"></textarea></label><div id="myPlantInfoError" class="season-form-error" role="alert"></div><button class="season-modal-save" type="submit">Save information</button></form></section>`;document.body.appendChild(wrap);wrap.querySelectorAll('[data-myplant-close]').forEach(b=>b.addEventListener('click',()=>{wrap.hidden=true;}));el('myPlantAcquiredMode').addEventListener('change',psUpdateMyPlantInfoFields);el('myPlantPropMode').addEventListener('change',psUpdateMyPlantInfoFields);el('myPlantPropMethod').addEventListener('change',psUpdateMyPlantInfoFields);el('myPlantInfoForm').addEventListener('submit',psSubmitMyPlantInfo);}
+function psUpdateMyPlantInfoFields(){const am=el('myPlantAcquiredMode')?.value,pm=el('myPlantPropMode')?.value,method=el('myPlantPropMethod')?.value;if(el('myPlantAcquiredExactWrap'))el('myPlantAcquiredExactWrap').hidden=am!=='exact';if(el('myPlantAcquiredApproxWrap'))el('myPlantAcquiredApproxWrap').hidden=am!=='approx';if(el('myPlantPropExactWrap'))el('myPlantPropExactWrap').hidden=pm!=='exact';if(el('myPlantPropApproxWrap'))el('myPlantPropApproxWrap').hidden=pm!=='approx';if(el('myPlantPropMethod'))el('myPlantPropMethod').disabled=pm==='not-propagated';if(el('myPlantPropCustomWrap'))el('myPlantPropCustomWrap').hidden=method!=='Other'||pm==='not-propagated';}
+let psMyPlantEditingId='';
+function psOpenMyPlantInfo(p){psEnsureMyPlantInfoModal();psMyPlantEditingId=p.id;const x=psGetMyPlantInfo()[p.id]||{};el('myPlantAcquiredMode').value=x.acquiredMode||'';el('myPlantAcquiredDate').value=x.acquiredDate||'';el('myPlantAcquiredMonth').value=x.acquiredMonth||'';el('myPlantPropMode').value=x.propagatedMode||'not-propagated';el('myPlantPropDate').value=x.propagatedDate||'';el('myPlantPropMonth').value=x.propagatedMonth||'';el('myPlantPropMethod').value=x.propagationMethod||'';el('myPlantPropCustom').value=x.propagationCustom||'';el('myPlantNotes').value=x.notes||'';el('myPlantInfoError').textContent='';psUpdateMyPlantInfoFields();el('myPlantInfoModal').hidden=false;}
+function psSubmitMyPlantInfo(e){e.preventDefault();const id=psMyPlantEditingId;if(!id)return;const am=el('myPlantAcquiredMode').value,pm=el('myPlantPropMode').value,method=el('myPlantPropMethod').value,err=el('myPlantInfoError');err.textContent='';if(am==='exact'&&!el('myPlantAcquiredDate').value){err.textContent='Choose the exact acquisition date.';return;}if(am==='approx'&&!el('myPlantAcquiredMonth').value){err.textContent='Choose the approximate acquisition month and year.';return;}if(pm==='exact'&&!el('myPlantPropDate').value){err.textContent='Choose the exact propagation date.';return;}if(pm==='approx'&&!el('myPlantPropMonth').value){err.textContent='Choose the approximate propagation month and year.';return;}if(pm!=='not-propagated'&&method==='Other'&&!el('myPlantPropCustom').value.trim()){err.textContent='Enter the custom propagation method.';return;}const all=psGetMyPlantInfo();all[id]={acquiredMode:am,acquiredDate:am==='exact'?el('myPlantAcquiredDate').value:'',acquiredMonth:am==='approx'?el('myPlantAcquiredMonth').value:'',propagatedMode:pm,propagatedDate:pm==='exact'?el('myPlantPropDate').value:'',propagatedMonth:pm==='approx'?el('myPlantPropMonth').value:'',propagationMethod:pm==='not-propagated'?'':method,propagationCustom:pm!=='not-propagated'&&method==='Other'?el('myPlantPropCustom').value.trim():'',notes:el('myPlantNotes').value.trim()};psSaveMyPlantInfo(all);el('myPlantInfoModal').hidden=true;renderProfile(id,6);}
+function psEnsureCareModal(){if(el('careRecordModal'))return;const wrap=document.createElement('div');wrap.id='careRecordModal';wrap.className='season-modal';wrap.hidden=true;wrap.innerHTML=`<div class="season-modal-backdrop" data-care-close></div><section class="season-modal-sheet" role="dialog" aria-modal="true"><div class="season-modal-head"><h2 id="careRecordTitle">Record care</h2><button type="button" data-care-close aria-label="Close">×</button></div><form id="careRecordForm"><input id="careRecordId" type="hidden"><label>Care action<select id="careRecordType"><option value="pruned">Pruned</option><option value="pinched">Pinched</option><option value="wiped">Wiped leaves</option><option value="rotated">Rotated</option><option value="other">Other</option></select></label><label id="careRecordCustomWrap">Other care action<input id="careRecordCustom" type="text" maxlength="80" placeholder="e.g. Staked"></label><label>Date<input id="careRecordDate" type="date"></label><label>Note <span>(optional)</span><textarea id="careRecordNote" rows="3" maxlength="500"></textarea></label><div id="careRecordError" class="season-form-error" role="alert"></div><button class="season-modal-save" type="submit">Save care record</button></form></section>`;document.body.appendChild(wrap);wrap.querySelectorAll('[data-care-close]').forEach(b=>b.addEventListener('click',()=>{wrap.hidden=true;}));el('careRecordType').addEventListener('change',()=>{el('careRecordCustomWrap').hidden=el('careRecordType').value!=='other';});el('careRecordForm').addEventListener('submit',psSubmitCareRecord);}
+let psCarePlantId='';
+function psOpenCareModal(p,id='',presetType=''){psEnsureCareModal();psCarePlantId=p.id;const all=psGetCareHistory(),r=id?(all[p.id]||[]).find(x=>x.id===id):null;el('careRecordTitle').textContent=r?'Edit care record':'Record care';el('careRecordId').value=r?.id||'';el('careRecordType').value=r?.type||presetType||'pruned';el('careRecordCustom').value=r?.customType||'';el('careRecordDate').value=r?.date||psTodayISO();el('careRecordNote').value=r?.note||'';el('careRecordError').textContent='';el('careRecordCustomWrap').hidden=el('careRecordType').value!=='other';el('careRecordModal').hidden=false;}
+function psSubmitCareRecord(e){e.preventDefault();const id=psCarePlantId;if(!id)return;const type=el('careRecordType').value,date=el('careRecordDate').value,custom=el('careRecordCustom').value.trim(),err=el('careRecordError');err.textContent='';if(!date){err.textContent='Choose the care date.';return;}if(type==='other'&&!custom){err.textContent='Enter the other care action.';return;}const all=psGetCareHistory(),list=all[id]||[],rid=el('careRecordId').value;const r={id:rid||psCareId(),type,customType:type==='other'?custom:'',date,note:el('careRecordNote').value.trim(),createdAt:rid?(list.find(x=>x.id===rid)?.createdAt||new Date().toISOString()):new Date().toISOString()};const i=list.findIndex(x=>x.id===r.id);if(i>=0)list[i]=r;else list.push(r);all[id]=list;psSaveCareHistory(all);el('careRecordModal').hidden=true;renderProfile(id,6);}
+function psDeleteCareRecord(p,id){const all=psGetCareHistory(),list=all[p.id]||[],r=list.find(x=>x.id===id);if(!r)return;if(!confirm(`Delete ${psCareDisplayName(r)} record from ${psDateAU(r.date)}?`))return;all[p.id]=list.filter(x=>x.id!==id);psSaveCareHistory(all);renderProfile(p.id,6);}
+function psBindMyPlantPage(p){if(!document.querySelector('.myplant-page'))return;document.querySelectorAll('[data-myplant-edit]').forEach(b=>b.addEventListener('click',()=>psOpenMyPlantInfo(p)));document.querySelectorAll('[data-care-add]').forEach(b=>b.addEventListener('click',()=>psOpenCareModal(p)));document.querySelectorAll('[data-care-add-other]').forEach(b=>b.addEventListener('click',()=>psOpenCareModal(p,'','other')));document.querySelectorAll('[data-care-edit]').forEach(b=>b.addEventListener('click',()=>psOpenCareModal(p,b.dataset.careEdit)));document.querySelectorAll('[data-care-delete]').forEach(b=>b.addEventListener('click',()=>psDeleteCareRecord(p,b.dataset.careDelete)));}
+
 function profilePageButton(n,label){return `<button class="profile-tab" type="button" data-profile-page="${n}">${label}</button>`;}
 function renderProfile(id,page=1){
  const p=plants.find(x=>x.id===id);if(!p)return;
@@ -895,7 +961,7 @@ function renderProfile(id,page=1){
  const displayName=psDisplayName(p),safeName=psEscapeHTML(displayName),safeBotanical=psEscapeHTML(botanical),otherNames=psOtherNamesMarkup(p);
  const photoMarkup=`<button class="profile-photo-wrap profile-photo-trigger ${photo?'has-photo':''}" type="button" data-profile-photo-edit="${p.id}" aria-label="Edit ${safeName} profile">${photo?`<img class="profile-plant-photo" src="${photo}" alt="${safeName} photo">`:`<span class="profile-photo-fallback" aria-label="No saved plant photo">${psEscapeHTML(psPlantInitials(displayName))}</span>`}</button>`;
  const identity=`<section class="profile-identity profile-identity-quick" aria-label="${safeName} identity"><div class="quick-identity-photo">${photoMarkup}</div><div class="quick-identity-copy"><span class="profile-eyebrow">PLANT PROFILE</span><h2 id="profileName">${safeName}</h2>${otherNames}<p class="botanical-name"><em>${safeBotanical}</em></p><span class="profile-tag">${p.place==='indoor'?'Indoor plant':'Outdoor plant'}</span></div></section>`;
- const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
+ const tabs=`<nav class="profile-tabs" aria-label="Profile pages">${profilePageButton(6,'My Plant')}${profilePageButton(1,'Quick')}${profilePageButton(2,'Care')}${profilePageButton(3,'Pests')}${profilePageButton(4,'Problems')}</nav>`;
  const seasonEntry=page===5?'':`<button class="profile-season-entry" type="button" data-open-season><span class="profile-season-entry-icon">${psSeasonIcon('calendar')}</span><span><strong>Bloom &amp; Harvest Schedule</strong><small>Compare expected timing with this plant’s actual records</small></span><span class="profile-season-entry-arrow" aria-hidden="true">›</span></button>`;
  let body='';
  if(page===1) body=`<article class="profile-poster quick-guide-v110"><section class="quick-info-grid quick-info-columns"><div class="quick-info-column">${quickInfoCard('light','LIGHT',g.position)}${quickInfoCard('soil','SOIL',g.soilQuick)}</div><div class="quick-info-column">${quickInfoCard('watering','WATERING',`${g.moisture}. ${g.water}`)}<article class="quick-info-card quick-info-feeding quick-feeding-card"><div class="quick-info-icon">${quickGuideIcon('feeding')}</div><div class="quick-info-copy"><span class="quick-info-label">FEEDING</span><p><strong>${g.feed}</strong></p><p>${g.feedNote}</p></div></article>${quickInfoCard('ph','pH',phFor(p,g),'quick-ph-card')}</div></section>${quickFullSection('maintenance','HANDS-ON CARE',`<ul>${(g.maint||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`,'quick-maintenance-card')}${quickFullSection('tip','GROW TIP',`<p>${g.grow}</p>`,'quick-grow-card')}</article>`;
@@ -903,6 +969,7 @@ function renderProfile(id,page=1){
  if(page===3) body=`<section class="detail-stack profile-cohesive"><h2>Common Pests — Symptoms & Solutions</h2><p class="section-intro">Only pests relevant to this plant type are shown. Confirm the pest before treating.</p>${g.pests.map(k=>{const x=pestData[k];return `<article class="pest-card profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('pest')}</div><div class="profile-card-copy"><h3>${x[1]}</h3><p><b>Symptoms:</b> ${x[2]}</p><p><b>Inspect:</b> ${x[3]}</p><p><b>Care / treatment:</b> ${x[4]}</p></div></article>`}).join('')}<article class="evidence-note"><b>Product safety</b><p>No pesticide dilution or schedule is invented in Plant Secretary. Use only products whose current APVMA-approved label covers the pest and use situation, and follow that label.</p></article></section>`;
  if(page===4) body=`<section class="detail-stack profile-cohesive"><h2>Common Problems & Troubleshooting</h2><div class="trouble-list">${g.problems.map(k=>{const x=problemData[k];return `<article class="trouble-card profile-illustrated-card"><div class="profile-card-icon">${profileGuideIcon('problem')}</div><div class="profile-card-copy"><h3>${x[0]}</h3><p><b>Likely causes</b><br>${x[1]}</p><p><b>What to do</b><br>${x[2]}</p></div></article>`}).join('')}</div><article class="evidence-note"><b>Diagnostic rule</b><p>Similar symptoms can have different causes. Check soil moisture, roots, light and pests before treating or feeding.</p></article></section>`;
  if(page===5) body=psSeasonPage(p);
+ if(page===6) body=psMyPlantPage(p);
  const tabsMount=el('profileTabsMount');
  if(tabsMount) tabsMount.innerHTML=tabs;
  el('profileContent').innerHTML=`${identity}${seasonEntry}<div class="profile-page">${body}</div>${page===5?'':`<button id="profileWaterBtn" class="profile-water-btn" type="button"><span class="profile-water-icon" aria-hidden="true">${quickGuideIcon('watering')}</span><span>${watered}</span></button>`}`;
@@ -910,6 +977,7 @@ function renderProfile(id,page=1){
  const profileWaterBtn=el('profileWaterBtn');if(profileWaterBtn)profileWaterBtn.addEventListener('click',()=>{state.watered[p.id]=localDateOnly();save();renderAll();renderProfile(p.id,page);});
  document.querySelectorAll('[data-profile-photo-edit]').forEach(btn=>btn.addEventListener('click',()=>psOpenProfilePhotoMenu(p.id)));
  psBindSeasonPage(p);
+ psBindMyPlantPage(p);
 }
 
 let psEditingPhotoPlantId=null;
@@ -1011,7 +1079,7 @@ function psProfileSequence(){
 function psActiveProfilePage(){
   const active=document.querySelector('#profileTabsMount .profile-tab.active');
   const page=Number(active&&active.dataset.profilePage);
-  return page>=1&&page<=4?page:1;
+  return (page>=1&&page<=4)||page===6?page:1;
 }
 let psProfileSwipeAnimating=false;
 function psNavigateAdjacentProfile(direction){
@@ -1135,11 +1203,11 @@ document.querySelectorAll('.bottom-nav [data-view], .top-backup-btn[data-view]')
 
 el('fortnightShortcut').addEventListener('click',()=>showView('fortnightView'));
 
-// v122 — Watering Checks now opens with ‘Check today’ as the default filter.
+// v123 — Watering Checks now opens with ‘Check today’ as the default filter.
 el('filterSelect').value='due';
 renderAll();
 
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=122').catch(()=>{}));}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=123').catch(()=>{}));}
 
 
 // v118 — complete Plant Secretary backup / restore
