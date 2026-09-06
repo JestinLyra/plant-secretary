@@ -1,10 +1,10 @@
-const CACHE='plant-secretary-v141';
+const CACHE='plant-secretary-v142';
 const ASSETS=[
   './',
   './index.html',
   './style.css?v=138',
   './project.css?v=138',
-  './nav-v138.css?v=141',
+  './nav-v138.css?v=142',
   './app.js?v=138',
   './project.js?v=138',
   './manifest.json',
