@@ -1,5 +1,5 @@
-/* Plant Secretary v142 — 58px visible bottom-navigation circles */
-.brand-identity h1::after{content:"v142"!important}
+/* Plant Secretary v143 — 58px visible bottom-navigation circles */
+.brand-identity h1::after{content:"v143"!important}
 
 .bottom-nav{
   position:fixed!important;
@@ -124,15 +124,15 @@
   height:66px!important;
   min-width:66px!important;
   min-height:66px!important;
-  content:url("assets/icons/calendar-droplet-approved.png?v=142")!important;
+  content:url("assets/icons/calendar-droplet-approved.png?v=143")!important;
 }
 
-/* iOS Safari does not reliably render content:url() on the dynamically-created Project <img> because it has no src attribute. Hide that broken replaced element and render the uploaded transparent artwork on the icon slot instead. */
+/* Project uses one approved rocket asset only. The empty dynamic img is hidden so iOS cannot render a broken-image placeholder. */
 .bottom-nav .nav-project-uploaded{
   display:none!important;
 }
 .bottom-nav .project-nav-icon{
-  background-image:url("assets/icons/project-nav-v141.png?v=142")!important;
+  background-image:url("assets/icons/project-nav-approved.png?v=143")!important;
   background-repeat:no-repeat!important;
   background-position:center!important;
   background-size:65px 65px!important;
