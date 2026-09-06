@@ -1,145 +1,137 @@
-/* Plant Secretary v139 — standardised 92px visible navigation circles */
-.brand-identity h1::after{content:"v139"!important}
+/* Plant Secretary v138 — bottom navigation structural alignment only */
+.brand-identity h1::after{content:"v138"!important}
 
-/* Four equal columns. The bar is tall enough for a true 92px visible circle plus label. */
+/* Fixed bottom bar with a bounded height: no vertical stretching. */
 .bottom-nav{
   position:fixed!important;
   left:0!important;
   right:0!important;
   top:auto!important;
   bottom:0!important;
-  height:calc(132px + env(safe-area-inset-bottom))!important;
-  min-height:calc(132px + env(safe-area-inset-bottom))!important;
-  max-height:calc(132px + env(safe-area-inset-bottom))!important;
+  height:calc(82px + env(safe-area-inset-bottom))!important;
+  min-height:calc(82px + env(safe-area-inset-bottom))!important;
+  max-height:calc(82px + env(safe-area-inset-bottom))!important;
   padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;
   display:grid!important;
   grid-template-columns:repeat(4,minmax(0,1fr))!important;
   align-items:start!important;
   align-content:start!important;
-  gap:0!important;
 }
 
-/* Every button uses the same icon row and the same label row. */
+/* Every button uses the same two-row structure: 44px icon slot + 22px label slot. */
 .bottom-nav button{
   display:grid!important;
-  grid-template-rows:96px 24px!important;
+  grid-template-rows:44px 22px!important;
   grid-template-columns:1fr!important;
   width:100%!important;
-  height:120px!important;
-  min-height:120px!important;
-  max-height:120px!important;
+  height:66px!important;
+  min-height:66px!important;
+  max-height:66px!important;
   margin:0!important;
-  padding:0 1px!important;
+  padding:0 2px!important;
   align-self:start!important;
   align-content:start!important;
   justify-items:center!important;
   overflow:visible!important;
-  border-radius:18px!important;
 }
 
-/* The visible outer circle is the element below, not the image canvas.
-   All four are exactly 92px with exactly the same 3px outline. */
+/* Identical icon slot for Home, Watering Check, Fortnight and Project. */
 .bottom-nav .nav-icon{
   grid-row:1!important;
-  box-sizing:border-box!important;
-  width:92px!important;
-  height:92px!important;
-  min-width:92px!important;
-  min-height:92px!important;
-  max-width:92px!important;
-  max-height:92px!important;
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  min-height:44px!important;
+  max-width:44px!important;
+  max-height:44px!important;
   display:grid!important;
   place-items:center!important;
   align-self:start!important;
   justify-self:center!important;
   margin:0!important;
   padding:0!important;
-  background:#fff!important;
-  border:3px solid #174d2d!important;
-  border-radius:50%!important;
-  box-shadow:none!important;
+  background:transparent!important;
   transform:none!important;
-  overflow:hidden!important;
-  position:relative!important;
+  overflow:visible!important;
 }
 
-/* Crop away the source artwork's inconsistent outer-ring padding/border.
-   The 92px wrapper above becomes the single visible circular border. */
+/* Identical label slot and baseline for all four buttons. */
+.bottom-nav button>span:last-child{
+  grid-row:2!important;
+  width:100%!important;
+  height:22px!important;
+  min-height:22px!important;
+  max-height:22px!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  line-height:22px!important;
+  white-space:nowrap!important;
+  transform:none!important;
+}
+
 .bottom-nav .nav-icon img{
   display:block!important;
-  width:102px!important;
-  height:102px!important;
-  min-width:102px!important;
-  min-height:102px!important;
-  max-width:102px!important;
-  max-height:102px!important;
   margin:0!important;
   padding:0!important;
   object-fit:contain!important;
   object-position:center!important;
-  clip-path:circle(42px at 50% 50%)!important;
+  max-width:none!important;
+  max-height:none!important;
   opacity:1!important;
   visibility:visible!important;
-  background:#fff!important;
-  border:0!important;
+  background:transparent!important;
+}
+
+/* Preserve the established visible-circle sizes. */
+.bottom-nav .nav-icon img.nav-home-approved{
+  width:40px!important;
+  height:40px!important;
+  min-width:40px!important;
+  min-height:40px!important;
+  transform:none!important;
+}
+
+/* Only the Watering artwork moves inside its fixed 44px slot.
+   No transform is applied to the button, icon slot, or label. */
+.bottom-nav .nav-icon img.nav-watering-approved{
+  width:33px!important;
+  height:33px!important;
+  min-width:33px!important;
+  min-height:33px!important;
+  transform:translateY(-5px)!important;
+}
+
+/* Explicitly restore the approved Fortnight artwork in the same fixed slot. */
+.bottom-nav .nav-icon img.nav-calendar-approved{
+  width:35px!important;
+  height:35px!important;
+  min-width:35px!important;
+  min-height:35px!important;
+  content:url("assets/icons/calendar-droplet-approved.png?v=138")!important;
+  transform:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+
+.bottom-nav .nav-icon img.nav-project-uploaded{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  content:url("assets/icons/project-nav-v133.png?v=138")!important;
+  background:transparent!important;
   border-radius:0!important;
   box-shadow:none!important;
-  transform:none!important;
-}
-
-/* Remove all old per-icon sizing/position overrides. */
-.bottom-nav .nav-icon img.nav-home-approved,
-.bottom-nav .nav-icon img.nav-watering-approved,
-.bottom-nav .nav-icon img.nav-calendar-approved,
-.bottom-nav .nav-icon img.nav-project-uploaded{
-  width:102px!important;
-  height:102px!important;
-  min-width:102px!important;
-  min-height:102px!important;
-  max-width:102px!important;
-  max-height:102px!important;
-  transform:none!important;
-}
-
-.bottom-nav .nav-icon img.nav-calendar-approved{
-  content:url("assets/icons/calendar-droplet-approved.png?v=139")!important;
-}
-.bottom-nav .nav-icon img.nav-project-uploaded{
-  content:url("assets/icons/project-nav-v133.png?v=139")!important;
-}
-
-/* Identical label baseline for all four buttons. */
-.bottom-nav button>span:last-child{
-  grid-row:2!important;
-  width:100%!important;
-  height:24px!important;
-  min-height:24px!important;
-  max-height:24px!important;
-  margin:0!important;
-  padding:0!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  text-align:center!important;
-  line-height:24px!important;
-  white-space:nowrap!important;
   transform:none!important;
 }
 
 .bottom-nav .project-nav-icon,
 .bottom-nav .project-nav-btn,
 .bottom-nav .project-nav-btn .nav-icon{
-  background-color:#fff!important;
-}
-
-/* Keep page content clear of the taller fixed navigation. */
-body{padding-bottom:calc(142px + env(safe-area-inset-bottom))!important}
-.project-view{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
-
-@media(max-width:390px){
-  .bottom-nav{padding-left:4px!important;padding-right:4px!important}
-  .bottom-nav button{padding-left:0!important;padding-right:0!important}
-  .bottom-nav button>span:last-child{font-size:9px!important}
+  background-color:transparent!important;
 }
 
 @media(min-width:760px){
