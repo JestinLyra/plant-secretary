@@ -98,11 +98,10 @@
   justify-content:center!important;
 }
 
-/* Move Watering Check icon and label together. Based on the supplied v136 render,
-   its visible circle/label sit about 8px below the peer row. */
+/* Move Watering Check icon and label together. */
 .bottom-nav button[data-view="wateringView"] .nav-icon,
 .bottom-nav button[data-view="wateringView"]>span:last-child{
-  transform:translateY(-10px)!important;
+  transform:translateY(-11px)!important;
 }
 
 @media(min-width:760px){
