@@ -1,5 +1,5 @@
-/* Plant Secretary v143 — 58px visible bottom-navigation circles */
-.brand-identity h1::after{content:"v143"!important}
+/* Plant Secretary v144 — 58px visible bottom-navigation circles */
+.brand-identity h1::after{content:"v144"!important}
 
 .bottom-nav{
   position:fixed!important;
@@ -124,7 +124,7 @@
   height:66px!important;
   min-width:66px!important;
   min-height:66px!important;
-  content:url("assets/icons/calendar-droplet-approved.png?v=143")!important;
+  content:url("assets/icons/calendar-droplet-approved.png?v=144")!important;
 }
 
 /* Project uses one approved rocket asset only. The empty dynamic img is hidden so iOS cannot render a broken-image placeholder. */
@@ -132,7 +132,7 @@
   display:none!important;
 }
 .bottom-nav .project-nav-icon{
-  background-image:url("assets/icons/project-nav-approved.png?v=143")!important;
+  background-image:url("assets/icons/project-nav-approved.png?v=144")!important;
   background-repeat:no-repeat!important;
   background-position:center!important;
   background-size:65px 65px!important;
