@@ -1,5 +1,5 @@
-/* Plant Secretary v140 — 46px visible bottom-navigation circles */
-.brand-identity h1::after{content:"v140"!important}
+/* Plant Secretary v141 — 58px visible bottom-navigation circles */
+.brand-identity h1::after{content:"v141"!important}
 
 /* Keep the existing four-column bottom navigation structure. */
 .bottom-nav{
@@ -8,9 +8,9 @@
   right:0!important;
   top:auto!important;
   bottom:0!important;
-  height:calc(102px + env(safe-area-inset-bottom))!important;
-  min-height:calc(102px + env(safe-area-inset-bottom))!important;
-  max-height:calc(102px + env(safe-area-inset-bottom))!important;
+  height:calc(114px + env(safe-area-inset-bottom))!important;
+  min-height:calc(114px + env(safe-area-inset-bottom))!important;
+  max-height:calc(114px + env(safe-area-inset-bottom))!important;
   padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;
   display:grid!important;
   grid-template-columns:repeat(4,minmax(0,1fr))!important;
@@ -21,12 +21,12 @@
 /* Common icon-centre row and common label row. */
 .bottom-nav button{
   display:grid!important;
-  grid-template-rows:64px 22px!important;
+  grid-template-rows:76px 22px!important;
   grid-template-columns:1fr!important;
   width:100%!important;
-  height:86px!important;
-  min-height:86px!important;
-  max-height:86px!important;
+  height:98px!important;
+  min-height:98px!important;
+  max-height:98px!important;
   margin:0!important;
   padding:0 2px!important;
   align-self:start!important;
@@ -35,15 +35,15 @@
   overflow:visible!important;
 }
 
-/* A shared 64px artwork slot keeps all four visible-circle centres aligned. */
+/* A shared 76px artwork slot keeps all four visible-circle centres aligned. */
 .bottom-nav .nav-icon{
   grid-row:1!important;
-  width:64px!important;
-  height:64px!important;
-  min-width:64px!important;
-  min-height:64px!important;
-  max-width:64px!important;
-  max-height:64px!important;
+  width:76px!important;
+  height:76px!important;
+  min-width:76px!important;
+  min-height:76px!important;
+  max-width:76px!important;
+  max-height:76px!important;
   display:grid!important;
   place-items:center!important;
   align-self:start!important;
@@ -56,20 +56,20 @@
   position:relative!important;
 }
 
-/* Standardised final visible circle: 46px diameter, 2px stroke, same centre for all four icons. */
+/* Standardised final visible circle: 58px diameter, 2px stroke, same centre for all four icons. */
 .bottom-nav .nav-icon::after{
   content:""!important;
   position:absolute!important;
   left:50%!important;
   top:50%!important;
-  width:46px!important;
-  height:46px!important;
+  width:58px!important;
+  height:58px!important;
   box-sizing:border-box!important;
   border:2px solid #173f27!important;
   border-radius:50%!important;
   transform:translate(-50%,-50%)!important;
   pointer-events:none!important;
-  z-index:2!important;
+  z-index:3!important;
 }
 
 /* Identical label slot and baseline for all four buttons. */
@@ -102,43 +102,49 @@
   background:transparent!important;
   transform:none!important;
   z-index:1!important;
-  /* Hide each source artwork's inconsistent outer ring so the shared 2px ring is the only visible stroke. */
-  clip-path:circle(21px at 50% 50%)!important;
 }
 
-/* Individual artwork scaling derived from the measured visible-circle proportions.
-   Each source circle resolves to the same 46px target before the common stroke is applied. */
+/* Crop the original ring on the three standard nav artworks so the shared 2px ring is the visible stroke. */
+.bottom-nav .nav-icon img.nav-home-approved,
+.bottom-nav .nav-icon img.nav-watering-approved,
+.bottom-nav .nav-icon img.nav-calendar-approved{
+  clip-path:circle(27px at 50% 50%)!important;
+}
+
+/* Individual artwork scaling preserves each illustration's internal proportions while resolving to a 58px visible circle. */
 .bottom-nav .nav-icon img.nav-home-approved{
-  width:61px!important;
-  height:61px!important;
-  min-width:61px!important;
-  min-height:61px!important;
+  width:77px!important;
+  height:77px!important;
+  min-width:77px!important;
+  min-height:77px!important;
 }
 
 .bottom-nav .nav-icon img.nav-watering-approved{
-  width:52px!important;
-  height:52px!important;
-  min-width:52px!important;
-  min-height:52px!important;
+  width:66px!important;
+  height:66px!important;
+  min-width:66px!important;
+  min-height:66px!important;
 }
 
 .bottom-nav .nav-icon img.nav-calendar-approved{
-  width:52px!important;
-  height:52px!important;
-  min-width:52px!important;
-  min-height:52px!important;
-  content:url("assets/icons/calendar-droplet-approved.png?v=140")!important;
+  width:66px!important;
+  height:66px!important;
+  min-width:66px!important;
+  min-height:66px!important;
+  content:url("assets/icons/calendar-droplet-approved.png?v=141")!important;
 }
 
+/* New transparent, higher-resolution Project artwork. Keep its rocket/flame/plus details intact. */
 .bottom-nav .nav-icon img.nav-project-uploaded{
-  width:59px!important;
-  height:59px!important;
-  min-width:59px!important;
-  min-height:59px!important;
-  content:url("assets/icons/project-nav-v133.png?v=140")!important;
+  width:65px!important;
+  height:auto!important;
+  min-width:65px!important;
+  min-height:0!important;
+  content:url("assets/icons/project-nav-v141.png?v=141")!important;
   background:transparent!important;
   border-radius:0!important;
   box-shadow:none!important;
+  clip-path:none!important;
 }
 
 .bottom-nav .project-nav-icon,
@@ -147,9 +153,9 @@
   background-color:transparent!important;
 }
 
-/* Keep page content clear of the slightly taller navigation bar. */
-body{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
-.project-view{padding-bottom:calc(120px + env(safe-area-inset-bottom))!important}
+/* Keep page content clear of the taller navigation bar. */
+body{padding-bottom:calc(124px + env(safe-area-inset-bottom))!important}
+.project-view{padding-bottom:calc(132px + env(safe-area-inset-bottom))!important}
 
 @media(max-width:390px){
   .bottom-nav{padding-left:4px!important;padding-right:4px!important}
