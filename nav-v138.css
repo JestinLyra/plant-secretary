@@ -1,7 +1,6 @@
-/* Plant Secretary v141 — 58px visible bottom-navigation circles */
-.brand-identity h1::after{content:"v141"!important}
+/* Plant Secretary v142 — 58px visible bottom-navigation circles */
+.brand-identity h1::after{content:"v142"!important}
 
-/* Keep the existing four-column bottom navigation structure. */
 .bottom-nav{
   position:fixed!important;
   left:0!important;
@@ -18,7 +17,6 @@
   align-content:start!important;
 }
 
-/* Common icon-centre row and common label row. */
 .bottom-nav button{
   display:grid!important;
   grid-template-rows:76px 22px!important;
@@ -35,7 +33,6 @@
   overflow:visible!important;
 }
 
-/* A shared 76px artwork slot keeps all four visible-circle centres aligned. */
 .bottom-nav .nav-icon{
   grid-row:1!important;
   width:76px!important;
@@ -56,7 +53,6 @@
   position:relative!important;
 }
 
-/* Standardised final visible circle: 58px diameter, 2px stroke, same centre for all four icons. */
 .bottom-nav .nav-icon::after{
   content:""!important;
   position:absolute!important;
@@ -72,7 +68,6 @@
   z-index:3!important;
 }
 
-/* Identical label slot and baseline for all four buttons. */
 .bottom-nav button>span:last-child{
   grid-row:2!important;
   width:100%!important;
@@ -104,14 +99,12 @@
   z-index:1!important;
 }
 
-/* Crop the original ring on the three standard nav artworks so the shared 2px ring is the visible stroke. */
 .bottom-nav .nav-icon img.nav-home-approved,
 .bottom-nav .nav-icon img.nav-watering-approved,
 .bottom-nav .nav-icon img.nav-calendar-approved{
   clip-path:circle(27px at 50% 50%)!important;
 }
 
-/* Individual artwork scaling preserves each illustration's internal proportions while resolving to a 58px visible circle. */
 .bottom-nav .nav-icon img.nav-home-approved{
   width:77px!important;
   height:77px!important;
@@ -131,29 +124,25 @@
   height:66px!important;
   min-width:66px!important;
   min-height:66px!important;
-  content:url("assets/icons/calendar-droplet-approved.png?v=141")!important;
+  content:url("assets/icons/calendar-droplet-approved.png?v=142")!important;
 }
 
-/* New transparent, higher-resolution Project artwork. Keep its rocket/flame/plus details intact. */
-.bottom-nav .nav-icon img.nav-project-uploaded{
-  width:65px!important;
-  height:auto!important;
-  min-width:65px!important;
-  min-height:0!important;
-  content:url("assets/icons/project-nav-v141.png?v=141")!important;
-  background:transparent!important;
-  border-radius:0!important;
-  box-shadow:none!important;
-  clip-path:none!important;
+/* iOS Safari does not reliably render content:url() on the dynamically-created Project <img> because it has no src attribute. Hide that broken replaced element and render the uploaded transparent artwork on the icon slot instead. */
+.bottom-nav .nav-project-uploaded{
+  display:none!important;
+}
+.bottom-nav .project-nav-icon{
+  background-image:url("assets/icons/project-nav-v141.png?v=142")!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:65px 65px!important;
 }
 
-.bottom-nav .project-nav-icon,
 .bottom-nav .project-nav-btn,
 .bottom-nav .project-nav-btn .nav-icon{
   background-color:transparent!important;
 }
 
-/* Keep page content clear of the taller navigation bar. */
 body{padding-bottom:calc(124px + env(safe-area-inset-bottom))!important}
 .project-view{padding-bottom:calc(132px + env(safe-area-inset-bottom))!important}
 
