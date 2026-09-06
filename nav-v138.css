@@ -1,16 +1,16 @@
-/* Plant Secretary v138 — bottom navigation structural alignment only */
-.brand-identity h1::after{content:"v138"!important}
+/* Plant Secretary v140 — 46px visible bottom-navigation circles */
+.brand-identity h1::after{content:"v140"!important}
 
-/* Fixed bottom bar with a bounded height: no vertical stretching. */
+/* Keep the existing four-column bottom navigation structure. */
 .bottom-nav{
   position:fixed!important;
   left:0!important;
   right:0!important;
   top:auto!important;
   bottom:0!important;
-  height:calc(82px + env(safe-area-inset-bottom))!important;
-  min-height:calc(82px + env(safe-area-inset-bottom))!important;
-  max-height:calc(82px + env(safe-area-inset-bottom))!important;
+  height:calc(102px + env(safe-area-inset-bottom))!important;
+  min-height:calc(102px + env(safe-area-inset-bottom))!important;
+  max-height:calc(102px + env(safe-area-inset-bottom))!important;
   padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;
   display:grid!important;
   grid-template-columns:repeat(4,minmax(0,1fr))!important;
@@ -18,15 +18,15 @@
   align-content:start!important;
 }
 
-/* Every button uses the same two-row structure: 44px icon slot + 22px label slot. */
+/* Common icon-centre row and common label row. */
 .bottom-nav button{
   display:grid!important;
-  grid-template-rows:44px 22px!important;
+  grid-template-rows:64px 22px!important;
   grid-template-columns:1fr!important;
   width:100%!important;
-  height:66px!important;
-  min-height:66px!important;
-  max-height:66px!important;
+  height:86px!important;
+  min-height:86px!important;
+  max-height:86px!important;
   margin:0!important;
   padding:0 2px!important;
   align-self:start!important;
@@ -35,15 +35,15 @@
   overflow:visible!important;
 }
 
-/* Identical icon slot for Home, Watering Check, Fortnight and Project. */
+/* A shared 64px artwork slot keeps all four visible-circle centres aligned. */
 .bottom-nav .nav-icon{
   grid-row:1!important;
-  width:44px!important;
-  height:44px!important;
-  min-width:44px!important;
-  min-height:44px!important;
-  max-width:44px!important;
-  max-height:44px!important;
+  width:64px!important;
+  height:64px!important;
+  min-width:64px!important;
+  min-height:64px!important;
+  max-width:64px!important;
+  max-height:64px!important;
   display:grid!important;
   place-items:center!important;
   align-self:start!important;
@@ -53,6 +53,23 @@
   background:transparent!important;
   transform:none!important;
   overflow:visible!important;
+  position:relative!important;
+}
+
+/* Standardised final visible circle: 46px diameter, 2px stroke, same centre for all four icons. */
+.bottom-nav .nav-icon::after{
+  content:""!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:46px!important;
+  height:46px!important;
+  box-sizing:border-box!important;
+  border:2px solid #173f27!important;
+  border-radius:50%!important;
+  transform:translate(-50%,-50%)!important;
+  pointer-events:none!important;
+  z-index:2!important;
 }
 
 /* Identical label slot and baseline for all four buttons. */
@@ -83,55 +100,61 @@
   opacity:1!important;
   visibility:visible!important;
   background:transparent!important;
+  transform:none!important;
+  z-index:1!important;
+  /* Hide each source artwork's inconsistent outer ring so the shared 2px ring is the only visible stroke. */
+  clip-path:circle(21px at 50% 50%)!important;
 }
 
-/* Preserve the established visible-circle sizes. */
+/* Individual artwork scaling derived from the measured visible-circle proportions.
+   Each source circle resolves to the same 46px target before the common stroke is applied. */
 .bottom-nav .nav-icon img.nav-home-approved{
-  width:40px!important;
-  height:40px!important;
-  min-width:40px!important;
-  min-height:40px!important;
-  transform:none!important;
+  width:61px!important;
+  height:61px!important;
+  min-width:61px!important;
+  min-height:61px!important;
 }
 
-/* Only the Watering artwork moves inside its fixed 44px slot.
-   No transform is applied to the button, icon slot, or label. */
 .bottom-nav .nav-icon img.nav-watering-approved{
-  width:33px!important;
-  height:33px!important;
-  min-width:33px!important;
-  min-height:33px!important;
-  transform:translateY(-5px)!important;
+  width:52px!important;
+  height:52px!important;
+  min-width:52px!important;
+  min-height:52px!important;
 }
 
-/* Explicitly restore the approved Fortnight artwork in the same fixed slot. */
 .bottom-nav .nav-icon img.nav-calendar-approved{
-  width:35px!important;
-  height:35px!important;
-  min-width:35px!important;
-  min-height:35px!important;
-  content:url("assets/icons/calendar-droplet-approved.png?v=138")!important;
-  transform:none!important;
-  opacity:1!important;
-  visibility:visible!important;
+  width:52px!important;
+  height:52px!important;
+  min-width:52px!important;
+  min-height:52px!important;
+  content:url("assets/icons/calendar-droplet-approved.png?v=140")!important;
 }
 
 .bottom-nav .nav-icon img.nav-project-uploaded{
-  width:38px!important;
-  height:38px!important;
-  min-width:38px!important;
-  min-height:38px!important;
-  content:url("assets/icons/project-nav-v133.png?v=138")!important;
+  width:59px!important;
+  height:59px!important;
+  min-width:59px!important;
+  min-height:59px!important;
+  content:url("assets/icons/project-nav-v133.png?v=140")!important;
   background:transparent!important;
   border-radius:0!important;
   box-shadow:none!important;
-  transform:none!important;
 }
 
 .bottom-nav .project-nav-icon,
 .bottom-nav .project-nav-btn,
 .bottom-nav .project-nav-btn .nav-icon{
   background-color:transparent!important;
+}
+
+/* Keep page content clear of the slightly taller navigation bar. */
+body{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
+.project-view{padding-bottom:calc(120px + env(safe-area-inset-bottom))!important}
+
+@media(max-width:390px){
+  .bottom-nav{padding-left:4px!important;padding-right:4px!important}
+  .bottom-nav button{padding-left:0!important;padding-right:0!important}
+  .bottom-nav button>span:last-child{font-size:9px!important}
 }
 
 @media(min-width:760px){
