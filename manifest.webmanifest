@@ -1,0 +1,18 @@
+{
+  "name": "Plant Secretary",
+  "short_name": "Plant Secretary",
+  "description": "Personal plant care tracker for watering, projects, profiles and insights.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffdf8",
+  "theme_color": "#eef9f4",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
