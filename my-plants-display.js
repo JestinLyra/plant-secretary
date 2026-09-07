@@ -57,12 +57,23 @@ function installCollectionSelector(){
   selector.value=plantFilter||'all';
   selector.addEventListener('change',()=>{plantFilter=selector.value;window.renderCollection();});
 }
+function installProfileTap(){
+  const collection=document.getElementById('collection');
+  if(!collection||collection.dataset.profileTapBound==='1')return;
+  collection.dataset.profileTapBound='1';
+  collection.addEventListener('click',event=>{
+    const card=event.target.closest('.plant-card[data-profile]');
+    if(!card||!collection.contains(card))return;
+    if(typeof window.openModal==='function')window.openModal(card.dataset.profile);
+    else if(typeof openModal==='function')openModal(card.dataset.profile);
+  });
+}
 window.renderCollection=function(){
  let list=plants.filter(p=>plantFilter==='all'||p.location===plantFilter);
  list.sort((a,b)=>a.name.localeCompare(b.name));
  const indoor=plants.filter(p=>p.location==='Indoor').length,outdoor=plants.length-indoor;
  $('#countLine').textContent=`${plants.length} plants · ${indoor} Indoor · ${outdoor} Outdoor`;
- $('#collection').innerHTML=list.map(p=>{const d=detail(p);return `<article class="plant-card" data-profile="${p.id}"><div class="photo" id="photo-${p.id}">🌿</div><div class="pcopy"><strong>${p.name}</strong><em>${d.common}</em><small>${p.location} · ${d.habit}</small></div></article>`}).join('');
+ $('#collection').innerHTML=list.map(p=>{const d=detail(p);return `<article class="plant-card" data-profile="${p.id}" role="button" tabindex="0"><div class="photo" id="photo-${p.id}">🌿</div><div class="pcopy"><strong>${p.name}</strong><em>${d.common}</em><small>${p.location} · ${d.habit}</small></div></article>`}).join('');
  list.forEach(loadCardPhoto);
 };
 const st=document.createElement('style');
@@ -72,6 +83,6 @@ st.textContent=`
 @media(max-width:430px){.plant-location-selector{margin-top:0;margin-bottom:12px}.location-select{min-width:118px;padding:7px 9px}.location-select select{font-size:13px;min-width:80px}.location-select svg{width:18px;height:18px;flex-basis:18px}}
 `;
 document.head.appendChild(st);
-function refresh(){installCollectionSelector();if(typeof window.renderCollection==='function')window.renderCollection();}
+function refresh(){installCollectionSelector();installProfileTap();if(typeof window.renderCollection==='function')window.renderCollection();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(refresh,0));else setTimeout(refresh,0);
 })();
