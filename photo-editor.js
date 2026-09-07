@@ -25,7 +25,9 @@ zoom.oninput=()=>{v.scale=Number(zoom.value);v=clean(v);draw()};
 $('#photoReset').onclick=()=>{v={x:0,y:0,scale:1};draw()};
 $('#photoSave').onclick=()=>{const all=views();all[id]=clean(v);saveViews(all);closeEditor();if(typeof renderCollection==='function')renderCollection();setTimeout(applyAll,80);if($('#plantModal')?.classList.contains('open')&&typeof openModal==='function'){openModal(id);setTimeout(applyAll,80)}if(typeof toast==='function')toast('Photo position and size saved')};
 m.classList.add('open')}
-document.addEventListener('click',e=>{const box=e.target.closest('.photo,.hero-photo');if(!box)return;const id=box.id?.replace(/^photo-|^hero-/,'');if(!id)return;e.preventDefault();e.stopPropagation();openEditor(id)},true);
+// Collection-card taps must always open the plant profile, whether or not a photo exists.
+// Photo adjustment is available only from the large photo inside an already-open plant profile.
+document.addEventListener('click',e=>{const box=e.target.closest('.hero-photo');if(!box)return;const id=box.id?.replace(/^hero-/,'');if(!id)return;e.preventDefault();e.stopPropagation();openEditor(id)},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#photoAdjustModal')?.classList.contains('open'))closeEditor()});
 const obs=new MutationObserver(()=>requestAnimationFrame(applyAll));obs.observe(document.body,{childList:true,subtree:true});window.addEventListener('resize',()=>requestAnimationFrame(applyAll));setTimeout(applyAll,0);
 })();
