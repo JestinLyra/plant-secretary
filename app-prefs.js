@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='v1.0.3';
+  const VERSION='v1.0.4';
 
   function applyVersion(){
     const visible=document.querySelector('.version-label');
