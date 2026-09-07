@@ -1,8 +1,8 @@
-const CACHE='plant-secretary-v12';
+const CACHE='plant-secretary-v13';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./home-art.css','./home-art.js','./assets/home-sunlight.webp','./assets/home-ph.webp','./assets/home-controls.webp','./assets/water-drop.webp'];
 const decorate=async response=>{
   const text=await response.text();
-  const html=text.replace('</head>','<link rel="stylesheet" href="home-art.css?v=12"></head>').replace('</body>','<script src="home-art.js?v=9"></script></body>');
+  const html=text.replace('</head>','<link rel="stylesheet" href="home-art.css?v=13"></head>').replace('</body>','<script src="home-art.js?v=9"></script></body>');
   return new Response(html,{status:response.status,statusText:response.statusText,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-cache'}});
 };
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
