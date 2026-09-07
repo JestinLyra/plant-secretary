@@ -1,5 +1,4 @@
 (()=>{
-const VERSION='v1.0.1';
 const DETAILS={
 'Begonia':{common:'Polka Dot Begonia · Spotted Begonia',habit:'Cane-forming / upright'},
 'Birkin — green pot':{common:'Philodendron Birkin',habit:'Self-heading / upright'},
@@ -48,7 +47,9 @@ window.renderCollection=function(){
  $('#collection').innerHTML=list.map(p=>{const d=detail(p);return `<article class="plant-card" data-profile="${p.id}"><div class="photo" id="photo-${p.id}">🌿</div><div class="pcopy"><strong>${p.name}</strong><em>${d.common}</em><small>${p.location} · ${d.habit}</small></div></article>`}).join('');
  list.forEach(loadCardPhoto);
 };
-function applyVersion(){document.querySelectorAll('.version-label').forEach(el=>el.textContent=VERSION);document.querySelectorAll('.more-card small').forEach(el=>{if(el.textContent.includes('Version '))el.textContent=el.textContent.replace(/Version\s+[\d.]+/,'Version 1.0.1')});}
-function refresh(){applyVersion();if(typeof window.renderCollection==='function')window.renderCollection();}
+const st=document.createElement('style');
+st.textContent='.pcopy{min-height:92px;display:flex;flex-direction:column}.pcopy strong{line-height:1.1}.pcopy em{min-height:30px;line-height:1.2}.pcopy small{display:block;line-height:1.2;margin-top:auto}';
+document.head.appendChild(st);
+function refresh(){if(typeof window.renderCollection==='function')window.renderCollection();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(refresh,0));else setTimeout(refresh,0);
 })();
