@@ -1,54 +1,82 @@
 (()=>{
 const $=s=>document.querySelector(s);
 const TYPES=['Pruning','Pinching','Repotting','Feeding'];
+const LABEL_TO_TYPE={Pruned:'Pruning',Pinched:'Pinching',Repotted:'Repotting',Fed:'Feeding'};
+const TYPE_TO_LABEL={Pruning:'Pruned',Pinching:'Pinched',Repotting:'Repotted',Feeding:'Fed'};
 let selectedType='';
 function currentPlant(){try{const name=$('#modalTitle')?.textContent?.trim();return plants.find(p=>p.name===name)||null}catch(e){return null}}
 function sortHistory(list){return (list||[]).sort((a,b)=>new Date(b.date)-new Date(a.date))}
 function localToday(){const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+function localDateFromISO(v){const d=new Date(v);if(Number.isNaN(d.getTime()))return'';const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+function sameCareRecord(a,label,date,skipIndex=-1,index=-1){return index!==skipIndex&&a?.type===label&&localDateFromISO(a?.date)===date}
+function refreshPlant(p,msg){save();openModal(p.id);if(typeof renderInsights==='function')renderInsights();if(msg&&typeof toast==='function')toast(msg)}
 function ensureButton(){
   const panel=[...document.querySelectorAll('#plantProfile .panel')].find(p=>p.querySelector('h3')?.textContent.trim()==='Care History');
   if(!panel||panel.querySelector('#careHistoryEditBtn'))return;
   panel.style.position='relative';
   const btn=document.createElement('button');
-  btn.id='careHistoryEditBtn';btn.type='button';btn.setAttribute('aria-label','Back-log plant care');
+  btn.id='careHistoryEditBtn';btn.type='button';btn.setAttribute('aria-label','Edit care history');
   btn.innerHTML='<img src="assets/care-history-edit.png" alt="">';
-  btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openTypeStep();});
+  btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openModeStep();});
   panel.appendChild(btn);
 }
 function ensureModal(){
   let m=$('#careHistoryBacklogModal');if(m)return m;
   m=document.createElement('div');m.id='careHistoryBacklogModal';m.className='modal';
-  m.innerHTML=`<div class="sheet"><div class="sheethead"><h3 id="careBacklogTitle">Back-log plant care</h3><button class="close" id="careBacklogClose">×</button></div><div id="careBacklogBody"></div></div>`;
+  m.innerHTML=`<div class="sheet"><div class="sheethead"><h3 id="careBacklogTitle">Care History</h3><button class="close" id="careBacklogClose">×</button></div><div id="careBacklogBody"></div></div>`;
   document.body.appendChild(m);
   $('#careBacklogClose').onclick=()=>m.classList.remove('open');
   m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')});
   return m;
 }
+function openModeStep(){
+  if(!currentPlant())return;const m=ensureModal();selectedType='';
+  $('#careBacklogTitle').textContent='Care History';
+  $('#careBacklogBody').innerHTML=`<p class="hint">Add a past care record or amend an existing one.</p><div class="care-mode-grid"><button type="button" class="secondary" id="careAddPast">Add past care</button><button type="button" class="secondary" id="careEditHistory">Edit care history</button></div>`;
+  $('#careAddPast').onclick=openTypeStep;$('#careEditHistory').onclick=openHistoryList;m.classList.add('open');
+}
 function openTypeStep(){
   if(!currentPlant())return;selectedType='';const m=ensureModal();
   $('#careBacklogTitle').textContent='Which plant care?';
-  $('#careBacklogBody').innerHTML=`<p class="hint">Choose the care you want to back-log for this plant.</p><div class="care-backlog-types">${TYPES.map(t=>`<button type="button" class="secondary care-backlog-type" data-type="${t}">${t}</button>`).join('')}</div>`;
-  $('#careBacklogBody').querySelectorAll('.care-backlog-type').forEach(b=>b.onclick=()=>{selectedType=b.dataset.type;openDateStep()});
-  m.classList.add('open');
+  $('#careBacklogBody').innerHTML=`<p class="hint">Choose the care you want to back-log for this plant.</p><div class="care-backlog-types">${TYPES.map(t=>`<button type="button" class="secondary care-backlog-type" data-type="${t}">${t}</button>`).join('')}</div><button type="button" class="secondary care-full-back" id="careModeBack">Back</button>`;
+  $('#careBacklogBody').querySelectorAll('.care-backlog-type').forEach(b=>b.onclick=()=>{selectedType=b.dataset.type;openDateStep()});$('#careModeBack').onclick=openModeStep;m.classList.add('open');
 }
 function openDateStep(){
   const p=currentPlant();if(!p||!selectedType)return;const m=ensureModal();
   $('#careBacklogTitle').textContent=selectedType;
-  $('#careBacklogBody').innerHTML=`<form id="careBacklogForm" class="formgrid"><p class="hint" style="margin:0">Choose the date this care was completed for ${p.name}.</p><label>Date<input id="careBacklogDate" type="date" max="${localToday()}" required></label><div class="actions"><button class="secondary" type="button" id="careBacklogBack">Back</button><button class="primary" type="submit">Save care record</button></div></form>`;
+  $('#careBacklogBody').innerHTML=`<form id="careBacklogForm" class="formgrid"><p class="hint" style="margin:0">Choose the date this care was completed for ${p.name}.</p><label>Date<input id="careBacklogDate" type="date" max="${localToday()}" required></label><p id="careDuplicateWarning" class="hint care-warning"></p><div class="actions"><button class="secondary" type="button" id="careBacklogBack">Back</button><button class="primary" type="submit">Save care record</button></div></form>`;
   $('#careBacklogBack').onclick=openTypeStep;
   $('#careBacklogForm').onsubmit=e=>{
     e.preventDefault();const plant=currentPlant();const date=$('#careBacklogDate').value;if(!plant||!date)return;
-    const label=selectedType==='Pruning'?'Pruned':selectedType==='Pinching'?'Pinched':selectedType==='Repotting'?'Repotted':'Fed';
-    const iso=new Date(`${date}T12:00:00`).toISOString();plant.history=plant.history||[];plant.history.push({type:label,date:iso});plant.history=sortHistory(plant.history);
-    save();m.classList.remove('open');openModal(plant.id);if(typeof renderInsights==='function')renderInsights();if(typeof toast==='function')toast(`${label} recorded for ${plant.name}`);
+    const label=TYPE_TO_LABEL[selectedType];plant.history=plant.history||[];
+    const duplicate=plant.history.some((h,i)=>sameCareRecord(h,label,date,-1,i));
+    if(duplicate){$('#careDuplicateWarning').textContent=`${label} is already recorded on this date.`;return;}
+    const iso=new Date(`${date}T12:00:00`).toISOString();plant.history.push({type:label,date:iso});plant.history=sortHistory(plant.history);
+    m.classList.remove('open');refreshPlant(plant,`${label} recorded for ${plant.name}`);
   };
+}
+function editableHistory(p){return (p.history||[]).map((h,i)=>({h,i})).filter(x=>LABEL_TO_TYPE[x.h.type]);}
+function openHistoryList(){
+  const p=currentPlant();if(!p)return;const m=ensureModal();const items=editableHistory(p);
+  $('#careBacklogTitle').textContent='Edit care history';
+  $('#careBacklogBody').innerHTML=`<p class="hint">Choose a care record to amend or delete.</p><div class="care-edit-list">${items.map(({h,i})=>`<button type="button" class="care-edit-row" data-index="${i}"><span><b>${h.type}</b><small>${new Date(h.date).toLocaleDateString('en-AU')}</small></span><span>›</span></button>`).join('')||'<p class="hint">No pruning, pinching, repotting or feeding records yet.</p>'}</div><button type="button" class="secondary care-full-back" id="careEditBack">Back</button>`;
+  $('#careBacklogBody').querySelectorAll('.care-edit-row').forEach(b=>b.onclick=()=>openEditRecord(Number(b.dataset.index)));$('#careEditBack').onclick=openModeStep;m.classList.add('open');
+}
+function openEditRecord(index){
+  const p=currentPlant();if(!p)return;const record=p.history?.[index];if(!record||!LABEL_TO_TYPE[record.type])return;const m=ensureModal();
+  $('#careBacklogTitle').textContent='Edit care record';
+  $('#careBacklogBody').innerHTML=`<form id="careEditForm" class="formgrid"><label>Plant care<select id="careEditType">${TYPES.map(t=>`<option value="${t}" ${t===LABEL_TO_TYPE[record.type]?'selected':''}>${t}</option>`).join('')}</select></label><label>Date<input id="careEditDate" type="date" max="${localToday()}" value="${localDateFromISO(record.date)}" required></label><p id="careEditWarning" class="hint care-warning"></p><div class="care-edit-actions"><button type="button" class="secondary" id="careEditCancel">Back</button><button type="button" class="secondary care-delete" id="careDeleteRecord">Delete</button><button type="submit" class="primary">Save changes</button></div></form>`;
+  $('#careEditCancel').onclick=openHistoryList;
+  $('#careDeleteRecord').onclick=()=>{if(!confirm('Delete this care history record?'))return;p.history.splice(index,1);m.classList.remove('open');refreshPlant(p,'Care history record deleted');};
+  $('#careEditForm').onsubmit=e=>{e.preventDefault();const type=$('#careEditType').value,date=$('#careEditDate').value,label=TYPE_TO_LABEL[type];if(!date)return;const duplicate=p.history.some((h,i)=>sameCareRecord(h,label,date,index,i));if(duplicate){$('#careEditWarning').textContent=`${label} is already recorded on this date.`;return;}p.history[index]={...record,type:label,date:new Date(`${date}T12:00:00`).toISOString()};p.history=sortHistory(p.history);m.classList.remove('open');refreshPlant(p,'Care history record updated');};
 }
 const style=document.createElement('style');style.textContent=`
 #careHistoryEditBtn{position:absolute;top:18px;right:18px;width:46px;height:46px;border:0;background:transparent;padding:0;display:grid;place-items:center;cursor:pointer;z-index:2}
 #careHistoryEditBtn img{display:block;width:44px;height:44px;object-fit:contain}
 #careHistoryEditBtn:active{transform:scale(.96)}
 #plantProfile .panel:has(#careHistoryEditBtn) h3{padding-right:56px}
-.care-backlog-types{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.care-backlog-types button{min-height:52px}
+.care-backlog-types,.care-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.care-backlog-types button,.care-mode-grid button{min-height:52px}
+.care-full-back{width:100%;margin-top:12px}.care-edit-list{display:grid;gap:8px;margin-top:10px}.care-edit-row{border:1px solid #dfeae6;background:#fff;border-radius:14px;padding:12px 14px;color:var(--ink);display:flex;align-items:center;justify-content:space-between;text-align:left;font:inherit}.care-edit-row b,.care-edit-row small{display:block}.care-edit-row small{margin-top:3px;color:#68758f}.care-edit-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.care-edit-actions .primary{grid-column:1/-1}.care-delete{color:var(--danger);border-color:#efd0d5}.care-warning{color:var(--danger);min-height:18px;margin:0}
 `;
 document.head.appendChild(style);
 new MutationObserver(()=>requestAnimationFrame(ensureButton)).observe(document.body,{childList:true,subtree:true});document.addEventListener('click',()=>setTimeout(ensureButton,0),true);setTimeout(ensureButton,0);
