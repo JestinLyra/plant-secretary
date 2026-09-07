@@ -1,4 +1,4 @@
-const CACHE='plant-secretary-v24';
+const CACHE='plant-secretary-v25';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./home-art.css','./home-art.js','./my-plants-display.js','./app-prefs.js','./app-actions.js','./photo-editor.js','./assets/home-sunlight.webp','./assets/home-ph.webp','./assets/home-controls.webp','./assets/water-drop.webp','./assets/heading-logo.jpg'];
 const decorate=async response=>{
   let text=await response.text();
@@ -7,7 +7,7 @@ const decorate=async response=>{
     .replace('Good plants<br>Brighter days ♡','Healthy plants<br>Happy hearts ♡');
   const html=text
     .replace('</head>','<link rel="stylesheet" href="home-art.css?v=17"></head>')
-    .replace('</body>','<script src="home-art.js?v=9"></script><script src="my-plants-display.js?v=1.0.5"></script><script src="app-prefs.js?v=1.0.11"></script><script src="app-actions.js?v=1.0.6"></script><script src="photo-editor.js?v=1.0.6"></script></body>');
+    .replace('</body>','<script src="home-art.js?v=9"></script><script src="my-plants-display.js?v=1.0.12"></script><script src="app-prefs.js?v=1.0.12"></script><script src="app-actions.js?v=1.0.6"></script><script src="photo-editor.js?v=1.0.6"></script></body>');
   return new Response(html,{status:response.status,statusText:response.statusText,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-cache'}});
 };
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
