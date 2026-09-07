@@ -1,20 +1,21 @@
-const CACHE='plant-secretary-v32';
+const CACHE='plant-secretary-v33';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./home-art.css','./home-art.js','./my-plants-display.js','./app-prefs.js','./app-actions.js','./photo-editor.js','./profile-care-summary-v2.js','./care-history-edit.js','./assets/care-history-edit.png','./assets/home-sunlight.webp','./assets/home-ph.webp','./assets/home-controls.webp','./assets/water-drop.webp','./assets/heading-logo.jpg'];
 const decorate=async response=>{
   let text=await response.text();
   text=text
     .replace('<div class="logo">🌿</div>','<span class="heading-logo-frame"><img class="heading-logo" src="assets/heading-logo.jpg" alt=""></span>')
     .replace('Good plants<br>Brighter days ♡','Healthy plants<br>Happy hearts ♡')
+    .replace('${lightIcon(p.light)} <b>Light</b><br>${p.light}','${lightIcon(p.light)} <b>Sunlight</b><br>${p.light==="sun"?"direct":p.light}')
     .replace('💧 <b>Water</b>','<b>Water</b>')
-    .replace('🌤️ <b>Light</b>','<b>Light</b>')
-    .replace('☀️ <b>Light</b>','<b>Light</b>')
+    .replace('🌤️ <b>Sunlight</b>','<b>Sunlight</b>')
+    .replace('☀️ <b>Sunlight</b>','<b>Sunlight</b>')
     .replace('🪴 <b>Soil</b><br>Editable in care guide','<b>Soil</b><br><span data-care-summary="soil"></span>')
     .replace('🧪 <b>pH</b>','<b>pH</b>')
     .replace('🌱 <b>Feed</b><br>Record as needed','<b>Feed</b><br><span data-care-summary="feed"></span>')
     .replace('✂️ <b>Prune / Pinch</b><br>Track in history','<b>Prune / Pinch</b><br><span data-care-summary="prune"></span>');
   const html=text
     .replace('</head>','<link rel="stylesheet" href="home-art.css?v=17"></head>')
-    .replace('</body>','<script src="home-art.js?v=9"></script><script src="my-plants-display.js?v=1.0.13"></script><script src="app-prefs.js?v=1.0.19"></script><script src="app-actions.js?v=1.0.6"></script><script src="photo-editor.js?v=1.0.14"></script><script src="profile-care-summary-v2.js?v=1.0.19"></script><script src="care-history-edit.js?v=1.0.18"></script></body>');
+    .replace('</body>','<script src="home-art.js?v=9"></script><script src="my-plants-display.js?v=1.0.13"></script><script src="app-prefs.js?v=1.0.20"></script><script src="app-actions.js?v=1.0.6"></script><script src="photo-editor.js?v=1.0.14"></script><script src="profile-care-summary-v2.js?v=1.0.19"></script><script src="care-history-edit.js?v=1.0.18"></script></body>');
   return new Response(html,{status:response.status,statusText:response.statusText,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-cache'}});
 };
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
