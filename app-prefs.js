@@ -1,13 +1,12 @@
 (()=>{
-  const VERSION='v1.0.4';
+  const VERSION='v1.0.5';
+  window.PLANT_SECRETARY_VERSION=VERSION;
 
   function applyVersion(){
-    const visible=document.querySelector('.version-label');
-    if(visible) visible.textContent=VERSION;
-
-    document.querySelectorAll('.more-card small').forEach(el=>{
+    document.querySelectorAll('.version-label').forEach(el=>el.textContent=VERSION);
+    document.querySelectorAll('.more-card small,#utilityBody p').forEach(el=>{
       if(/Version\s+\d+\.\d+\.\d+/i.test(el.textContent)){
-        el.textContent=el.textContent.replace(/Version\s+\d+\.\d+\.\d+/i,`Version ${VERSION.replace(/^v/,'')}`);
+        el.textContent=el.textContent.replace(/Version\s+\d+\.\d+\.\d+/ig,`Version ${VERSION.replace(/^v/,'')}`);
       }
     });
   }
@@ -21,4 +20,6 @@
 
   applyVersion();
   setDefaultWateringView();
+  const obs=new MutationObserver(applyVersion);
+  obs.observe(document.body,{childList:true,subtree:true,characterData:true});
 })();
