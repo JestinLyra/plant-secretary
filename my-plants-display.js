@@ -38,6 +38,7 @@ const DETAILS={
 'Timble — Chilli':{common:'Timble Chilli',habit:'Bushy / upright'}
 };
 function detail(p){const d=DETAILS[p.name]||{};return {common:(p.common&&p.common.trim())||d.common||'Common name not set',habit:(p.habit&&p.habit.trim())||d.habit||'Growing habit not set'};}
+window.PLANT_DISPLAY_DETAIL=detail;
 function installCollectionSelector(){
   const page=document.getElementById('plants');
   const collection=document.getElementById('collection');
