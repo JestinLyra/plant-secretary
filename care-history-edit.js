@@ -9,7 +9,8 @@ function sortHistory(list){return (list||[]).sort((a,b)=>new Date(b.date)-new Da
 function localToday(){const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
 function localDateFromISO(v){const d=new Date(v);if(Number.isNaN(d.getTime()))return'';const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
 function sameCareRecord(a,label,date,skipIndex=-1,index=-1){return index!==skipIndex&&a?.type===label&&localDateFromISO(a?.date)===date}
-function refreshPlant(p,msg){save();openModal(p.id);if(typeof renderInsights==='function')renderInsights();if(msg&&typeof toast==='function')toast(msg)}
+function syncLastWatered(p){const latest=(p.history||[]).filter(h=>h.type==='Watered'&&h.date).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];p.lastWatered=latest?.date||null}
+function refreshPlant(p,msg){syncLastWatered(p);save();openModal(p.id);if(typeof renderInsights==='function')renderInsights();if(msg&&typeof toast==='function')toast(msg)}
 function ensureButton(){
   const panel=[...document.querySelectorAll('#plantProfile .panel')].find(p=>p.querySelector('h3')?.textContent.trim()==='Care History');
   if(!panel||panel.querySelector('#careHistoryEditBtn'))return;
@@ -55,20 +56,21 @@ function openDateStep(){
     m.classList.remove('open');refreshPlant(plant,`${label} recorded for ${plant.name}`);
   };
 }
-function editableHistory(p){return (p.history||[]).map((h,i)=>({h,i})).filter(x=>LABEL_TO_TYPE[x.h.type]);}
+function editableHistory(p){return (p.history||[]).map((h,i)=>({h,i})).filter(x=>x.h.type==='Watered'||LABEL_TO_TYPE[x.h.type]);}
 function openHistoryList(){
   const p=currentPlant();if(!p)return;const m=ensureModal();const items=editableHistory(p);
   $('#careBacklogTitle').textContent='Edit care history';
-  $('#careBacklogBody').innerHTML=`<p class="hint">Choose a care record to amend or delete.</p><div class="care-edit-list">${items.map(({h,i})=>`<button type="button" class="care-edit-row" data-index="${i}"><span><b>${h.type}</b><small>${new Date(h.date).toLocaleDateString('en-AU')}</small></span><span>›</span></button>`).join('')||'<p class="hint">No pruning, pinching, repotting or feeding records yet.</p>'}</div><button type="button" class="secondary care-full-back" id="careEditBack">Back</button>`;
+  $('#careBacklogBody').innerHTML=`<p class="hint">Choose a care record to amend or delete.</p><div class="care-edit-list">${items.map(({h,i})=>`<button type="button" class="care-edit-row" data-index="${i}"><span><b>${h.type}</b><small>${new Date(h.date).toLocaleDateString('en-AU')}</small></span><span>›</span></button>`).join('')||'<p class="hint">No care records yet.</p>'}</div><button type="button" class="secondary care-full-back" id="careEditBack">Back</button>`;
   $('#careBacklogBody').querySelectorAll('.care-edit-row').forEach(b=>b.onclick=()=>openEditRecord(Number(b.dataset.index)));$('#careEditBack').onclick=openModeStep;m.classList.add('open');
 }
 function openEditRecord(index){
-  const p=currentPlant();if(!p)return;const record=p.history?.[index];if(!record||!LABEL_TO_TYPE[record.type])return;const m=ensureModal();
-  $('#careBacklogTitle').textContent='Edit care record';
-  $('#careBacklogBody').innerHTML=`<form id="careEditForm" class="formgrid"><label>Plant care<select id="careEditType">${TYPES.map(t=>`<option value="${t}" ${t===LABEL_TO_TYPE[record.type]?'selected':''}>${t}</option>`).join('')}</select></label><label>Date<input id="careEditDate" type="date" max="${localToday()}" value="${localDateFromISO(record.date)}" required></label><p id="careEditWarning" class="hint care-warning"></p><div class="care-edit-actions"><button type="button" class="secondary" id="careEditCancel">Back</button><button type="button" class="secondary care-delete" id="careDeleteRecord">Delete</button><button type="submit" class="primary">Save changes</button></div></form>`;
+  const p=currentPlant();if(!p)return;const record=p.history?.[index];if(!record)return;const isWatered=record.type==='Watered';if(!isWatered&&!LABEL_TO_TYPE[record.type])return;const m=ensureModal();
+  $('#careBacklogTitle').textContent=isWatered?'Edit watered date':'Edit care record';
+  const typeControl=isWatered?`<label>Plant care<input type="text" value="Watered" disabled></label>`:`<label>Plant care<select id="careEditType">${TYPES.map(t=>`<option value="${t}" ${t===LABEL_TO_TYPE[record.type]?'selected':''}>${t}</option>`).join('')}</select></label>`;
+  $('#careBacklogBody').innerHTML=`<form id="careEditForm" class="formgrid">${typeControl}<label>Date<input id="careEditDate" type="date" max="${localToday()}" value="${localDateFromISO(record.date)}" required></label><p id="careEditWarning" class="hint care-warning"></p><div class="care-edit-actions"><button type="button" class="secondary" id="careEditCancel">Back</button><button type="button" class="secondary care-delete" id="careDeleteRecord">Delete</button><button type="submit" class="primary">Save changes</button></div></form>`;
   $('#careEditCancel').onclick=openHistoryList;
-  $('#careDeleteRecord').onclick=()=>{if(!confirm('Delete this care history record?'))return;p.history.splice(index,1);m.classList.remove('open');refreshPlant(p,'Care history record deleted');};
-  $('#careEditForm').onsubmit=e=>{e.preventDefault();const type=$('#careEditType').value,date=$('#careEditDate').value,label=TYPE_TO_LABEL[type];if(!date)return;const duplicate=p.history.some((h,i)=>sameCareRecord(h,label,date,index,i));if(duplicate){$('#careEditWarning').textContent=`${label} is already recorded on this date.`;return;}p.history[index]={...record,type:label,date:new Date(`${date}T12:00:00`).toISOString()};p.history=sortHistory(p.history);m.classList.remove('open');refreshPlant(p,'Care history record updated');};
+  $('#careDeleteRecord').onclick=()=>{if(!confirm('Delete this care history record?'))return;p.history.splice(index,1);p.history=sortHistory(p.history);m.classList.remove('open');refreshPlant(p,'Care history record deleted');};
+  $('#careEditForm').onsubmit=e=>{e.preventDefault();const date=$('#careEditDate').value;if(!date)return;const label=isWatered?'Watered':TYPE_TO_LABEL[$('#careEditType').value];const duplicate=p.history.some((h,i)=>sameCareRecord(h,label,date,index,i));if(duplicate){$('#careEditWarning').textContent=`${label} is already recorded on this date.`;return;}p.history[index]={...record,type:label,date:new Date(`${date}T12:00:00`).toISOString()};p.history=sortHistory(p.history);m.classList.remove('open');refreshPlant(p,isWatered?'Watered date updated':'Care history record updated');};
 }
 const style=document.createElement('style');style.textContent=`
 #careHistoryEditBtn{position:absolute;top:18px;right:18px;width:46px;height:46px;border:0;background:transparent;padding:0;display:grid;place-items:center;cursor:pointer;z-index:2}
