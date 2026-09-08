@@ -1,4 +1,4 @@
-const CACHE='plant-secretary-v38';
+const CACHE='plant-secretary-v39';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./home-art.css','./home-art.js','./my-plants-display.js','./app-prefs.js','./app-actions.js','./photo-editor.js','./profile-care-summary-v2.js','./care-history-edit.js','./plant-origin.js','./app-stability.js','./assets/care-history-edit.png','./assets/home-sunlight.webp','./assets/home-ph.webp','./assets/home-controls.webp','./assets/water-drop.webp','./assets/heading-logo.jpg'];
 const decorate=async response=>{
   let text=await response.text();
@@ -15,7 +15,7 @@ const decorate=async response=>{
     .replace('✂️ <b>Prune / Pinch</b><br>Track in history','<b>Prune / Pinch</b><br><span data-care-summary="prune"></span>');
   const html=text
     .replace('</head>','<link rel="stylesheet" href="home-art.css?v=17"></head>')
-    .replace('</body>','<script src="home-art.js?v=9"></script><script src="my-plants-display.js?v=1.0.13"></script><script src="app-prefs.js?v=1.0.26"></script><script src="app-actions.js?v=1.0.6"></script><script src="photo-editor.js?v=1.0.14"></script><script src="profile-care-summary-v2.js?v=1.0.19"></script><script src="care-history-edit.js?v=1.0.23"></script><script src="plant-origin.js?v=1.0.24"></script><script src="app-stability.js?v=1.0.24"></script></body>');
+    .replace('</body>','<script src="home-art.js?v=9"></script><script src="my-plants-display.js?v=1.0.27"></script><script src="app-prefs.js?v=1.0.27"></script><script src="app-actions.js?v=1.0.6"></script><script src="photo-editor.js?v=1.0.14"></script><script src="profile-care-summary-v2.js?v=1.0.19"></script><script src="care-history-edit.js?v=1.0.23"></script><script src="plant-origin.js?v=1.0.24"></script><script src="app-stability.js?v=1.0.27"></script></body>');
   return new Response(html,{status:response.status,statusText:response.statusText,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-cache'}});
 };
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
