@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='v1.0.36';
+  const VERSION='v1.0.37';
   const WHITE_ORCHID_ID='p14';
   const CLEANUP_KEY='plant-secretary-cleanup-white-orchid-photo-v1';
   window.PLANT_SECRETARY_VERSION=VERSION;
@@ -14,6 +14,19 @@
         setTextIfChanged(el,next);
       }
     });
+  }
+
+  function applyHomeHeader(){
+    const tag=document.querySelector('header .tag');
+    if(tag)tag.innerHTML='I just wet my plants <span class="tag-pants" role="img" aria-label="pants">👖</span>';
+    const date=document.getElementById('dateLine');
+    if(date){
+      const now=new Date();
+      const dow=['Sun.','Mon.','Tue.','Wed.','Thu.','Fri.','Sat.'][now.getDay()];
+      const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][now.getMonth()];
+      date.textContent=`Altona. ${dow} ${String(now.getDate()).padStart(2,'0')} ${mon} ${String(now.getFullYear()).slice(-2)}`;
+    }
+    document.querySelector('header .scribble')?.remove();
   }
 
   function setDefaultWateringView(){
@@ -42,7 +55,7 @@
     }catch(err){console.warn('White orchid photo cleanup did not complete',err);}
   }
 
-  applyVersion();setDefaultWateringView();removeWhiteOrchidPhotoOnce();
+  applyVersion();applyHomeHeader();setDefaultWateringView();removeWhiteOrchidPhotoOnce();
   const obs=new MutationObserver(records=>{for(const record of records){for(const node of record.addedNodes){if(node.nodeType===1)applyVersion(node);}}applyVersion(document);});
   obs.observe(document.body,{childList:true,subtree:true});
 })();
