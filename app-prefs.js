@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='v1.0.42';
+  const VERSION='v1.0.43';
   const WHITE_ORCHID_ID='p14';
   const CLEANUP_KEY='plant-secretary-cleanup-white-orchid-photo-v1';
   window.PLANT_SECRETARY_VERSION=VERSION;
@@ -33,8 +33,6 @@
     const selector=document.getElementById('homeFilter');
     if(!selector)return;
     selector.value='today';
-    selector.style.width='128px';
-    selector.style.minWidth='128px';
     if(typeof window.renderWatering==='function')window.renderWatering();
   }
 
