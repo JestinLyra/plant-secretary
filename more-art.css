@@ -1,6 +1,6 @@
 #more .more-card{position:relative}
 #more .more-card .more-art{position:absolute;top:14px;right:14px;display:grid;width:48px;height:48px;place-items:center;object-fit:contain;margin:0;background:transparent;border:0;box-shadow:none;pointer-events:none}
-#more .more-card .more-art-care-guides{width:48px;height:48px}
+#more .more-card .more-art-care-guides{width:48px;height:48px;max-width:48px;max-height:48px}
 #more .more-card .more-art-emoji{font-size:36px;line-height:1;text-align:center}
 #more .more-card b,#more .more-card small{display:block;padding-right:58px}
-@media(max-width:430px){#more .more-card .more-art{top:12px;right:12px;width:46px;height:46px}#more .more-card .more-art-care-guides{width:46px;height:46px}#more .more-card .more-art-emoji{font-size:34px}#more .more-card b,#more .more-card small{padding-right:56px}}
+@media(max-width:430px){#more .more-card .more-art{top:12px;right:12px;width:46px;height:46px}#more .more-card .more-art-care-guides{width:48px;height:48px;max-width:48px;max-height:48px}#more .more-card .more-art-emoji{font-size:34px}#more .more-card b,#more .more-card small{padding-right:56px}}
