@@ -1,4 +1,0 @@
-#more .more-card{position:relative}
-#more .more-card .more-art{position:absolute;top:14px;right:14px;display:grid;width:48px;height:48px;place-items:center;object-fit:contain;margin:0;background:transparent;border:0;box-shadow:none;pointer-events:none}
-#more .more-card .more-art-care-guides{width:48px;height:48px;max-width:48px;max-height:48px}
-#more .more-card .more-art-emoji{font-size:36px;line-height:1;text-align:center}
