@@ -2,6 +2,59 @@
 const KEY='plant-secretary-photo-view-v1';
 const $=s=>document.querySelector(s);
 let activeObjectUrl=null,manageId=null;
+const MAX_SOURCE_BYTES=20*1024*1024;
+const MAX_EDGE=1800;
+const JPEG_QUALITY=.88;
+const rawStorePhoto=typeof window.storePhoto==='function'?window.storePhoto.bind(window):null;
+async function loadImageSource(file){
+  if('createImageBitmap' in window){
+    try{return{source:await createImageBitmap(file,{imageOrientation:'from-image'}),close:true}}catch(_){
+      try{return{source:await createImageBitmap(file),close:true}}catch(__){}
+    }
+  }
+  const url=URL.createObjectURL(file);
+  try{
+    const img=new Image();
+    img.decoding='async';
+    img.src=url;
+    if(img.decode)await img.decode();else await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject});
+    return{source:img,close:false};
+  }finally{URL.revokeObjectURL(url)}
+}
+async function normalizePhoto(file){
+  if(!(file instanceof Blob)||!String(file.type||'').toLowerCase().startsWith('image/'))throw new Error('PHOTO_NOT_IMAGE');
+  if(file.size>MAX_SOURCE_BYTES)throw new Error('PHOTO_TOO_LARGE');
+  let loaded;
+  try{loaded=await loadImageSource(file)}catch(_){throw new Error('PHOTO_UNSUPPORTED')}
+  const src=loaded.source;
+  try{
+    const w=Number(src.width||src.naturalWidth)||0,h=Number(src.height||src.naturalHeight)||0;
+    if(!w||!h)throw new Error('PHOTO_UNSUPPORTED');
+    const scale=Math.min(1,MAX_EDGE/Math.max(w,h));
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.max(1,Math.round(w*scale));
+    canvas.height=Math.max(1,Math.round(h*scale));
+    const ctx=canvas.getContext('2d',{alpha:false});
+    if(!ctx)throw new Error('PHOTO_PROCESSING_FAILED');
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(src,0,0,canvas.width,canvas.height);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',JPEG_QUALITY));
+    if(!blob)throw new Error('PHOTO_PROCESSING_FAILED');
+    return blob;
+  }finally{if(loaded.close&&typeof src.close==='function')src.close()}
+}
+function photoErrorMessage(err){
+  if(err?.message==='PHOTO_TOO_LARGE')return'Photo is too large. Choose an image under 20 MB.';
+  if(err?.message==='PHOTO_NOT_IMAGE')return'That file is not a supported image.';
+  if(err?.message==='PHOTO_UNSUPPORTED')return'This photo format cannot be decoded. Choose another photo.';
+  return'Photo could not be processed.';
+}
+if(rawStorePhoto){
+  window.storePhoto=async(id,file)=>{
+    try{const normalized=await normalizePhoto(file);await rawStorePhoto(id,normalized);return true}
+    catch(err){console.warn('Photo normalization failed',err);if(typeof toast==='function')toast(photoErrorMessage(err));return false}
+  };
+}
 function views(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}}
 function saveViews(v){localStorage.setItem(KEY,JSON.stringify(v))}
 function clearView(id){const all=views();if(Object.prototype.hasOwnProperty.call(all,id)){delete all[id];saveViews(all)}}
@@ -21,7 +74,7 @@ async function deletePhoto(id){const p=(window.plants||[]).find(x=>String(x.id)=
 function closeEditor(){const m=$('#photoAdjustModal');if(m)m.classList.remove('open');revokeActive()}
 function ensureModal(){let m=$('#photoAdjustModal');if(m)return m;m=document.createElement('div');m.id='photoAdjustModal';m.className='modal';m.innerHTML=`<div class="sheet"><div class="sheethead"><h3>Adjust Photo</h3><button class="close" id="photoAdjustClose">×</button></div><p class="hint">Drag to reposition. Resize with the slider. The frame always stays completely filled, and the original uploaded photo is never changed.</p><div id="photoAdjustStage" style="position:relative;width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;background:linear-gradient(145deg,#e8f6ef,#eee8fb);touch-action:none"><img id="photoAdjustImg" alt="Plant photo" style="position:absolute;left:50%;top:50%;max-width:none;max-height:none;user-select:none;-webkit-user-drag:none"></div><label style="display:block;margin-top:14px;font-size:13px;color:#59677c">Resize<input id="photoZoom" type="range" min="1" max="2.5" step="0.01" value="1" style="width:100%;margin-top:8px"></label><div class="actions"><button class="secondary" id="photoReset">Reset</button><button class="primary" id="photoSave">Save view</button></div>`;document.body.appendChild(m);m.querySelector('#photoAdjustClose').onclick=closeEditor;m.addEventListener('click',e=>{if(e.target===m)closeEditor()});return m}
 async function openEditor(id){const blob=await getPhotoFor(id);if(!blob){choosePhoto(id);return}revokeActive();const m=ensureModal(),img=$('#photoAdjustImg'),zoom=$('#photoZoom'),stage=$('#photoAdjustStage');let v=state(id);activeObjectUrl=URL.createObjectURL(blob);img.src=activeObjectUrl;function draw(){v=clean(v);place(img,stage,v);zoom.value=String(v.scale)}img.onload=draw;let dragging=false,lastX=0,lastY=0;stage.onpointerdown=e=>{if(!img.naturalWidth)return;dragging=true;lastX=e.clientX;lastY=e.clientY;stage.setPointerCapture?.(e.pointerId)};stage.onpointermove=e=>{if(!dragging)return;const mtr=metrics(img,stage,v),dx=e.clientX-lastX,dy=e.clientY-lastY;if(mtr.maxX>0)v.x+=dx/mtr.maxX;if(mtr.maxY>0)v.y+=dy/mtr.maxY;v.x=Math.max(-1,Math.min(1,v.x));v.y=Math.max(-1,Math.min(1,v.y));lastX=e.clientX;lastY=e.clientY;draw()};stage.onpointerup=stage.onpointercancel=e=>{dragging=false;try{stage.releasePointerCapture?.(e.pointerId)}catch(_){}};zoom.oninput=()=>{v.scale=Number(zoom.value);v=clean(v);draw()};$('#photoReset').onclick=()=>{v={x:0,y:0,scale:1};draw()};$('#photoSave').onclick=()=>{const all=views();all[id]=clean(v);saveViews(all);closeEditor();refreshPhotoUI(id);if(typeof toast==='function')toast('Photo position and size saved')};m.classList.add('open')}
-function ensurePicker(){let input=$('#plantPhotoPicker');if(input)return input;input=document.createElement('input');input.id='plantPhotoPicker';input.type='file';input.accept='image/*';input.hidden=true;document.body.appendChild(input);input.addEventListener('change',async()=>{const id=input.dataset.plantId,f=input.files?.[0];input.value='';if(!id||!f)return;try{await storePhoto(id,f);clearView(id);closeManager();refreshPhotoUI(id);if(typeof toast==='function')toast('Photo updated')}catch(err){console.warn('Photo upload failed',err);if(typeof toast==='function')toast('Photo could not be saved')}});return input}
+function ensurePicker(){let input=$('#plantPhotoPicker');if(input)return input;input=document.createElement('input');input.id='plantPhotoPicker';input.type='file';input.accept='image/*';input.hidden=true;document.body.appendChild(input);input.addEventListener('change',async()=>{const id=input.dataset.plantId,f=input.files?.[0];input.value='';if(!id||!f)return;try{const saved=await window.storePhoto(id,f);if(!saved)return;clearView(id);closeManager();refreshPhotoUI(id);if(typeof toast==='function')toast('Photo updated')}catch(err){console.warn('Photo upload failed',err);if(typeof toast==='function')toast('Photo could not be saved')}});return input}
 function choosePhoto(id){const input=ensurePicker();input.dataset.plantId=id;input.click()}
 function closeManager(){const m=$('#photoManageModal');if(m)m.classList.remove('open');manageId=null}
 function ensureManager(){let m=$('#photoManageModal');if(m)return m;m=document.createElement('div');m.id='photoManageModal';m.className='modal';m.innerHTML=`<div class="sheet photo-manage-sheet"><div class="sheethead"><h3>Photo</h3><button class="close" type="button" id="photoManageClose">×</button></div><div class="photo-manage-actions"><button class="secondary" type="button" id="photoReplace">Replace photo</button><button class="secondary" type="button" id="photoEdit">Edit photo</button><button class="secondary photo-delete-action" type="button" id="photoDelete">Delete photo</button></div></div>`;document.body.appendChild(m);m.querySelector('#photoManageClose').onclick=closeManager;m.addEventListener('click',e=>{if(e.target===m)closeManager()});m.querySelector('#photoReplace').onclick=()=>{const id=manageId;closeManager();if(id)choosePhoto(id)};m.querySelector('#photoEdit').onclick=()=>{const id=manageId;closeManager();if(id)openEditor(id)};m.querySelector('#photoDelete').onclick=()=>{const id=manageId;if(id)deletePhoto(id)};return m}
@@ -29,5 +82,5 @@ async function managePhoto(id){const blob=await getPhotoFor(id);if(!blob){choose
 const style=document.createElement('style');style.textContent=`.hero-photo{cursor:pointer}.photo-manage-sheet{padding-bottom:calc(26px + env(safe-area-inset-bottom))}.photo-manage-actions{display:grid;gap:10px;margin-top:16px}.photo-manage-actions button{width:100%}.photo-manage-actions .photo-delete-action{color:var(--danger);border-color:#efcfd4}`;document.head.appendChild(style);
 document.addEventListener('click',e=>{const del=e.target.closest('[data-delete-photo]');if(del){e.preventDefault();e.stopPropagation();deletePhoto(del.dataset.deletePhoto);return}const box=e.target.closest('.hero-photo');if(!box)return;const id=box.id?.replace(/^hero-/,'');if(!id)return;e.preventDefault();e.stopPropagation();managePhoto(id)},true);
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('#photoManageModal')?.classList.contains('open'))closeManager();else if($('#photoAdjustModal')?.classList.contains('open'))closeEditor()});
-let raf=0;const obs=new MutationObserver(records=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{records.forEach(r=>r.addedNodes.forEach(n=>{if(n.nodeType===1)applyWithin(n)}));syncDeleteButtons()})});obs.observe(document.body,{childList:true,subtree:true});window.addEventListener('resize',()=>requestAnimationFrame(applyAll));setTimeout(()=>{applyAll();syncDeleteButtons()},0);window.PLANT_PHOTO_TOOLS={applyAll,applyWithin,deletePhoto,syncDeleteButtons,managePhoto,openEditor};
+let raf=0;const obs=new MutationObserver(records=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{records.forEach(r=>r.addedNodes.forEach(n=>{if(n.nodeType===1)applyWithin(n)}));syncDeleteButtons()})});obs.observe(document.body,{childList:true,subtree:true});window.addEventListener('resize',()=>requestAnimationFrame(applyAll));setTimeout(()=>{applyAll();syncDeleteButtons()},0);window.PLANT_PHOTO_TOOLS={applyAll,applyWithin,deletePhoto,syncDeleteButtons,managePhoto,openEditor,normalizePhoto};
 })();
