@@ -29,6 +29,43 @@ function refreshProfileAfterDelete(p){
   });
   notify('Care history record deleted');
 }
+async function deleteProfilePhoto(id){
+  if(!id)return;
+  const p=currentPlantById(id);
+  if(!confirm(`Delete the uploaded photo${p?.name?` for ${p.name}`:''}?`))return;
+  try{
+    if(typeof db!=='function')throw new Error('Photo database unavailable');
+    const d=await db();
+    await new Promise((resolve,reject)=>{
+      const tx=d.transaction('photos','readwrite');
+      tx.objectStore('photos').delete(id);
+      tx.oncomplete=resolve;
+      tx.onerror=()=>reject(tx.error);
+      tx.onabort=()=>reject(tx.error||new Error('Delete aborted'));
+    });
+    const remaining=await new Promise((resolve,reject)=>{
+      const r=d.transaction('photos','readonly').objectStore('photos').get(id);
+      r.onsuccess=()=>resolve(r.result);
+      r.onerror=()=>reject(r.error);
+    });
+    d.close();
+    if(remaining)throw new Error('Photo still exists after delete');
+    try{
+      const key='plant-secretary-photo-view-v1';
+      const views=JSON.parse(localStorage.getItem(key)||'{}');
+      if(Object.prototype.hasOwnProperty.call(views,id)){delete views[id];localStorage.setItem(key,JSON.stringify(views));}
+    }catch(_){ }
+    if(typeof renderCollection==='function')renderCollection();
+    const hero=document.getElementById(`hero-${id}`);
+    if(hero)hero.innerHTML='🌿';
+    document.querySelectorAll(`[data-delete-photo="${CSS.escape(String(id))}"]`).forEach(b=>b.hidden=true);
+    document.getElementById('photoManageModal')?.classList.remove('open');
+    notify('Photo deleted');
+  }catch(err){
+    console.warn('Profile photo delete failed',err);
+    notify('Photo could not be deleted');
+  }
+}
 
 const style=document.createElement('style');
 style.textContent=`
@@ -62,8 +99,19 @@ function syncModalState(){
 const mo=new MutationObserver(syncModalState);
 mo.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 
+window.addEventListener('click',e=>{
+  const target=e.target instanceof Element?e.target:null;
+  const del=target?.closest?.('[data-delete-photo]');
+  if(!del)return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  deleteProfilePhoto(del.dataset.deletePhoto);
+},true);
+
 document.addEventListener('click',e=>{
-  const deleteCare=e.target.closest('#careDeleteRecord');
+  const target=e.target instanceof Element?e.target:null;
+  if(!target)return;
+  const deleteCare=target.closest('#careDeleteRecord');
   if(deleteCare){
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -78,14 +126,15 @@ document.addEventListener('click',e=>{
     refreshProfileAfterDelete(p);
     return;
   }
-  const log=e.target.closest('#plantProfile [data-log]');
+  const log=target.closest('#plantProfile [data-log]');
   if(log){const p=currentPlantById(log.dataset.id);const type=log.dataset.log;if(p&&(p.history||[]).some(h=>h.type===type&&localDate(h.date)===today())){e.preventDefault();e.stopImmediatePropagation();notify(`${type} is already recorded today for ${p.name}`);return}}
-  const water=e.target.closest('[data-water]');
+  const water=target.closest('[data-water]');
   if(water){const p=currentPlantById(water.dataset.water);if(p&&(p.history||[]).some(h=>h.type==='Watered'&&localDate(h.date)===today())){e.preventDefault();e.stopImmediatePropagation();notify(`Watering is already recorded today for ${p.name}`);return}}
 },true);
 
 document.addEventListener('keydown',e=>{
-  const card=e.target.closest('.plant-card[data-profile]');if(!card)return;
+  const target=e.target instanceof Element?e.target:null;
+  const card=target?.closest?.('.plant-card[data-profile]');if(!card)return;
   if(e.key!=='Enter'&&e.key!==' ')return;e.preventDefault();
   if(typeof window.openModal==='function')window.openModal(card.dataset.profile);else if(typeof openModal==='function')openModal(card.dataset.profile);
 });
