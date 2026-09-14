@@ -19,16 +19,12 @@
 #more .more-card .more-art-reminders,
 #more .more-card .more-art-weather,
 #more .more-card .more-art-backup-restore,
-#more .more-card .more-art-settings{
+#more .more-card .more-art-settings,
+#more .more-card .more-art-about{
   width:48px;
   height:48px;
   max-width:48px;
   max-height:48px
-}
-#more .more-card .more-art-emoji{
-  font-size:36px;
-  line-height:1;
-  text-align:center
 }
 #more .more-card:nth-child(3)::before{
   content:"";
