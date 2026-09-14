@@ -1,6 +1,6 @@
 #more .more-card{position:relative}
 #more .more-card .more-art{position:absolute;top:14px;right:14px;display:grid;width:48px;height:48px;place-items:center;object-fit:contain;margin:0;background:transparent;border:0;box-shadow:none;pointer-events:none}
-#more .more-card .more-art-care-guides,#more .more-card .more-art-plant-notes,#more .more-card .more-art-reminders,#more .more-card .more-art-weather{width:48px;height:48px;max-width:48px;max-height:48px}
+#more .more-card .more-art-care-guides,#more .more-card .more-art-plant-notes,#more .more-card .more-art-reminders,#more .more-card .more-art-weather,#more .more-card .more-art-backup-restore{width:48px;height:48px;max-width:48px;max-height:48px}
 #more .more-card .more-art-emoji{font-size:36px;line-height:1;text-align:center}
 #more .more-card:nth-child(3)::before{content:"";position:absolute;top:14px;right:14px;width:48px;height:48px;background:url("assets/reminders.webp?v=1.0.73") center/contain no-repeat;pointer-events:none}
 #more .more-card b,#more .more-card small{display:block;padding-right:58px}
