@@ -39,7 +39,7 @@ function showUndoBar(name){
   const bar=document.createElement('div');bar.className='plant-delete-undo-bar';bar.setAttribute('role','status');
   const msg=document.createElement('span');msg.className='plant-delete-undo-text';msg.textContent=`${name} deleted`;
   const btn=document.createElement('button');btn.type='button';btn.className='plant-delete-undo-btn';btn.setAttribute('aria-label',`Undo deletion of ${name}`);
-  const img=document.createElement('img');img.src='assets/undo-plant.webp?v=1.0.76';img.alt='';btn.appendChild(img);btn.addEventListener('click',undoDeletePlant);
+  const img=document.createElement('img');img.src='assets/undo-plant.webp';img.alt='';btn.appendChild(img);btn.addEventListener('click',undoDeletePlant);
   bar.append(msg,btn);document.body.appendChild(bar);undoBar=bar;
 }
 async function requestDeletePlant(id){
