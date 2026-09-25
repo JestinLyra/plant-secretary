@@ -10,12 +10,13 @@ const records={
  lightGuide:'Bright sun or very bright light during active growth; protect from excessive heat/harsh summer exposure.'
  }
 };
+function classify(botanical){const n=norm(botanical);if(/gardenia/.test(n))return'acid';if(/phalaenopsis/.test(n))return'orchid';if(/citrus/.test(n))return'citrus';if(/coriandrum|mentha|petroselinum|capsicum/.test(n))return'herb';if(/sedum|curio|haworthia|cheiridopsis|mesembryanthemum|delosperma/.test(n))return'succulent';if(/monstera|epipremnum|philodendron/.test(n))return'aroid';if(/eucalyptus/.test(n))return'native';if(/salvia rosmarinus|bougainvillea/.test(n))return'drymix';return'indoor'}
 const botanicalCare={};
 try{
  const base=typeof BASE_PLANTS!=='undefined'?BASE_PLANTS:(window.BASE_PLANTS||[]);
  for(const row of base||[]){
   const key=norm(row[1]); if(!key||records[key])continue;
-  botanicalCare[key]={botanical:row[1],interval:Number(row[3]),light:row[4],ph:row[5],demand:row[6]};
+  botanicalCare[key]={botanical:row[1],interval:Number(row[3]),light:row[4],ph:row[5],demand:row[6],group:classify(row[1])};
  }
 }catch(_){}
 Object.assign(botanicalCare,records);
