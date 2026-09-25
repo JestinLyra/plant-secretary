@@ -105,8 +105,7 @@ window.addEventListener('click',e=>{
   if(water){
     const p=currentPlantById(water.dataset.water);
     if(p&&(p.history||[]).some(h=>h.type==='Watered'&&localDate(h.date)===today())){e.preventDefault();e.stopImmediatePropagation();notify(`Watering is already recorded today for ${p.name}`);return}
-    if(typeof window.water==='function')window.water(water.dataset.water);else if(typeof waterPlant==='function')waterPlant(water.dataset.water);
-    else if(typeof globalThis.water==='function')globalThis.water(water.dataset.water);
+    if(typeof window.PLANT_RECORD_WATERING==='function'){e.preventDefault();e.stopImmediatePropagation();window.PLANT_RECORD_WATERING(water.dataset.water);}
     return;
   }
   const del=target?.closest?.('[data-delete-photo]');
