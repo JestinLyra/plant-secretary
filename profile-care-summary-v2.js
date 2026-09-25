@@ -40,19 +40,29 @@ const CARE={
 };
 const TILE_ORDER=['water','light','prune','ph','feed','soil'];
 function plantsList(){try{return typeof plants!=='undefined'?plants:(window.plants||[])}catch(_){return window.plants||[]}}
-function byName(name){return CARE[name]||{soil:['Species-appropriate, free-draining mix','Scotts Osmocote Premium Potting Mix'],feed:['Species-appropriate fertiliser','Scotts Osmocote Pots, Planters & Indoors Controlled Release Fertiliser'],prune:'Active growth · as needed'}}
+function byBotanical(botanical){
+ const botanicalCare=window.PLANT_BOTANICAL_CARE?.get(botanical);
+ if(!botanicalCare)return null;
+ if(botanicalCare.soil||botanicalCare.feed||botanicalCare.prune)return botanicalCare;
+ const row=(typeof BASE_PLANTS!=='undefined'?BASE_PLANTS:[]).find(x=>window.PLANT_BOTANICAL_CARE?.normalize(x[1])===window.PLANT_BOTANICAL_CARE?.normalize(botanical));
+ return row&&CARE[row[0]]?{...botanicalCare,...CARE[row[0]]}:botanicalCare;
+}
 function currentPlant(){const name=$('#modalTitle')?.textContent?.trim();return plantsList().find(p=>p.name===name)||null}
 function markTiles(q){const cards=[...q.children];if(cards.length<6)return null;const original=['water','light','soil','ph','feed','prune'];cards.forEach((card,i)=>{if(!card.dataset.profileTile)card.dataset.profileTile=original[i]});return cards}
 function removeEmoji(card){card.innerHTML=card.innerHTML.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]/gu,'');const b=card.querySelector('b');if(b&&!b.querySelector('.profile-tile-icon-slot'))b.insertAdjacentHTML('afterbegin',`<span class="profile-tile-icon-slot" data-icon="${card.dataset.profileTile||''}" aria-hidden="true"></span>`)}
-function apply(p){const modal=$('#plantModal');if(!modal||!p)return;const q=modal.querySelector('.quick');if(!q)return;const cards=markTiles(q);if(!cards)return;const map=Object.fromEntries(cards.map(c=>[c.dataset.profileTile,c]));const c=byName(p.name);
-map.soil.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="soil" aria-hidden="true"></span>Soil</b><span>${c.soil[0]}</span><small>${c.soil[1]}</small>`;
-map.feed.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="feed" aria-hidden="true"></span>Feed</b><span>${c.feed[0]}</span><small>${c.feed[1]}</small>`;
-map.prune.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="prune" aria-hidden="true"></span>Prune / Pinch</b><span>${c.prune}</span>`;
+function apply(p){const modal=$('#plantModal');if(!modal||!p)return;const q=modal.querySelector('.quick');if(!q)return;const cards=markTiles(q);if(!cards)return;const map=Object.fromEntries(cards.map(c=>[c.dataset.profileTile,c]));const c=byBotanical(p.botanical);
+const unavailable='Care information not yet available for this botanical name';
+const soil=c?.soil||[unavailable,''];
+const feed=c?.feed||[unavailable,''];
+const prune=c?.prune||unavailable;
+map.soil.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="soil" aria-hidden="true"></span>Soil</b><span>${soil[0]}</span><small>${soil[1]}</small>`;
+map.feed.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="feed" aria-hidden="true"></span>Feed</b><span>${feed[0]}</span><small>${feed[1]}</small>`;
+map.prune.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="prune" aria-hidden="true"></span>Prune / Pinch</b><span>${prune}</span>`;
 Object.values(map).forEach(removeEmoji);
 TILE_ORDER.forEach(key=>{if(map[key])q.appendChild(map[key])});
 ['soil','feed','prune'].forEach(key=>{const card=map[key];card.style.cursor='default';card.style.pointerEvents='none';card.removeAttribute('role');card.removeAttribute('tabindex');card.removeAttribute('onclick')});
 }
-window.PLANT_PROFILE_CARE={get:byName,apply};
+window.PLANT_PROFILE_CARE={get:byBotanical,apply};
 const originalOpen=window.openModal;if(typeof originalOpen==='function'){window.openModal=function(id){originalOpen(id);const p=plantsList().find(x=>x.id===id)||currentPlant();if(p)apply(p)}}
 const style=document.createElement('style');style.textContent='#plantModal .quick div{line-height:1.2;min-height:92px}#plantModal .quick div b,#plantModal .quick div span,#plantModal .quick div small{display:block}#plantModal .quick div small{margin-top:5px;color:#68758f;font-size:10.5px;line-height:1.2;overflow-wrap:anywhere}.profile-tile-icon-slot:empty{display:none}.profile-tile-icon-slot:not(:empty){display:inline-flex;width:22px;height:22px;vertical-align:middle;margin-right:6px}.profile-tile-icon-slot img{width:100%;height:100%;object-fit:contain}';document.head.appendChild(style);
 new MutationObserver(()=>{const p=currentPlant();if(p&&$('#plantModal')?.classList.contains('open'))requestAnimationFrame(()=>apply(p))}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
