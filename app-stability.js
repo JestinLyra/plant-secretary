@@ -101,6 +101,14 @@ mo.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']
 
 window.addEventListener('click',e=>{
   const target=e.target instanceof Element?e.target:null;
+  const water=target?.closest?.('[data-water]');
+  if(water){
+    const p=currentPlantById(water.dataset.water);
+    if(p&&(p.history||[]).some(h=>h.type==='Watered'&&localDate(h.date)===today())){e.preventDefault();e.stopImmediatePropagation();notify(`Watering is already recorded today for ${p.name}`);return}
+    if(typeof window.water==='function')window.water(water.dataset.water);else if(typeof waterPlant==='function')waterPlant(water.dataset.water);
+    else if(typeof globalThis.water==='function')globalThis.water(water.dataset.water);
+    return;
+  }
   const del=target?.closest?.('[data-delete-photo]');
   if(!del)return;
   e.preventDefault();
@@ -128,8 +136,6 @@ document.addEventListener('click',e=>{
   }
   const log=target.closest('#plantProfile [data-log]');
   if(log){const p=currentPlantById(log.dataset.id);const type=log.dataset.log;if(p&&(p.history||[]).some(h=>h.type===type&&localDate(h.date)===today())){e.preventDefault();e.stopImmediatePropagation();notify(`${type} is already recorded today for ${p.name}`);return}}
-  const water=target.closest('[data-water]');
-  if(water){const p=currentPlantById(water.dataset.water);if(p&&(p.history||[]).some(h=>h.type==='Watered'&&localDate(h.date)===today())){e.preventDefault();e.stopImmediatePropagation();notify(`Watering is already recorded today for ${p.name}`);return}}
 },true);
 
 document.addEventListener('keydown',e=>{
