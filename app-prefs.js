@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='v1.0.87';
+  const VERSION='v1.0.88';
   const WHITE_ORCHID_ID='p14';
   const CLEANUP_KEY='plant-secretary-cleanup-white-orchid-photo-v1';
   window.PLANT_SECRETARY_VERSION=VERSION;
