@@ -9,7 +9,7 @@ const FIELD={'Sunlight':'sunlight','Watering':'water','Soil':'soil','pH':'ph','F
 function currentPlant(){const name=document.querySelector('#modalTitle')?.textContent?.trim();return plantsList().find(p=>p.name===name)||null}
 function botanicalCare(p){return window.PLANT_BOTANICAL_CARE?.get(p?.botanical)||null}
 function issueFor(p){return window.PLANT_BOTANICAL_CARE?.identificationIssue(p?.botanical)||null}
-function sourcePanel(c){return c?.source?`<div class="panel"><h3>Care basis</h3><p class="hint" style="margin:0;line-height:1.5">Botanical identity: <b>${esc(c.botanical)}</b><br>Source basis: ${esc(c.source)}</p></div>`:''}
+function sourcePanel(c){return c?.source?`<div class="panel"><h3>Care basis</h3><p class="hint" style="margin:0;line-height:1.5">Botanical identity: <b>${esc(c.botanical)}</b><br><b>Source hierarchy:</b> ${esc(c.sourcePolicy||window.PLANT_BOTANICAL_CARE?.sourcePolicy||'')}<br><b>Sources used for this guide:</b> ${esc(c.source)}</p></div>`:''}
 function unavailable(p){const issue=issueFor(p);return `<div class="panel"><h3>Species-specific care unavailable</h3><p><b>${esc(issue||'This botanical identity is not yet in the verified care database.')}</b></p><p class="hint">Saved botanical name: ${esc(p?.botanical||'Not set')}</p><p>No generic care guide has been substituted.</p></div>`}
 function fieldText(c,field){const v=c?.[field];if(Array.isArray(v))return v.filter(Boolean).join(' — ');return v||'Not established in the selected species-specific sources.'}
 function topicHtml(name,p){
