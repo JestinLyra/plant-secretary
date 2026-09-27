@@ -75,7 +75,7 @@ async function undoDeletePlant(){
 function decorate(id){
   const p=plantsList().find(x=>String(x.id)===String(id));const profile=document.getElementById('plantProfile');const hero=document.getElementById(`hero-${id}`);if(!p||!profile||!hero)return;
   profile.querySelector('.profile-identity-row')?.remove();
-  const detail=typeof window.PLANT_DISPLAY_DETAIL==='function'?window.PLANT_DISPLAY_DETAIL(p):{common:'Common name not available for this botanical name',habit:'Growing habit not available for this botanical name'};if(String(p.common||'').trim())detail.common=String(p.common).trim();
+  const detail=typeof window.PLANT_DISPLAY_DETAIL==='function'?window.PLANT_DISPLAY_DETAIL(p):{common:'Common name not available for this botanical name',habit:'Growing habit not available for this botanical name'};if(String(p.common||'').trim())detail.common=String(p.common).trim();const botanicalCare=window.PLANT_BOTANICAL_CARE?.get(p.botanical);if(String(botanicalCare?.habit||'').trim())detail.habit=String(botanicalCare.habit).trim();
   const row=document.createElement('section');row.className='profile-identity-row';row.setAttribute('aria-label','Plant identity');hero.parentNode.insertBefore(row,hero);
   const photoWrap=document.createElement('div');photoWrap.className='profile-photo-wrap';photoWrap.appendChild(hero);
   const del=document.createElement('button');del.type='button';del.className='profile-photo-delete';del.dataset.deletePhoto=id;del.textContent='Delete photo';del.hidden=true;photoWrap.appendChild(del);row.appendChild(photoWrap);
