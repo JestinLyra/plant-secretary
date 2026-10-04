@@ -94,7 +94,8 @@ if(typeof rawOpen==='function'){
 
 function syncModalState(){
   const anyOpen=document.querySelector('.modal.open');
-  document.body.classList.toggle('modal-open',!!anyOpen);
+  const shouldLock=!!anyOpen;
+  if(document.body.classList.contains('modal-open')!==shouldLock)document.body.classList.toggle('modal-open',shouldLock);
 }
 const mo=new MutationObserver(syncModalState);
 mo.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
