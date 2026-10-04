@@ -51,5 +51,5 @@ function applyToPlant(p){const r=get(p?.botanical);if(!p||!r)return false;if(Num
 function hydrateAll(){let changed=false;try{const list=typeof plants!=='undefined'?plants:(window.plants||[]);for(const p of list||[])if(applyToPlant(p))changed=true}catch(_){}return changed}
 window.PLANT_BOTANICAL_CARE={normalize:norm,get,identificationIssue,applyToPlant,hydrateAll,records,sourcePolicy:SOURCE_POLICY};
 const originalSave=window.save;if(typeof originalSave==='function'){window.save=function(){hydrateAll();return originalSave.apply(this,arguments)};try{save=window.save}catch(_){}}
-if(hydrateAll()&&typeof originalSave==='function')originalSave();
+hydrateAll();
 })();

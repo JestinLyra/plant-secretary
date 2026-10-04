@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='v1.0.109';
+  const VERSION='v1.0.110';
   window.PLANT_SECRETARY_VERSION=VERSION;
 
   function applyHomeHeader(){
@@ -25,4 +25,3 @@
   applyHomeHeader();
   setDefaultWateringView();
 })();
-
