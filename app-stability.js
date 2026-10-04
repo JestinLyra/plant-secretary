@@ -101,13 +101,6 @@ mo.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']
 
 window.addEventListener('click',e=>{
   const target=e.target instanceof Element?e.target:null;
-  const water=target?.closest?.('[data-water]');
-  if(water){
-    const p=currentPlantById(water.dataset.water);
-    if(p&&(p.history||[]).some(h=>h.type==='Watered'&&localDate(h.date)===today())){e.preventDefault();e.stopImmediatePropagation();notify(`Watering is already recorded today for ${p.name}`);return}
-    if(typeof window.PLANT_RECORD_WATERING==='function'){e.preventDefault();e.stopImmediatePropagation();window.PLANT_RECORD_WATERING(water.dataset.water);}
-    return;
-  }
   const del=target?.closest?.('[data-delete-photo]');
   if(!del)return;
   e.preventDefault();
