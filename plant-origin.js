@@ -15,5 +15,7 @@ function openEditor(){const p=currentPlant();if(!p)return;const m=ensureModal();
 window.PLANT_ORIGIN={ensure:ensureOrigin,open:openEditor};
 const previousOpen=window.openModal;if(typeof previousOpen==='function'){window.openModal=function(id){previousOpen(id);requestAnimationFrame(ensureOrigin)}}
 const style=document.createElement('style');style.textContent='.plant-origin-row{display:flex;width:100%;align-items:center;justify-content:flex-start;gap:12px;margin:10px 0 2px;padding:10px 12px;border:1px solid #e2ebe8;border-radius:14px;background:#fbfdfc;color:var(--ink);font:inherit;text-align:left;cursor:pointer}.plant-origin-row:active{background:#f4faf7}.plant-origin-copy{min-width:0}.plant-origin-label{display:block;font-size:11px;font-weight:750;letter-spacing:.04em;text-transform:uppercase;color:#728079}.plant-origin-value{display:block;margin-top:3px;font-size:13px;line-height:1.3;color:var(--ink)}#propagationFields{display:grid;gap:10px}';document.head.appendChild(style);
-new MutationObserver(()=>requestAnimationFrame(ensureOrigin)).observe(document.body,{childList:true,subtree:true});document.addEventListener('click',()=>setTimeout(ensureOrigin,0),true);setTimeout(ensureOrigin,0);
+// Opening the profile and saving its origin already refresh this row. The old
+// body observer reacted to its own textContent write, even after closing.
+setTimeout(ensureOrigin,0);
 })();

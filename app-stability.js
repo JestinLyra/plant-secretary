@@ -77,13 +77,9 @@ body.modal-open .modal.open>.sheet{touch-action:pan-y!important}
 `;
 document.head.appendChild(style);
 
-let lastOpenId=null,lastOpenAt=0;
 const rawOpen=window.openModal;
 if(typeof rawOpen==='function'){
   window.openModal=function(id){
-    const now=performance.now();
-    if(String(id)===String(lastOpenId)&&now-lastOpenAt<350)return;
-    lastOpenId=id;lastOpenAt=now;
     const result=rawOpen.apply(this,arguments);
     const modal=document.getElementById('plantModal');
     if(modal){modal.style.left='0';modal.style.right='0';modal.style.top='0';modal.style.bottom='0';modal.style.width='100vw';modal.style.height='100dvh';}

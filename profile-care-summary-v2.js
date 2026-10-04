@@ -24,5 +24,6 @@ function apply(p){
 window.PLANT_PROFILE_CARE={get:byBotanical,apply};
 const originalOpen=window.openModal;if(typeof originalOpen==='function'){window.openModal=function(id){originalOpen(id);const p=plantsList().find(x=>x.id===id)||currentPlant();if(p)apply(p)}}
 const style=document.createElement('style');style.textContent='#plantModal .quick div{line-height:1.2;min-height:92px}#plantModal .quick div b,#plantModal .quick div span,#plantModal .quick div small{display:block}#plantModal .quick div small{margin-top:5px;color:#68758f;font-size:10.5px;line-height:1.2;overflow-wrap:anywhere}.profile-tile-icon-slot:empty{display:none}.profile-tile-icon-slot:not(:empty){display:inline-flex;width:22px;height:22px;vertical-align:middle;margin-right:6px}.profile-tile-icon-slot img{width:100%;height:100%;object-fit:contain}';document.head.appendChild(style);
-new MutationObserver(()=>{const p=currentPlant();if(p&&$('#plantModal')?.classList.contains('open'))requestAnimationFrame(()=>apply(p))}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+// openModal already applies the summary. Observing our own innerHTML writes
+// here creates an endless render/mutation cycle.
 })();
