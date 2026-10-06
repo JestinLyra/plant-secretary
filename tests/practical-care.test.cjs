@@ -16,10 +16,10 @@ function setup(){
  vm.runInContext(code,ctx);
  return {ctx,plants,before,care:ctx.window.PLANT_BOTANICAL_CARE,detail:ctx.window.PLANT_PRACTICAL_CARE,hooks:ctx.window.testCare};
 }
-test('all 34 resolved records have practical guidance and complete valid references',()=>{
- const {care,detail}=setup();assert.equal(Object.keys(detail.records).length,34);
+test('all resolved records have practical guidance and complete valid references',()=>{
+ const {care,detail}=setup();assert.equal(Object.keys(detail.records).length,38);
  for(const d of Object.values(detail.records)){
-  assert.equal(care.get(d.botanical).botanical,d.botanical);
+  assert.equal(detail.getCare(d.botanical).botanical,d.botanical);
   assert.ok(Object.values(d.entries).flat().length>0,d.botanical);
   assert.ok(d.gap,d.botanical);
   for(const field of detail.fields){
@@ -97,6 +97,64 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.124/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.125/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.123/);
+});
+const requested=[
+ ['Maidenhair Fern','Adiantum aethiopicum'],
+ ['Peppermint','Mentha x piperita'],
+ ['Orchids purple','Phalaenopsis cultivar'],
+ ['Orchids lime mini','Phalaenopsis hybrid'],
+ ['Peace Lily','Spathiphyllum wallisii'],
+ ['Bougainvillea White Stripe','Bougainvillea spectabilis x glabra'],
+ ['Ice Plant','Delosperma lehmannii']
+];
+test('all seven owner-supplied botanical identities open practical comprehensive guides',()=>{
+ const {detail,hooks}=setup();
+ for(const [name,botanical]of requested){
+  assert.ok(detail.getCare(botanical),botanical);
+  assert.ok(detail.get(botanical),botanical);
+  for(const topic of hooks.GUIDE_TOPICS){
+   const html=hooks.topicHtml(topic,{id:name,name,botanical,location:'Indoor',wateringCheckDays:14});
+   assert.doesNotMatch(html,/Species-specific care unavailable|undefined|\[object Object\]/,`${name}/${topic}`);
+   assert.match(html,/<details class="panel care-sources"><summary>Sources/);
+   if(topic!=='Recommended products')assert.match(html,/Practical steps/);
+   assert.doesNotMatch(html,/Source hierarchy:|Botanical basis:/);
+  }
+ }
+});
+test('four new identities remain comprehensive-only; all seven saved plant records and reminder results remain unchanged',()=>{
+ const {ctx,detail,care,hooks,before}=setup();
+ for(const b of ['Adiantum aethiopicum','Mentha × piperita','Bougainvillea spectabilis × glabra','Delosperma lehmannii']){
+  assert.equal(care.get(b),null);assert.equal(detail.getCare(b).comprehensiveOnly,true);
+ }
+ const ps=requested.map(([name,botanical],i)=>({id:i,name,botanical,location:i>4?'Outdoor':'Indoor',wateringCheckDays:14,lastWatered:'2026-09-24',photoId:'photo-'+i,photoScale:1.7,notes:'Saved note',history:[{type:'Watered',date:'2026-09-24'}]}));
+ const saved=JSON.stringify(ps),audit=ctx.window.PLANT_WATERING_AUDIT;
+ const counts=ps.map(p=>audit.interval(p)),descriptions=ps.map(p=>audit.summary(p));
+ for(const p of ps){hooks.topicHtml('Watering checks',p);hooks.topicHtml('Propagation',p)}
+ assert.equal(JSON.stringify(ps),saved);assert.equal(JSON.stringify(care),before);
+ assert.deepEqual(ps.map(p=>audit.interval(p)),counts);assert.deepEqual(ps.map(p=>audit.summary(p)),descriptions);
+ for(const p of ps.slice(0,2).concat(ps.slice(5)))assert.match(hooks.topicHtml('Watering checks',p),/Inspect every 14 days/);
+});
+test('identity review treats orchids and bougainvillea as supported groups rather than invalid names',()=>{
+ const {detail}=setup();const ps=requested.map(([name,botanical],i)=>({id:i,name,botanical}));
+ const entries=detail.identityReview(ps);assert.equal(entries.length,3);
+ for(const e of entries)assert.equal(e.kind,'group');
+ assert.ok(entries.some(e=>e.name==='Orchids lime mini'));
+ assert.ok(entries.some(e=>e.name==='Bougainvillea White Stripe'));
+ assert.equal(detail.getCare('Mentha × piperita').botanical,detail.getCare('Mentha x piperita').botanical);
+ assert.equal(detail.getCare('Corpuscularia lehmannii').botanical,'Delosperma lehmannii');
+ for(const b of ['Adiantum','Mentha','Phalaenopsis','Bougainvillea','Mesembryanthemum / Delosperma'])assert.equal(detail.getCare(b),null);
+});
+test('targeted practical details retain primary Australian guidance, supplementary scope and honest limitations',()=>{
+ const {detail,hooks}=setup();
+ const fern=hooks.topicHtml('Pruning',{name:'Fern',botanical:'Adiantum aethiopicum'});
+ assert.match(fern,/new shoots emerge/);assert.match(fern,/Fern Fabulousity/);
+ const mint=hooks.topicHtml('Propagation',{name:'Peppermint',botanical:'Mentha x piperita'});
+ assert.match(mint,/divide the root ball/i);assert.match(mint,/Controlling Mint/);assert.match(mint,/RHS/);
+ const boug=hooks.topicHtml('Growth habit',{name:'White Stripe',botanical:'Bougainvillea spectabilis x glabra'});
+ assert.match(boug,/spectoglabra/);assert.match(boug,/not verify a particular named cultivar/);
+ const ice=hooks.topicHtml('Watering checks',{name:'Ice Plant',botanical:'Delosperma lehmannii'});
+ assert.match(ice,/leaf firmness/);assert.match(ice,/SANBI/);assert.match(ice,/full cultivation text unavailable/);
+ assert.match(detail.getCare('Delosperma lehmannii').evidenceGaps,/fixed inspection interval remain gaps/);
 });

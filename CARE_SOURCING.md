@@ -201,3 +201,38 @@ The checked indoor mix contains peat: it is excluded where the selected guide sp
 No precise pot diameter, numerical pH correction dose or numerical soil-check interval is invented. Fields without additional verified practical steps say so. Source evidence and app climate interpretation remain distinguishable.
 
 Validation: 65 automated tests cover existing photo upload/view behavior, watering/override persistence, botanical identity matching and the new guide layer. New tests render every topic for every supported canonical record, validate practical-step references, check exclusions, distinguish identity from coverage gaps, and confirm no mutation of care summaries or plant data. These tests do not establish execution on the owner's iPhone.
+
+## Seven owner-supplied identities — v1.0.125, 2026-10-06
+
+The owner explicitly supplied this mapping after the earlier starter-data audit:
+
+| Display label supplied by owner | Botanical input | Comprehensive resolution |
+|---|---|---|
+| Maidenhair Fern | Adiantum aethiopicum | New exact species record |
+| Peppermint | Mentha x piperita | New Mentha × piperita hybrid record |
+| Orchids purple | Phalaenopsis cultivar | Existing supported cultivated group |
+| Orchids lime mini | Phalaenopsis hybrid | Existing supported cultivated group alias |
+| Peace Lily | Spathiphyllum wallisii | Existing supported species record |
+| Bougainvillea White Stripe | Bougainvillea spectabilis x glabra | New supplied spectoglabra hybrid-group record; named cultivar unverified |
+| Ice Plant | Delosperma lehmannii | New species record; Corpuscularia lehmannii supported as a linked name |
+
+Resolution is botanical-only. No plant is selected or identified by display name. These mappings do not mutate saved plant names or botanical values and do not claim that the phone's current saved records were remotely read. The previously supplied plant-list screenshots and starter data are not substituted for this explicit new owner mapping.
+
+The four added identities live in a comprehensive-only registry inside practical-care.js. app-actions.js consults it for guide sheets. botanical-care.js, profile-care-summary-v2.js, watering-audit.js and all plant storage/photo/history code are untouched. Consequently profile summaries and reminder results remain exactly as they were, even where a new comprehensive record now has practical moisture guidance. The water sheet displays existing reminder settings without assigning a new default.
+
+### Australian-first review and evidence gaps
+
+- Adiantum aethiopicum: ABC Fern Fabulousity explicitly includes the Australian maidenhair and supports moisture, sheltered light and recovery pruning. ABC Adiantum supplies genus-level soil and spore/division guidance and credits Global Book Publishing's Flora's Gardening Cards. RBG Victoria HortFlora identifies the species; ANBG provides botanical imagery, not a fertiliser trial. The general empty-saucer step is not applied to this record because ABC discusses a small water reserve for this fern. No numeric pH optimum, exact bag recipe, check interval or species feeding dose is invented.
+- Mentha × piperita: ABC Potted Plant Care addresses mint moisture and containers; Controlling Mint demonstrates M. spicata and expressly extends containment to other mint varieties. RBG Victoria identifies peppermint. ANBG/APNI searches provide name/image information, not complete cultivation. RHS exact peppermint fills light, pH categories, division, after-flowering pruning and disease/pest gaps. UK seasonal/hardiness settings are not imported as Altona dates or reminder intervals.
+- Phalaenopsis cultivar/hybrid: ABC Orchid Revival supports airy medium, root inspection, after-flowering spike choices, repotting, specialised food and protection from cold windows/draughts. Additional feed and problem-management steps reuse that source and current manufacturer directions. Purple and mini do not establish an exact species or hybrid name. Group care remains supported and the identity review labels this remaining scope gap.
+- Spathiphyllum wallisii: ABC Dividing Peace Lilies adds a practical root-ball division demonstration with explicit cultivar/group scope. RHS exact species fills peat-free medium, root crowding, growth-stage water/feed and propagation details. Profile summaries remain unchanged. No chemically treated pest recommendation is added.
+- Bougainvillea spectabilis × glabra: ABC Bougainvillea supplies sun, drainage, moisture during flowering and overfeeding advice; its original Global Book Publishing credit is retained. RBG Victoria identifies the spectoglabra hybrid group and warns that many cultivar origins are uncertain. RHS genus guidance fills support, pruning and container-medium/cold-protection gaps; its UK greenhouse calendar and weekly high-nitrogen feeding schedule are not imported. White Stripe is a display label, not a verified named cultivar. No cultivar dose, exact frost threshold or peat-free Bunnings loam recipe is asserted.
+- Delosperma lehmannii: no exact practical protocol was located in the reviewed ABC/RBG Victoria/ANBG results. ABC succulent-group drainage advice is used only at group scope. LLIFLE supplies description and synonymy with Corpuscularia lehmannii. SANBI PlantZAfrica indexed extracts explicitly support compact clumping habit, dehydration leaf shrinkage and seed/cutting propagation. Its full page returned a fetch/access error, so detailed light, mineral percentages, propagation conditions, pH and fertiliser schedules were not inferred from unavailable text. SANBI attribution is preserved as supplementary species evidence, not Australian primary guidance.
+
+BOM Laverton RAAF climate averages remain regional context; Altona forecasts are external current-weather links. Neither is used as a biological inspection formula. APVMA approved-use label requirements apply to any regulated treatment; this change prescribes no pesticide, fungicide or insecticide.
+
+All seven inputs now open practical comprehensive topics with collapsed Sources and explicit limitations. The current-device identity review reports both orchid entries and the bougainvillea as supported groups with unresolved exact hybrid/cultivar scope; the four supplied species/hybrid identities are no longer treated as missing guide coverage. Genus-only old inputs remain unresolved rather than being silently assigned a species.
+
+Product matches retain label/composition scope. The fern has the previously checked indoor/fern product options, orchids retain orchid-specific options, peace lily retains its peat-free exclusion, and Ice Plant has the general draining succulent-medium option. Peppermint exact feeding rates and a peat-free bougainvillea loam recipe remain product-match gaps. Manufacturer labels govern rates; no automatic feed stacking or numerical reminder changes are introduced.
+
+Validation: 69 automated tests pass. New tests exercise all fourteen topics for all seven supplied identities, botanical spelling/× aliases, honest supported-group identity results, sources/evidence gaps, and unchanged profile registry, saved records and reminder outputs. Other practical records, photo uploads/view settings, interval persistence and history behavior retain their regression tests. Live deployment verification is performed separately; these tests do not claim testing on the owner's physical iPhone.

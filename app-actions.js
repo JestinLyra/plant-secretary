@@ -7,7 +7,7 @@ function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt
 const GUIDE_TOPICS=['Plant features','Sunlight','Watering checks','Soil','pH','Feeding','Growth habit','Pruning','Pinching','Repotting','Propagation','Common problems','Seasonal care','Recommended products'];
 const FIELD={'Sunlight':'sunlight','Watering checks':'water','Watering':'water','Soil':'soil','pH':'ph','Feeding':'feed','Growth habit':'habit','Pruning':'prune','Pinching':'pinching','Repotting':'repotting','Propagation':'propagation','Common problems':'problems','Seasonal care':'seasonal'};
 function currentPlant(){const id=$('#plantModal')?.dataset.plantId;return id?plantsList().find(p=>String(p.id)===String(id))||null:null}
-function botanicalCare(p){return window.PLANT_BOTANICAL_CARE?.get(p?.botanical)||null}
+function botanicalCare(p){return window.PLANT_PRACTICAL_CARE?.getCare(p?.botanical)||window.PLANT_BOTANICAL_CARE?.get(p?.botanical)||null}
 function issueFor(p){return window.PLANT_BOTANICAL_CARE?.identificationIssue(p?.botanical)||null}
 function sourceLinks(sources){return `<ul>${sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)}</a><br><span class="hint">${esc(s.scope)}</span></li>`).join('')}</ul>`}
 function sourcePanel(c,field,p=null){
@@ -15,11 +15,11 @@ function sourcePanel(c,field,p=null){
  const detail=window.PLANT_PRACTICAL_CARE;
  const ids=c.fieldSources?.[field];
  const sources=(c.sources||[]).filter(s=>!ids||ids.includes(s.id));
- const summary=field==='water'&&p?sourceLinks(window.PLANT_WATERING_AUDIT?.sources(p)||[]):sources.length?sourceLinks(sources):`<p class="hint">${esc(c.source||'No structured summary attribution available.')}</p>`;
+ const summary=field==='water'&&p&&!c.comprehensiveOnly?sourceLinks(window.PLANT_WATERING_AUDIT?.sources(p)||[]):sources.length?sourceLinks(sources):`<p class="hint">${esc(c.source||'No structured summary attribution available.')}</p>`;
  const practical=field==='products'?['soil','feed'].flatMap(f=>detail?.fieldSources(c.botanical,f)||[]):detail?.fieldSources(c.botanical,field)||[];
  const matches=detail?.products(c.botanical,field==='products'?null:field)||[];
  const manufacturer=[...new Set(matches.flatMap(m=>m.refs||[]))].map(id=>detail?.sources[id]).filter(Boolean);
- return `<details class="panel care-sources"><summary>Sources</summary><h4>Summary references</h4>${summary}${practical.length?`<h4>Practical-detail references</h4>${sourceLinks(practical)}`:''}${manufacturer.length?`<h4>Product composition and label</h4>${sourceLinks(manufacturer)}`:''}${c.evidenceGaps?`<p class="hint"><b>Existing guide limitations:</b> ${esc(c.evidenceGaps)}</p>`:''}<p class="hint">Practical additions reviewed: ${esc(detail?.get(c.botanical)?.reviewedAt||c.reviewedAt||'Not recorded')}</p></details>`
+ return `<details class="panel care-sources"><summary>Sources</summary>${c.comprehensiveOnly?'':`<h4>Summary references</h4>${summary}`}${practical.length?`<h4>Practical-detail references</h4>${sourceLinks(practical)}`:''}${manufacturer.length?`<h4>Product composition and label</h4>${sourceLinks(manufacturer)}`:''}${c.evidenceGaps?`<p class="hint"><b>Existing guide limitations:</b> ${esc(c.evidenceGaps)}</p>`:''}<p class="hint">Practical additions reviewed: ${esc(detail?.get(c.botanical)?.reviewedAt||c.reviewedAt||'Not recorded')}</p></details>`
 }
 function unavailable(p){const issue=issueFor(p);return `<div class="panel"><h3>Species-specific care unavailable</h3><p><b>${esc(issue||'This botanical identity is not yet in the verified care database.')}</b></p><p class="hint">Saved botanical name: ${esc(p?.botanical||'Not set')}</p><p>No generic care guide has been substituted.</p></div>`}
 function fieldText(c,field){const v=c?.[field];if(Array.isArray(v))return v.filter(Boolean).join(' — ');return v||'Not established in the selected species-specific sources.'}
@@ -37,14 +37,15 @@ function practicalHtml(c,field,p){
  const productField=['soil','feed'].includes(field);
  return `<section class="care-practical"><h4>Practical steps</h4>${steps.length?`<ul>${steps.map(s=>`<li>${esc(s.text)}<small class="hint care-step-scope">${esc(s.kind)}</small></li>`).join('')}</ul>`:`<p class="hint">No additional verified practical instructions for this field were established in this review.</p>`}${field==='water'?'<p class="hint">Keep your chosen check interval. Water only when the moisture check shows it is needed; soil instructions do not apply to plants grown in water.</p>':''}${field==='seasonal'?`<p class="hint">${esc(window.PLANT_WATERING_AUDIT?.weatherContext(p)||'Open BOM for current conditions.')}</p>`:''}${productField?productHtml(c,field):''}<details class="care-limitations"><summary>Evidence gaps</summary><p class="hint">${esc(d.gap)}</p></details></section>`
 }
+function comprehensiveWater(p){const a=window.PLANT_WATERING_AUDIT,days=a?.interval(p);return (days==null?'Manual moisture checks; no fixed countdown.':`Inspect every ${days} days using your existing reminder setting.`)+' This comprehensive guide does not change reminders. Inspect the actual growing medium and water only if needed; the droplet records actual watering, not an inspection. '+(a?.weatherContext(p)||'')}
 function topicHtml(name,p){
  const c=botanicalCare(p);if(!c)return unavailable(p);
  const field=name==='Plant features'?'habit':FIELD[name];
  let body='';
- if(name==='Plant features')body=`<p>${esc(c.habit)}</p>${c.identityNote?`<p class="hint">${esc(c.identityNote)}</p>`:''}`;
+ if(name==='Plant features')body=`${c.habit?`<p>${esc(c.habit)}</p>`:''}${c.identityNote?`<p class="hint">${esc(c.identityNote)}</p>`:''}`;
  else if(name==='Recommended products')body=productHtml(c)||`<p><b>No generic product has been substituted.</b></p><p>${esc(fieldText(c,'soil'))}</p><p>${esc(fieldText(c,'feed'))}</p>`;
- else if(field==='water')body=`<p>${esc(window.PLANT_WATERING_AUDIT.describe(p))}</p>`;
- else body=`<p>${esc(fieldText(c,field))}</p>${!window.PLANT_PRACTICAL_CARE&&['soil','feed'].includes(field)?productHtml(c,field):''}`;
+ else if(field==='water')body=c.comprehensiveOnly?`<p>${esc(comprehensiveWater(p))}</p>`:`<p>${esc(window.PLANT_WATERING_AUDIT.describe(p))}</p>`;
+ else body=`${c.comprehensiveOnly?'':`<p>${esc(fieldText(c,field))}</p>`}${!window.PLANT_PRACTICAL_CARE&&['soil','feed'].includes(field)?productHtml(c,field):''}`;
  return `<div class="panel"><h3>${esc(p?.name||c.botanical)}</h3><p class="hint"><i>${esc(c.botanical)}</i></p>${body}${field?practicalHtml(c,field,p):''}</div>${name==='Recommended products'?sourcePanel(c,'products',p):sourcePanel(c,field,p)}`
 }
 function identityReviewHtml(ps){

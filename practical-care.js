@@ -244,8 +244,10 @@ product('orchid-mix','soil','Scotts Osmocote 10L Orchid Coarse Potting Mix','htt
 product('orchid-feed','feed','Yates 500mL Thrive Orchid Liquid Plant Food','https://www.bunnings.com.au/yates-500ml-thrive-orchid-liquid-plant-food_p2961896','https://www.yates.com.au/yates-thrive-orchid-liquid-plant-food/','Manufacturer explicitly includes Phalaenopsis. Use its orchid-feed dilution and directions; do not apply a general houseplant dose or translate liquid-feed timing into a granular dose.');
 product('gardenia-mix','soil','Scotts Osmocote 25L Rose, Gardenia and Azalea Premium Potting Mix','https://www.bunnings.com.au/scotts-osmocote-25l-rose-gardenia-and-azalea-premium-potting-mix_p2961491','https://www.lovethegarden.com/au-en/product/scotts-osmocote-rose-gardenia-azalea-camellia-mix','Acid-loving container-medium option. Includes fertiliser; count the nutrients already present. This is not a soil replacement instruction for a plant established in the ground.');
 product('gardenia-feed','feed','Scotts Osmocote 500g Roses, Gardenias, Azaleas and Camellias Controlled Release Fertiliser','https://www.bunnings.com.au/scotts-osmocote-500g-roses-gardenias-azaleas-and-camellias-controlled-release-fertiliser_p2961298','https://www.lovethegarden.com/au-en/product/scotts-osmocote-controlled-release-fertiliser-roses-gardenias-azaleas-camellias','Gardenia-labelled controlled-release option when needed. Use the current pack rate for the pot size and account for existing fertiliser. Do not treat cold-season yellowing as an automatic instruction to feed.');
-const groupProducts={indoor:['indoor-mix','indoor-feed'],'peat-free':['indoor-feed'],succulent:['succulent-mix'],orchid:['orchid-mix','orchid-feed'],gardenia:['gardenia-mix','gardenia-feed']};
+const groupProducts={fern:['indoor-mix','indoor-feed'],indoor:['indoor-mix','indoor-feed'],'peat-free':['indoor-feed'],succulent:['succulent-mix'],orchid:['orchid-mix','orchid-feed'],gardenia:['gardenia-mix','gardenia-feed']};
 const productGaps={
+ mint:'No new exact peppermint soil/feed product match has been verified; species dose and a peat-free Bunnings recipe remain gaps.',
+ bougainvillea:'No matching peat-free loam-based Bunnings medium or White Stripe cultivar feed dose has been verified; an indoor peat mix is not substituted.',
  'peat-free':'A matching peat-free Bunnings medium was not verified. The indoor mix checked contains peat, so it is not substituted for a peat-free requirement.',
  succulent:'No additional species-matched fertiliser has been selected. A general succulent product is not proof of an exact species dose; do not add feed automatically to fertilised fresh mix.',
  mineral:'No matching mineral recipe or fertiliser has been verified. Cheiridopsis potassium sensitivity prevents automatically substituting a high-potassium succulent feed.',
@@ -255,7 +257,7 @@ const productGaps={
  rosemary:'No new product is substituted for the distinction between unfed established ground plants and occasional granular feed for older container plants.',
  citrus:'No additional species/rootstock product match was verified. The existing Meyer-specific product matches are retained for the identified Meyer records only.'
 };
-function products(botanical,field){const c=care()?.get(botanical),d=get(botanical);if(!c||!d)return[];return (c.products?.length?c.products:(groupProducts[d.group]||[]).map(id=>productCatalog[id])).filter(p=>!field||p.field===field)}
+function products(botanical,field){const c=getCare(botanical),d=get(botanical);if(!c||!d)return[];return (c.products?.length?c.products:(groupProducts[d.group]||[]).map(id=>productCatalog[id])).filter(p=>!field||p.field===field)}
 function productGap(botanical){const d=get(botanical);return d?productGaps[d.group]||'':''}
 const common={
  water:[step('For a soil-grown indoor container, inspect the medium before watering and empty collected water from its saucer after drainage. This does not describe a plant kept in water.',['water'],'Australian container guidance')],
@@ -264,16 +266,88 @@ const common={
  seasonal:[step('Use Altona’s current forecast to assess outdoor heat, cold and rain exposure. Indoor conditions also depend on the room; regional climate alone does not calculate a soil-check interval.',['bom','forecast'],'App climate interpretation')]
 };
 
-function get(botanical){const c=care()?.get(botanical);return c?records[c.botanical]||null:null}
+// Comprehensive-only identities. Do not extend the profile registry or hydrate
+// saved plants: that would change summaries and reminder behavior.
+const extendedCare={},extendedAliases={};
+const botanicalKey=s=>care()?.normalize(s)||String(s||'').trim().toLowerCase();
+abc('fern-australia','Fern Fabulousity','how-to/fern-fabulousity/14061786','Australian fern guidance explicitly includes Adiantum aethiopicum: moisture, sheltered indoor light and cutting back browned fronds. A small reservoir is discussed, not a universal waterlogging rule.');
+abc('fern-genus','Adiantum','plant-finder/adiantum/9441730','Adiantum genus cultivation, spores/division and sheltered light. ABC page credits Global Book Publishing, Flora’s Gardening Cards; not an exact species feeding trial.');
+abc('mint-pots','Potted Plant Care','how-to/potted-plant-care/9433240','Australian mint/container moisture and pot-bound signs. Mint is not given the drying treatment of rosemary. Jane Edmanson, presenter; genus-level mint culture.');
+abc('mint-containment','Controlling Mint','how-to/controlling-mint/13353612','Hannah Moloney demonstrates Mentha spicata and explicitly allows the containment method for other mint varieties. Does not identify peppermint from its display name.');
+abc('bougainvillea-group','Bougainvillea','plant-finder/bougainvillea/9441670','Australian genus-level sun, drainage, flowering moisture and overfeeding guidance. ABC page credits Global Book Publishing, Flora’s Gardening Cards; no White Stripe cultivar trial.');
+abc('peace-division','Dividing Peace Lilies','how-to/dividing-peace-lilies/12648922','Jane Edmanson demonstrates division of a Spathiphyllum cultivar. General clump technique, not exact S. wallisii cultivar identity.');
+source('rbg-fern','RBG Victoria — HortFlora: Adiantum aethiopicum','https://hortflora.rbg.vic.gov.au/taxon/ad8beee2-5340-11e7-b82b-005056b0018f','Species botanical identification, including creeping rhizomes; not a fertiliser dose or indoor pot recipe.');
+source('anbg-fern','ANBG — Adiantum aethiopicum image reference','https://www.anbg.gov.au/photo/apii/id/dig/27688','Australian botanical image reference; not cultivation evidence or proof of the owner’s specimen identity.');
+source('rbg-mint','RBG Victoria — HortFlora: Mentha × piperita','https://hortflora.rbg.vic.gov.au/taxon/ada137d4-5340-11e7-b82b-005056b0018f','Peppermint botanical identity. Does not establish a named cultivar or mandatory soil-check frequency.');
+source('rbg-bougainvillea','RBG Victoria — HortFlora: Bougainvillea','https://hortflora.rbg.vic.gov.au/taxon/ad8e24aa-5340-11e7-b82b-005056b0018f','Recognises B. spectabilis × B. glabra as the spectoglabra hybrid group; warns that cultivar parentage is often uncertain. White-striped foliage does not establish a named cultivar.');
+rhs('peppermint','Mentha × piperita','plants/11050/mentha-piperita/details/','Supplementary exact peppermint moisture, light, pH categories, division, post-flowering pruning and problems. UK calendar/hardiness ratings are not an Altona schedule.');
+rhs('bougainvillea-practice','Growing bougainvillea','plants/bougainvillea/growing-guide','Supplementary genus-level training, pruning, container medium and cold protection. The UK greenhouse feeding calendar is not transferred to Altona or asserted as a White Stripe cultivar protocol.');
+source('ice-taxonomy','LLIFLE — Delosperma lehmannii','https://www.llifle.com/Encyclopedia/SUCCULENTS/Family/Aizoaceae/27712/Delosperma_lehmannii','Supplementary species description and synonymy with Corpuscularia lehmannii. Retains the owner’s saved name; does not identify every plant called Ice Plant.');
+source('ice-species','SANBI PlantZAfrica — Corpuscularia lehmannii','https://pza.sanbi.org/corpuscularia-lehmannii','Supplementary exact-species indexed evidence reviewed: clumping habit, dehydration leaf shrinkage, and seed/cutting propagation. Full cultivation text was not available for this review; no precise recipe or schedule inferred.');
+function comprehensive(name,group,entries,gap,identityNote,aliases=[]){
+ add(name,group,entries,gap);const c={botanical:name,comprehensiveOnly:true,identityNote,evidenceGaps:gap,reviewedAt,source:'Australian-first practical references; scope and remaining gaps are shown below.',sources:[],fieldSources:{}};
+ const ids=new Set();for(const [f,list]of Object.entries(entries)){c.fieldSources[f]=[...new Set(list.flatMap(s=>s.refs))];for(const id of c.fieldSources[f])ids.add(id)}
+ c.sources=[...ids].map(id=>sources[id]).filter(Boolean);extendedCare[botanicalKey(name)]=c;
+ for(const alias of aliases)extendedAliases[botanicalKey(alias)]=botanicalKey(name);
+}
+comprehensive('Adiantum aethiopicum','fern',{
+ habit:[step('Use its creeping, clump-forming fern habit when assessing crowding; it is not Adiantum capillus-veneris.',['rbg-fern','anbg-fern'])],
+ water:[step('Inspect for steady moisture before the root ball dries. ABC describes a nursery pot with a small water reserve; this species-specific practice differs from the drying rules for succulents.',['fern-australia'])],
+ sunlight:[step('Provide good filtered light away from hot direct sun, heating and air-conditioning outlets.',['fern-australia'])],
+ soil:[step('Use an organically rich medium kept just moist; protect the root zone from drying. Exact bag formulation and mineral percentages are not established.',['fern-genus'],'Australian genus guidance')],
+ prune:[step('If fronds have browned and died back, cut the damaged foliage down and maintain moisture while new shoots emerge. Do not discard it solely because the fronds look dead.',['fern-australia'])],
+ propagation:[step('Divide established plants or raise spores; detached fronds are not the reviewed propagation method.',['fern-genus'],'Australian genus guidance')],
+ feed:[step('Use a fern-labelled product only when feeding is warranted, following the current pack dilution. No exact A. aethiopicum dose was established.',['product-indoor-feed'],'Conditional product matching')]
+},'No species-tested fertiliser dose, numerical soil-check interval, pH optimum or exact pot diameter established. ABC genus soil/propagation advice is labelled separately from its named Australian maidenhair guidance.','The owner supplied this species identity. The guide does not silently replace it with the previously supported A. capillus-veneris.');
+comprehensive('Mentha × piperita','mint',{
+ habit:[step('Keep peppermint contained. Inspect stems reaching outside the pot because they can root where they touch soil.',['mint-containment','rbg-mint'])],
+ water:[step('Feel into the root zone and keep it moist; mint is not treated like a dry Mediterranean herb. Hot wind can dry a container faster, so inspect actual moisture before watering.',['mint-pots'])],
+ sunlight:[step('Grow in sun or partial shade, according to the peppermint species reference. The site’s actual light and drying rate matter more than a fixed window distance.',['peppermint'])],
+ soil:[step('Use moist, freely draining medium in a container that restricts spreading roots. Keep drainage holes clear.',['peppermint','mint-pots'])],
+ prune:[step('Pick shoots regularly for containment and cut back after flowering to renew foliage.',['mint-containment','peppermint'])],
+ propagation:[step('When crowded, divide the root ball and replant healthy sections. RHS recommends division in spring or autumn; use Melbourne seasons.',['mint-containment','peppermint'])],
+ repotting:[step('Inspect loss of vigour, rapid drying and crowded roots. Renew a portion of the root ball rather than automatically placing it in a very large wet pot.',['mint-pots','mint-containment'])],
+ ph:[step('RHS lists acid, neutral and alkaline soil categories. That is not evidence for a precise optimum or a lime/sulfur correction dose.',['peppermint'])],
+ problems:[step('Inspect for rust or powdery mildew rather than assuming every yellow leaf needs feed. The species source also lists leafhoppers and caterpillars; any chemical use requires the Australian approved label.',['peppermint','apvma'])]
+},'Exact cultivar, species-tested fertiliser rate, Bunnings peat-free recipe and numerical soil-check interval were not established. ABC mint methods are genus-level; RHS fills peppermint-specific gaps.','Mentha x piperita and Mentha × piperita resolve to the same peppermint hybrid. No display-name lookup is used.');
+comprehensive('Bougainvillea spectabilis × glabra','bougainvillea',{
+ habit:[step('The supplied cross belongs to the spectoglabra hybrid group. A striped-leaf display name does not verify a particular named cultivar or its final size.',['rbg-bougainvillea'])],
+ sunlight:[step('Choose a sunny, warm position with good drainage; glasshouse advice about shading does not mean an outdoor Altona plant belongs in deep shade.',['bougainvillea-group'])],
+ water:[step('Inspect moisture during flowering: drought tolerance does not mean withholding all water while flowering. In cool, slower growth let drying rate guide actual watering.',['bougainvillea-group','bougainvillea-practice'])],
+ soil:[step('Use light, freely draining soil. RHS specifies peat-free loam-based container compost; an indoor peat mix is not substituted.',['bougainvillea-group','bougainvillea-practice'])],
+ feed:[step('Avoid heavy feeding that encourages leaves at the expense of coloured bracts. No cultivar dose or imported UK weekly feeding schedule is asserted.',['bougainvillea-group'])],
+ prune:[step('Train young growth onto a support. Prune just before new late-winter/spring growth; after bracts fall, shorten long growth to encourage another flush.',['bougainvillea-practice'],'Supplementary genus guidance')],
+ propagation:[step('Use summer cuttings; RHS supplies a semi-ripe cutting method, which is genus-level rather than a trial of White Stripe.',['bougainvillea-group','bougainvillea-practice'])],
+ seasonal:[step('Protect containers from frost. RHS cold-protection guidance describes sheltered cultivation; assess actual Altona forecasts rather than assuming a sunny position guarantees frost protection.',['bougainvillea-practice','forecast'],'Supplementary guidance and app climate interpretation')]
+},'White Stripe is the owner’s display name; an exact cultivar and parentage of the specimen were not independently verified. The supplied cross is supported as a hybrid group. No cultivar-specific tolerance, pH optimum, fertiliser dose or peat-free Bunnings loam recipe established.','RBG Victoria recognises the supplied spectabilis–glabra cross as the spectoglabra group. Practical cultivation is labelled genus/group-level.', ['Bougainvillea spectabilis × Bougainvillea glabra','Bougainvillea × spectoglabra','Bougainvillea x spectoglabra']);
+comprehensive('Delosperma lehmannii','succulent',{
+ habit:[step('This is the compact, fleshy-leaved clumping species also described as Corpuscularia lehmannii. Do not use an unrelated flowering ground-cover’s guide merely because both are called Ice Plant.',['ice-taxonomy','ice-species'])],
+ water:[step('Check both the medium and leaf firmness. SANBI notes leaf shrinkage with dehydration; confirm the medium condition before adding water rather than treating shrinkage alone as a diagnosis.',['ice-species'])],
+ soil:[step('Use freely draining succulent medium in a drainage-holed pot. This Australian succulent-group method does not establish an exact mineral percentage for this species.',['succulent'],'Australian succulent-group guidance')],
+ propagation:[step('The species reference supports seed or cuttings. Detailed species rooting conditions and a guaranteed rooting time were not verified.',['ice-species'])],
+ seasonal:[step('Assess cool-season wetness and pot drainage; the Cheiridopsis summer-dormancy regime is not automatically transferred to this different species.',['succulent'],'Australian succulent-group guidance')]
+},'Australian exact-species cultivation was not located in this review. SANBI species evidence was available in indexed extracts, with full cultivation text unavailable; LLIFLE supplies synonymy. Light optimum, exact mineral recipe, pH, fertiliser dose and fixed inspection interval remain gaps.','Delosperma lehmannii is linked to Corpuscularia lehmannii in the selected supplementary references. The saved botanical name is retained.', ['Corpuscularia lehmannii']);
+// Expand already supported identities without touching their profile summaries.
+const peaceEntries=records['Spathiphyllum wallisii'].entries;
+peaceEntries.water=[step('Check root-zone moisture and maintain even moisture with drainage during active growth. Deep shade or cool conditions slow drying; do not water a saturated pot.',['peace','water'])];
+peaceEntries.soil=[step('Use a moisture-retentive but freely draining peat-free medium. Pot on only when roots overfill the container; preserve healthy clumps.',['peace'])];
+peaceEntries.feed=[step('The RHS species guide recommends balanced liquid feed during active growth. Account for fertiliser already in new medium and use the current product dilution rather than stacking feeds.',['peace','product-indoor-feed'])];
+peaceEntries.propagation.unshift(step('ABC demonstrates cutting a large healthy root ball into two or three clumps with a sharp knife, then potting the divisions. This is a peace-lily group technique.',['peace-division'],'Australian clump-division guidance'));
+orchidEntries.feed=[step('Use orchid-labelled food after pruning or repotting, with current pack directions controlling dilution; reduce feed in cool conditions. A controlled-release product is not applied on a liquid-feed timetable.',['orchid','product-orchid-feed'])];
+orchidEntries.problems=[step('Protect from cold window glass and draughts; avoid routine misting of flowers or foliage that can encourage damage or disease. Root crowding alone is not proof of root rot.',['orchid'])];
+
+function getCare(botanical){const base=care()?.get(botanical);if(base)return base;const k=botanicalKey(botanical);return extendedCare[extendedAliases[k]||k]||null}
+function get(botanical){const c=getCare(botanical);return c?records[c.botanical]||null:null}
 function steps(botanical,field){const d=get(botanical);if(!d)return[];const own=d.entries[field]||[];if(d.existingSources)return own;const extra=field==='water'?(['indoor','peat-free'].includes(d.group)?common.water:[]):field==='repotting'?(!['herb','chilli','mineral','native','orchid'].includes(d.group)?common.repotting:[]):common[field]||[];return [...own,...extra]}
-function fieldSources(botanical,field){const c=care()?.get(botanical),d=get(botanical);if(!c||!d)return[];const catalogue=d.existingSources?Object.fromEntries((c.sources||[]).map(s=>[s.id,s])):sources;return [...new Set(steps(botanical,field).flatMap(s=>s.refs))].map(id=>catalogue[id]).filter(Boolean)}
+function fieldSources(botanical,field){const c=getCare(botanical),d=get(botanical);if(!c||!d)return[];const catalogue=d.existingSources?Object.fromEntries((c.sources||[]).map(s=>[s.id,s])):sources;return [...new Set(steps(botanical,field).flatMap(s=>s.refs))].map(id=>catalogue[id]).filter(Boolean)}
 function identityReview(plants){return (plants||[]).map(p=>{
  const botanical=String(p.botanical||'').trim(),issue=care()?.identificationIssue(botanical);
  if(!botanical)return {id:p.id,name:p.name,botanical,kind:'identity',reason:'Botanical name is not set.'};
  if(issue)return {id:p.id,name:p.name,botanical,kind:'identity',reason:issue};
- if(!care()?.get(botanical))return {id:p.id,name:p.name,botanical,kind:'coverage',reason:'No researched guide matches this saved botanical name. This does not prove the name is invalid.'};
- if(care().get(botanical).botanical==='Phalaenopsis cultivar')return {id:p.id,name:p.name,botanical,kind:'group',reason:'Cultivated/hybrid group only; exact species or named hybrid is not established. Group guidance remains available.'};
+ if(!getCare(botanical))return {id:p.id,name:p.name,botanical,kind:'coverage',reason:'No researched guide matches this saved botanical name. This does not prove the name is invalid.'};
+ if(getCare(botanical).botanical==='Phalaenopsis cultivar')return {id:p.id,name:p.name,botanical,kind:'group',reason:'Cultivated/hybrid group only; exact species or named hybrid is not established. Group guidance remains available.'};
+ if(getCare(botanical).botanical==='Bougainvillea spectabilis × glabra')return {id:p.id,name:p.name,botanical,kind:'group',reason:'Supplied spectoglabra hybrid group is supported; named White Stripe cultivar and specimen parentage are not independently verified. Group guidance remains available.'};
  return null;
  }).filter(Boolean)}
-window.PLANT_PRACTICAL_CARE={records,sources,fields,get,steps,fieldSources,products,productGap,identityReview,reviewedAt};
+window.PLANT_PRACTICAL_CARE={records,sources,fields,get,getCare,steps,fieldSources,products,productGap,identityReview,reviewedAt};
 })();
