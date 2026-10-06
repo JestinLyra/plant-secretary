@@ -11,6 +11,8 @@ Search the applicable Australian authorities first. Record evidence gaps. Supple
 
 Unknown or unsupported values remain explicit gaps. App check intervals and practical interpretation must not be presented as sourced biological requirements.
 
+Water care means intervals for checking soil moisture before deciding whether to water. A reminder is never an instruction to water automatically. Soil and feed requirements come from the sourcing hierarchy; match them to specific products listed by Bunnings and verify manufacturer suitability and directions. Keep product matching distinct from horticultural attribution and do not imply botanical authorities endorse a brand. Retail listings do not establish local store stock.
+
 Species selection uses the saved botanical name through PLANT_BOTANICAL_CARE.get(p.botanical). Display names label the UI only. Active profiles are selected by plant ID for care topics and summaries, so duplicate or edited display names cannot select another plant.
 
 ## Review: Origanum vulgare subsp. hirtum — 2026-10-06
@@ -20,5 +22,7 @@ Australian searches found ABC's exact-subspecies Thyme for Pizza article, genus-
 Gaps: exact moisture practice, pH categories, pre-flowering pruning and pest details are supplemented by NC State's exact-subspecies profile. Container watering and feeding are supplemented by RHS Mediterranean-herb group guidance. No numerical optimum pH, tested subspecies fertiliser dose, fixed repotting interval or mandatory pinching schedule is asserted. The seven-day check interval is an app default.
 
 The record in botanical-care.js retains links, credits, field-source mappings and review date; app-actions.js renders the relevant links in each care topic.
+
+Product matching update: Scotts Osmocote 25L Tomato Vegetable & Herb Premium Potting Mix and conditional Yates 500mL Thrive All Purpose Liquid Plant Food. Bunnings listings and manufacturer pages checked 2026-10-06. Included fertiliser is accounted for; additional feeding is not automatic. Product formulations and current pack instructions govern use. Soil/feeding topics and Recommended products retain links and matching rationale.
 
 Legacy plant records retain their previous attribution. They have not all been re-researched or converted to field-level evidence in this review. The policy string alone is not proof of a completed evidence audit.

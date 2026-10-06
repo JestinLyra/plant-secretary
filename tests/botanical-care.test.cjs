@@ -46,7 +46,7 @@ test('every guide care field has valid source attribution',()=>{
  assert.match(c.evidenceGaps,/ANBG/);
  assert.match(c.water,/app check default/);
  assert.match(c.seasonal,/interpretation/);
- assert.match(c.feed.join(' '),/group-level/);
+ assert.match(c.feed.join(' '),/group.level/);
 });
 test('field panels show actual supplementary source links and scope',()=>{
  const {hooks,plants}=setup();
@@ -71,4 +71,28 @@ test('profile opening records ID before rendering guide, summary has no name loo
  const code=fs.readFileSync(path.join(root,'profile-care-summary-v2.js'),'utf8');
  assert.doesNotMatch(code,/p\.name===name/);
  assert.match(code,/byBotanical\(p.botanical\)/);
+});
+test('water topic describes soil checks and conditional watering',()=>{
+ const {hooks,plants,care}=setup();
+ const c=care.get(identity);
+ assert.equal(c.interval,7);
+ const html=hooks.topicHtml('Watering checks',plants[1]);
+ assert.match(html,/Soil-moisture checks: every 7 days/);
+ assert.match(html,/not an automatic watering schedule/);
+ assert.match(html,/mix is still moist/);
+ assert.match(html,/Only water when/);
+});
+test('soil, feeding and products render the appropriate Bunnings links',()=>{
+ const {hooks,plants}=setup();
+ const soil=hooks.topicHtml('Soil',plants[1]);
+ const feed=hooks.topicHtml('Feeding',plants[1]);
+ const products=hooks.topicHtml('Recommended products',plants[1]);
+ assert.match(soil,/href="https:\/\/www.bunnings.com.au\/scotts-osmocote-25l-tomato-vegetable-herb-premium-potting-mix_p2962103"/);
+ assert.match(feed,/href="https:\/\/www.bunnings.com.au\/yates-500ml-thrive-all-purpose-liquid-plant-food_p2961784"/);
+ assert.match(feed,/do not automatically add liquid feed/);
+ assert.match(products,/Already contains fertiliser/);
+ assert.match(products,/Conditional supplementary feed only/);
+ assert.match(products,/not endorsed by the botanical sources/);
+ assert.match(products,/check your store for stock/);
+ assert.doesNotMatch(products,/No generic product has been substituted/);
 });
