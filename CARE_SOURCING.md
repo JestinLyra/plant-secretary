@@ -142,3 +142,62 @@ The existing shared interval resolver supplies the profile summary, Home tile co
 Removed the unused indoor interval column and repeated null placeholders from the audit table; no watering rules were changed for plants without a personal interval. Name/location editing, delete/undo, photo handling, source guidance and the approved Home legend remain unchanged.
 
 Validation: 57 Node tests passed. Eight new behavioural tests cover the Edit plant action, separate plants with identical display names, JSON save/reload and botanical hydration, override priority, cancellation/validation, clearing, persistence failure rollback, storage readiness, all four colour buckets, countdown after actual watering, history/photo preservation and the existing same-day duplicate-water guard. Tests use a DOM/storage harness; no claim of a completed interaction on the owner’s iPhone.
+
+## Practical-detail expansion — 2026-10-06, v1.0.124
+
+`practical-care.js` adds presentation-only steps for all 34 canonical care records. It resolves through the existing botanical-name registry, never through display names. It does not modify profile summaries, saved plants, soil-check intervals, owner overrides, watering history or photo settings. Unmatched names receive no substitute species guide.
+
+Expanded topic sheets retain the existing summary and add practical steps, clearly scoped references, and evidence gaps. Sources use native collapsed details. The full sourcing policy appears once in the Care Guides entry screen. A runtime identity review inspects the current device's saved plants: missing/ambiguous identity, cultivated group identity and missing research coverage are separate categories. The repository's starter plants are not a claim about the owner's current phone collection.
+
+Australian-first review: ABC indoor lighting, water/humidity and potting-on guidance applies only to its stated container groups. Snake Plants, Orchid Revival, Planting Winter Herbs, Easy Solanaceae, Rockery Renewal, Worthy Display and the gardenia winter FAQ supply specific Australian practical guidance where available. RBG Victoria HortFlora and ANBG searches did not produce a complete practical protocol for every non-native taxon; this is a limitation of this review, not a statement that none exists. HortFlora Eucalyptus cinerea supplies botanical context. BOM Laverton averages are regional context, not live Altona weather; current forecasts remain external links. APVMA governs any regulated treatment label, and no chemical treatment is prescribed here.
+
+Missing species/cultivar details are supplemented with the exact RHS, NC State Extension or specialist LLIFLE links in the structured catalogue. Group guidance is not represented as a species trial. UK/US calendar dates are not transferred unchanged into Melbourne. Existing Greek oregano, Meyer and Lemonicious field-specific references are reused.
+
+### New species/cultivar steps (shared Australian container steps are additional)
+
+| Canonical identity | New practical topics |
+|---|---|
+| Adiantum capillus-veneris | Moisture trigger, filtered light, division/spores |
+| Begonia maculata | Light, water/drainage, cane pruning, stem cuttings |
+| Philodendron 'Birkin' | Light, bud-bearing cuttings, repotting |
+| Sedum morganianum | Handling fragile leaves, light, drying, propagation |
+| Coriandrum sativum | Bolting, leaf/seed harvest choices, seed replacement |
+| Phalaenopsis cultivar | Clear-pot root inspection, airy bark, spike choices, repotting, light; group scope |
+| Phalaenopsis amabilis | Same Australian genus-level orchid culture; species scope gap retained |
+| Spathiphyllum wallisii | Flowering versus shade, root crowding, division |
+| Pilea involucrata | Light, pinching, softwood cuttings |
+| Gardenia jasminoides | Cold-season yellowing, acidic medium, shelter, pruning |
+| Philodendron hederaceum | Climbing support, light, cooler-season moisture |
+| Peperomia caperata 'Milano' | Light, moisture extremes, species-level cuttings |
+| Peperomia argyraea | Top-medium trigger, light, snug pots |
+| Epipremnum aureum | Support, trimming, rooting vines, light |
+| Epipremnum aureum 'Marble Queen' | Species-level steps above; cultivar trial gap |
+| Monstera deliciosa | Upper-medium trigger, sturdy support, propagation, pruning |
+| Callisia repens | Rooting nodes, containment, cuttings/division, light |
+| Dracaena trifasciata | Soil versus water culture, drying, light, dead-leaf removal |
+| Curio rowleyanus | Oversized pots, cuttings, cooler-season moisture; drying-source disagreement retained |
+| Haworthia cymbiformis | Filtered light, gritty medium, crowding; Haworthia group scope |
+| Zamioculcas zamiifolia | Drying trigger, light, sparse species feeding, division/leaf cuttings |
+| Citrus × microcarpa | Sheltered light, gradual potting-on, seed identity limitation |
+| Citrus limon | Citrus group steps above |
+| Capsicum annuum | Warmth, moisture, fruit support, seed raising |
+| Capsicum chinense | Crop-group steps plus species drought/fruit and night-temperature guidance |
+| Petroselinum crispum | Harvest stems, biennial replacement, container moisture |
+| Salvia rosmarinus | Avoid bare old wood, ground versus container feeding, winter wet, cuttings/layering |
+| Eucalyptus cinerea | Establishment, tree/juvenile foliage, intentional coppicing |
+| Hypoestes phyllostachya | Light/colour response, pinching/flower choice, cuttings |
+| Curio herreanus | Light, cuttings, minimum-temperature supplementary guidance |
+| Cheiridopsis pillansii | Mineral medium, seasonal dormancy, potassium sensitivity |
+| Origanum vulgare subsp. hirtum | Container renewal, harvest/pruning, fertilised mix accounting |
+| Citrus × limon 'Meyer' | Nursery/graft identity, suckers, planting/repotting depth |
+| Citrus × meyeri 'Lemonicious' | Same steps with retained separate selection identity |
+
+### Product matching and exclusions
+
+Bunnings listings and manufacturer composition/directions were reviewed for indoor mix/liquid feed, succulent mix, epiphytic orchid bark/liquid feed and gardenia mix/controlled-release feed. Actual manufacturer links appear separately from horticultural references. Conditional matching is not a botanical-authority brand endorsement. Stock at a particular store and the owner's physical current pack are not verified. Product labels govern dilution and pot-size rates; nutrients already included in fresh mix must be counted. Granular and liquid feeding schedules are not interchangeable.
+
+The checked indoor mix contains peat: it is excluded where the selected guide specifies peat-free medium. No general high-potassium succulent feed is substituted for Cheiridopsis pillansii. Existing exact Greek oregano/Meyer/Lemonicious product matches are preserved. Additional herb, chilli, rosemary, native-tree and generic-citrus product matches remain explicit review gaps rather than invented species endorsements.
+
+No precise pot diameter, numerical pH correction dose or numerical soil-check interval is invented. Fields without additional verified practical steps say so. Source evidence and app climate interpretation remain distinguishable.
+
+Validation: 65 automated tests cover existing photo upload/view behavior, watering/override persistence, botanical identity matching and the new guide layer. New tests render every topic for every supported canonical record, validate practical-step references, check exclusions, distinguish identity from coverage gaps, and confirm no mutation of care summaries or plant data. These tests do not establish execution on the owner's iPhone.

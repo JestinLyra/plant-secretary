@@ -9,30 +9,51 @@ const FIELD={'Sunlight':'sunlight','Watering checks':'water','Watering':'water',
 function currentPlant(){const id=$('#plantModal')?.dataset.plantId;return id?plantsList().find(p=>String(p.id)===String(id))||null:null}
 function botanicalCare(p){return window.PLANT_BOTANICAL_CARE?.get(p?.botanical)||null}
 function issueFor(p){return window.PLANT_BOTANICAL_CARE?.identificationIssue(p?.botanical)||null}
-function sourcePanel(c,field){
- if(!c?.source)return '';
+function sourceLinks(sources){return `<ul>${sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)}</a><br><span class="hint">${esc(s.scope)}</span></li>`).join('')}</ul>`}
+function sourcePanel(c,field,p=null){
+ if(!c)return '';
+ const detail=window.PLANT_PRACTICAL_CARE;
  const ids=c.fieldSources?.[field];
  const sources=(c.sources||[]).filter(s=>!ids||ids.includes(s.id));
- const links=sources.length?`<ul>${sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)}</a><br><span class="hint">${esc(s.scope)}</span></li>`).join('')}</ul>`:`<p class="hint">${esc(c.source)}</p>`;
- return `<div class="panel"><h3>Care basis</h3><p class="hint">Botanical identity: <b>${esc(c.botanical)}</b><br><b>Source hierarchy:</b> ${esc(c.sourcePolicy||window.PLANT_BOTANICAL_CARE?.sourcePolicy||'')}</p>${c.evidenceGaps?`<p class="hint"><b>Evidence gaps:</b> ${esc(c.evidenceGaps)}</p>`:''}<h4>${ids?'Sources for this field':'Sources used for this guide'}</h4>${links}${c.reviewedAt?`<p class="hint">Reviewed: ${esc(c.reviewedAt)}</p>`:''}</div>`
+ const summary=field==='water'&&p?sourceLinks(window.PLANT_WATERING_AUDIT?.sources(p)||[]):sources.length?sourceLinks(sources):`<p class="hint">${esc(c.source||'No structured summary attribution available.')}</p>`;
+ const practical=field==='products'?['soil','feed'].flatMap(f=>detail?.fieldSources(c.botanical,f)||[]):detail?.fieldSources(c.botanical,field)||[];
+ const matches=detail?.products(c.botanical,field==='products'?null:field)||[];
+ const manufacturer=[...new Set(matches.flatMap(m=>m.refs||[]))].map(id=>detail?.sources[id]).filter(Boolean);
+ return `<details class="panel care-sources"><summary>Sources</summary><h4>Summary references</h4>${summary}${practical.length?`<h4>Practical-detail references</h4>${sourceLinks(practical)}`:''}${manufacturer.length?`<h4>Product composition and label</h4>${sourceLinks(manufacturer)}`:''}${c.evidenceGaps?`<p class="hint"><b>Existing guide limitations:</b> ${esc(c.evidenceGaps)}</p>`:''}<p class="hint">Practical additions reviewed: ${esc(detail?.get(c.botanical)?.reviewedAt||c.reviewedAt||'Not recorded')}</p></details>`
 }
 function unavailable(p){const issue=issueFor(p);return `<div class="panel"><h3>Species-specific care unavailable</h3><p><b>${esc(issue||'This botanical identity is not yet in the verified care database.')}</b></p><p class="hint">Saved botanical name: ${esc(p?.botanical||'Not set')}</p><p>No generic care guide has been substituted.</p></div>`}
 function fieldText(c,field){const v=c?.[field];if(Array.isArray(v))return v.filter(Boolean).join(' — ');return v||'Not established in the selected species-specific sources.'}
 function productHtml(c,field){
- const products=(c.products||[]).filter(p=>!field||p.field===field);
- if(!products.length)return '';
- return `<div><h4>Bunnings product matches</h4>${products.map(p=>`<p><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a><br><span class="hint">${esc(p.basis)}</span></p>`).join('')}<p class="hint">Matched to the sourced requirement; brands are not endorsed by the botanical sources. Listings checked ${esc(c.reviewedAt||'')}; check your store for stock and read the current pack.</p></div>`
+ const detail=window.PLANT_PRACTICAL_CARE;
+ const products=detail?.products(c.botanical,field)||(c.products||[]).filter(p=>!field||p.field===field);
+ const gap=detail?.productGap(c.botanical)||'';
+ if(!products.length&&!gap)return '';
+ return `<div>${products.length?`<h4>Bunnings product matches</h4>${products.map(p=>`<p><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a><br><span class="hint">${esc(p.basis)}</span></p>`).join('')}<p class="hint">Matched to the sourced requirement; brands are not endorsed by the botanical sources. Listings checked ${esc(detail?.reviewedAt||c.reviewedAt||'')}; check your store for stock and read the current pack.</p>`:''}${gap?`<p class="hint"><b>Product-match gap:</b> ${esc(gap)}</p>`:''}</div>`
+}
+function practicalHtml(c,field,p){
+ const detail=window.PLANT_PRACTICAL_CARE,d=detail?.get(c.botanical);
+ if(!d)return '';
+ const steps=detail.steps(c.botanical,field);
+ const productField=['soil','feed'].includes(field);
+ return `<section class="care-practical"><h4>Practical steps</h4>${steps.length?`<ul>${steps.map(s=>`<li>${esc(s.text)}<small class="hint care-step-scope">${esc(s.kind)}</small></li>`).join('')}</ul>`:`<p class="hint">No additional verified practical instructions for this field were established in this review.</p>`}${field==='water'?'<p class="hint">Keep your chosen check interval. Water only when the moisture check shows it is needed; soil instructions do not apply to plants grown in water.</p>':''}${field==='seasonal'?`<p class="hint">${esc(window.PLANT_WATERING_AUDIT?.weatherContext(p)||'Open BOM for current conditions.')}</p>`:''}${productField?productHtml(c,field):''}<details class="care-limitations"><summary>Evidence gaps</summary><p class="hint">${esc(d.gap)}</p></details></section>`
 }
 function topicHtml(name,p){
  const c=botanicalCare(p);if(!c)return unavailable(p);
+ const field=name==='Plant features'?'habit':FIELD[name];
  let body='';
- if(name==='Plant features')body=`<p><b>${esc(c.botanical)}</b></p><p>${esc(c.habit)}</p>${c.identityNote?`<p class="hint">${esc(c.identityNote)}</p>`:''}`;
- else if(name==='Recommended products')body=c.products?.length?productHtml(c):`<p><b>No generic product has been substituted.</b></p><p>Choose a product only when its label and composition match this species-specific requirement:</p><p>${esc(fieldText(c,'soil'))}</p><p>${esc(fieldText(c,'feed'))}</p>`;
- else {const field=FIELD[name];body=`<p>${esc(fieldText(c,field))}</p>${['soil','feed'].includes(field)?productHtml(c,field):''}`}
- if(FIELD[name]==='water')return `<div class="panel"><h3>Watering checks</h3><p>${esc(window.PLANT_WATERING_AUDIT.describe(p))}</p>${window.PLANT_WATERING_AUDIT.sources(p).map(s=>`<p><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)}</a><br><span class="hint">${esc(s.scope)}</span></p>`).join('')}</div>`;
- return `<div class="panel"><h3>${esc(p?.name||c.botanical)}</h3>${body}<p class="hint">Botanical basis: ${esc(c.botanical)}</p></div>${sourcePanel(c,name==='Plant features'?'habit':FIELD[name])}`
+ if(name==='Plant features')body=`<p>${esc(c.habit)}</p>${c.identityNote?`<p class="hint">${esc(c.identityNote)}</p>`:''}`;
+ else if(name==='Recommended products')body=productHtml(c)||`<p><b>No generic product has been substituted.</b></p><p>${esc(fieldText(c,'soil'))}</p><p>${esc(fieldText(c,'feed'))}</p>`;
+ else if(field==='water')body=`<p>${esc(window.PLANT_WATERING_AUDIT.describe(p))}</p>`;
+ else body=`<p>${esc(fieldText(c,field))}</p>${!window.PLANT_PRACTICAL_CARE&&['soil','feed'].includes(field)?productHtml(c,field):''}`;
+ return `<div class="panel"><h3>${esc(p?.name||c.botanical)}</h3><p class="hint"><i>${esc(c.botanical)}</i></p>${body}${field?practicalHtml(c,field,p):''}</div>${name==='Recommended products'?sourcePanel(c,'products',p):sourcePanel(c,field,p)}`
 }
-function generalGuides(){const ps=plantsList().slice().sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));showSheet('Care Guides',`<p class="hint">Choose a plant to open its botanical-name-based care guide.</p><div class="guide-list">${ps.map(p=>`<button class="guide-row care-plant" data-plant-id="${esc(p.id)}" style="border:0;text-align:left;width:100%;color:inherit"><span><b>${esc(p.name)}</b><small class="hint" style="display:block;margin-top:3px">${esc(p.botanical||'Botanical name not set')}</small></span><span>›</span></button>`).join('')||'<p class="hint">No plants yet.</p>'}</div>`)}
+function identityReviewHtml(ps){
+ const entries=window.PLANT_PRACTICAL_CARE?.identityReview(ps)||[];
+ if(!entries.length)return '<p class="hint">All saved plants match a botanical care record. This checks guide matching, not independent specimen identification.</p>';
+ const section=(kind,title)=>{const rows=entries.filter(e=>e.kind===kind);return rows.length?`<h4>${esc(title)} (${rows.length})</h4><ul>${rows.map(e=>`<li><b>${esc(e.name||'Unnamed plant')}</b> — ${esc(e.botanical||'Not set')}<br><span class="hint">${esc(e.reason)}</span></li>`).join('')}</ul>`:''};
+ return `<details class="panel care-identity"><summary>Botanical identity review (${entries.length})</summary><p class="hint">Based on the plants currently saved on this device. An unsupported guide does not prove a botanical name is invalid.</p>${section('identity','Identification needed')}${section('group','Exact species or hybrid not established')}${section('coverage','Research coverage needed')}</details>`
+}
+function generalGuides(){const ps=plantsList().slice().sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));showSheet('Care Guides',`<p class="hint">Choose a plant to open its botanical-name-based care guide.</p>${identityReviewHtml(ps)}<details class="panel care-policy"><summary>Care sourcing policy</summary><p class="hint">${esc(window.PLANT_BOTANICAL_CARE?.sourcePolicy||'')}</p></details><div class="guide-list">${ps.map(p=>`<button class="guide-row care-plant" data-plant-id="${esc(p.id)}" style="border:0;text-align:left;width:100%;color:inherit"><span><b>${esc(p.name)}</b><small class="hint" style="display:block;margin-top:3px">${esc(p.botanical||'Botanical name not set')}</small></span><span>›</span></button>`).join('')||'<p class="hint">No plants yet.</p>'}</div>`)}
 function plantGuide(id){const p=plantsList().find(x=>String(x.id)===String(id));if(!p)return;const c=botanicalCare(p);showSheet(p.name,`${c?`<div class="panel"><p style="margin:0"><b>${esc(c.botanical)}</b></p><p class="hint" style="margin:4px 0 0">Care guide uses the saved botanical identity.</p></div>`:unavailable(p)}<div class="guide-list">${GUIDE_TOPICS.map(k=>`<button class="guide-row care-topic" data-topic="${esc(k)}" data-plant-id="${esc(p.id)}" style="border:0;text-align:left;width:100%;color:inherit"><b>${esc(k)}</b><span>›</span></button>`).join('')}</div>`)}
 function topic(name,p=null){if(!p){generalGuides();return}showSheet(name,topicHtml(name,p));const b=document.createElement('button');b.className='secondary';b.textContent=`← ${p.name}`;b.style.marginTop='10px';b.onclick=()=>plantGuide(p.id);$('#utilityBody').appendChild(b)}
 function noteSort(ps){const alpha=(a,b)=>String(a.name||'').localeCompare(String(b.name||''),undefined,{sensitivity:'base'});const indoor=ps.filter(p=>String(p.location||'').trim().toLowerCase()==='indoor').sort(alpha);const outdoor=ps.filter(p=>String(p.location||'').trim().toLowerCase()==='outdoor').sort(alpha);const other=ps.filter(p=>!['indoor','outdoor'].includes(String(p.location||'').trim().toLowerCase())).sort(alpha);return {indoor,outdoor,other}}
@@ -51,5 +72,5 @@ async function importBackup(file){let o;try{o=JSON.parse(await file.text())}catc
 function backup(){showSheet('Backup & Restore',`<p class="hint">Export all supported saved app data to a JSON backup, or restore a Plant Secretary backup.</p><div class="actions"><button class="primary" id="exportBackup">Export backup</button><label class="secondary" style="text-align:center;cursor:pointer">Import backup<input id="importBackup" type="file" accept="application/json,.json" hidden></label></div><p class="hint" id="backupError" style="color:var(--danger);margin-top:12px"></p>`);$('#exportBackup').onclick=exportBackup;$('#importBackup').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{await importBackup(f)}catch(err){$('#backupError').textContent=err.message}}}
 const actions={'Care Guides':generalGuides,'Plant Notes':notes,'Reminders':reminders,'Weather':weather,'Backup & Restore':backup,'Settings':settings,'About Plant Secretary':about};
 document.addEventListener('click',e=>{const note=e.target.closest('.plant-note-row');if(note){editNote(note.dataset.noteId);return}const card=e.target.closest('.more-card');if(card){const name=card.querySelector('b')?.textContent.trim();if(actions[name]){actions[name]();return}}const plant=e.target.closest('.care-plant');if(plant){plantGuide(plant.dataset.plantId);return}const t=e.target.closest('.care-topic');if(t){const p=t.dataset.plantId?plantsList().find(x=>String(x.id)===String(t.dataset.plantId)):null;topic(t.dataset.topic,p);return}const row=e.target.closest('#plantProfile .guide-row');if(row){const name=row.querySelector('b')?.textContent.trim();if(name){topic(name,currentPlant());return}}});
-const st=document.createElement('style');st.textContent='.more-card{cursor:pointer}.more-card:active,.guide-row:active{transform:scale(.985)}#plantProfile .guide-row{cursor:pointer}#utilityBody ul{padding-left:20px;line-height:1.5}#utilityBody a.primary{color:white}';document.head.appendChild(st);
+const st=document.createElement('style');st.textContent='.more-card{cursor:pointer}.more-card:active,.guide-row:active{transform:scale(.985)}#plantProfile .guide-row{cursor:pointer}#utilityBody ul{padding-left:20px;line-height:1.5}#utilityBody a.primary{color:white}#utilityBody summary{cursor:pointer;font-weight:750;padding:5px 0}#utilityBody .care-step-scope{display:block;margin-top:4px}#utilityBody .care-practical{border-top:1px solid #d9e5e1;margin-top:16px;padding-top:4px}#utilityBody .care-practical li{margin-bottom:14px}#utilityBody .care-limitations{margin:12px 0}';document.head.appendChild(st);
 })();
