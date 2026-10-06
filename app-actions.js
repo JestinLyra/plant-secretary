@@ -6,10 +6,16 @@ function showSheet(title,html){let m=$('#utilityModal');if(!m){m=document.create
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const GUIDE_TOPICS=['Plant features','Sunlight','Watering','Soil','pH','Feeding','Growth habit','Pruning','Pinching','Repotting','Propagation','Common problems','Seasonal care','Recommended products'];
 const FIELD={'Sunlight':'sunlight','Watering':'water','Soil':'soil','pH':'ph','Feeding':'feed','Growth habit':'habit','Pruning':'prune','Pinching':'pinching','Repotting':'repotting','Propagation':'propagation','Common problems':'problems','Seasonal care':'seasonal'};
-function currentPlant(){const name=document.querySelector('#modalTitle')?.textContent?.trim();return plantsList().find(p=>p.name===name)||null}
+function currentPlant(){const id=$('#plantModal')?.dataset.plantId;return id?plantsList().find(p=>String(p.id)===String(id))||null:null}
 function botanicalCare(p){return window.PLANT_BOTANICAL_CARE?.get(p?.botanical)||null}
 function issueFor(p){return window.PLANT_BOTANICAL_CARE?.identificationIssue(p?.botanical)||null}
-function sourcePanel(c){return c?.source?`<div class="panel"><h3>Care basis</h3><p class="hint" style="margin:0;line-height:1.5">Botanical identity: <b>${esc(c.botanical)}</b><br><b>Source hierarchy:</b> ${esc(c.sourcePolicy||window.PLANT_BOTANICAL_CARE?.sourcePolicy||'')}<br><b>Sources used for this guide:</b> ${esc(c.source)}</p></div>`:''}
+function sourcePanel(c,field){
+ if(!c?.source)return '';
+ const ids=c.fieldSources?.[field];
+ const sources=(c.sources||[]).filter(s=>!ids||ids.includes(s.id));
+ const links=sources.length?`<ul>${sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)}</a><br><span class="hint">${esc(s.scope)}</span></li>`).join('')}</ul>`:`<p class="hint">${esc(c.source)}</p>`;
+ return `<div class="panel"><h3>Care basis</h3><p class="hint">Botanical identity: <b>${esc(c.botanical)}</b><br><b>Source hierarchy:</b> ${esc(c.sourcePolicy||window.PLANT_BOTANICAL_CARE?.sourcePolicy||'')}</p>${c.evidenceGaps?`<p class="hint"><b>Evidence gaps:</b> ${esc(c.evidenceGaps)}</p>`:''}<h4>${ids?'Sources for this field':'Sources used for this guide'}</h4>${links}${c.reviewedAt?`<p class="hint">Reviewed: ${esc(c.reviewedAt)}</p>`:''}</div>`
+}
 function unavailable(p){const issue=issueFor(p);return `<div class="panel"><h3>Species-specific care unavailable</h3><p><b>${esc(issue||'This botanical identity is not yet in the verified care database.')}</b></p><p class="hint">Saved botanical name: ${esc(p?.botanical||'Not set')}</p><p>No generic care guide has been substituted.</p></div>`}
 function fieldText(c,field){const v=c?.[field];if(Array.isArray(v))return v.filter(Boolean).join(' — ');return v||'Not established in the selected species-specific sources.'}
 function topicHtml(name,p){
@@ -18,7 +24,7 @@ function topicHtml(name,p){
  if(name==='Plant features')body=`<p><b>${esc(c.botanical)}</b></p><p>${esc(c.habit)}</p>`;
  else if(name==='Recommended products')body=`<p><b>No generic product has been substituted.</b></p><p>Choose a product only when its label and composition match this species-specific requirement:</p><p>${esc(fieldText(c,'soil'))}</p><p>${esc(fieldText(c,'feed'))}</p>`;
  else {const field=FIELD[name];body=`<p>${esc(fieldText(c,field))}</p>`}
- return `<div class="panel"><h3>${esc(p?.name||c.botanical)}</h3>${body}<p class="hint">Botanical basis: ${esc(c.botanical)}</p></div>${sourcePanel(c)}`
+ return `<div class="panel"><h3>${esc(p?.name||c.botanical)}</h3>${body}<p class="hint">Botanical basis: ${esc(c.botanical)}</p></div>${sourcePanel(c,name==='Plant features'?'habit':FIELD[name])}`
 }
 function generalGuides(){const ps=plantsList().slice().sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));showSheet('Care Guides',`<p class="hint">Choose a plant to open its botanical-name-based care guide.</p><div class="guide-list">${ps.map(p=>`<button class="guide-row care-plant" data-plant-id="${esc(p.id)}" style="border:0;text-align:left;width:100%;color:inherit"><span><b>${esc(p.name)}</b><small class="hint" style="display:block;margin-top:3px">${esc(p.botanical||'Botanical name not set')}</small></span><span>›</span></button>`).join('')||'<p class="hint">No plants yet.</p>'}</div>`)}
 function plantGuide(id){const p=plantsList().find(x=>String(x.id)===String(id));if(!p)return;const c=botanicalCare(p);showSheet(p.name,`${c?`<div class="panel"><p style="margin:0"><b>${esc(c.botanical)}</b></p><p class="hint" style="margin:4px 0 0">Care guide uses the saved botanical identity.</p></div>`:unavailable(p)}<div class="guide-list">${GUIDE_TOPICS.map(k=>`<button class="guide-row care-topic" data-topic="${esc(k)}" data-plant-id="${esc(p.id)}" style="border:0;text-align:left;width:100%;color:inherit"><b>${esc(k)}</b><span>›</span></button>`).join('')}</div>`)}
