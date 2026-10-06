@@ -86,9 +86,9 @@ function decorate(id){
   requestAnimationFrame(()=>window.PLANT_PHOTO_TOOLS?.syncDeleteButtons(row))
 }
 const style=document.createElement('style');style.textContent=`
-#plantProfile .profile-identity-row{display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;align-items:start;margin:4px 0 12px;min-width:0}
-#plantProfile .profile-photo-wrap{width:120px;min-width:120px}
-#plantProfile .profile-identity-row .hero-photo{width:120px!important;height:120px!important;aspect-ratio:1/1!important;border-radius:16px!important;flex:0 0 120px!important;font-size:48px!important;position:relative!important;overflow:hidden!important}
+#plantProfile .profile-identity-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;align-items:start;margin:4px 0 12px;min-width:0}
+#plantProfile .profile-photo-wrap{width:100%;min-width:0}
+#plantProfile .profile-identity-row .hero-photo{width:100%!important;height:auto!important;aspect-ratio:1/1!important;border-radius:16px!important;min-width:0!important;min-height:0!important;font-size:48px!important;position:relative!important;overflow:hidden!important}
 #plantProfile .profile-photo-delete{display:block;width:100%;margin-top:6px;border:0;background:transparent;color:#8a5a5a;font:inherit;font-size:10px;font-weight:700;padding:4px 0}
 #plantProfile .profile-photo-delete[hidden]{display:none!important}
 #plantProfile .profile-identity-info{min-width:0;padding-top:1px}
@@ -115,9 +115,8 @@ const style=document.createElement('style');style.textContent=`
 .plant-delete-undo-btn img{display:block;width:68px;height:48px;object-fit:contain}
 .plant-delete-undo-btn:active{transform:scale(.96)}
 @media(max-width:350px){
-#plantProfile .profile-identity-row{grid-template-columns:104px minmax(0,1fr);gap:10px}
-#plantProfile .profile-photo-wrap{width:104px;min-width:104px}
-#plantProfile .profile-identity-row .hero-photo{width:104px!important;height:104px!important;flex-basis:104px!important;border-radius:14px!important}
+#plantProfile .profile-identity-row{gap:10px}
+#plantProfile .profile-identity-row .hero-photo{border-radius:14px!important}
 #plantProfile .profile-common-name{font-size:16px}
 #plantProfile .profile-id-field{margin-top:5px}
 #plantProfile .profile-id-label{font-size:9.5px}

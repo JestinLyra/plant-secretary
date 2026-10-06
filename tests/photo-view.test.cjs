@@ -4,7 +4,7 @@ const {test}=require('node:test');const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const source=fs.readFileSync(process.env.PHOTO_VIEW_SOURCE||path.join(__dirname,'../photo-editor.js'),'utf8');
 function setup({saved={},failSave=false}={}){
- const nodes=new Map(),frames=new Map(),observers=[],messages=[],timers=[];let nextFrame=0;
+ const nodes=new Map(),frames=new Map(),observers=[],sizeObservers=[],messages=[],timers=[];let nextFrame=0;
  const storage=new Map([['plant-secretary-photo-view-v1',JSON.stringify(saved)]]);
  function element(id,W=120,H=120){const handlers={};const classes=new Set();return{id,style:{},dataset:{},value:'1',complete:true,naturalWidth:1086,naturalHeight:1448,
   classList:{contains:c=>classes.has(c),add:c=>classes.add(c),remove:c=>classes.delete(c)},
@@ -19,13 +19,13 @@ function setup({saved={},failSave=false}={}){
   localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>{if(failSave)throw new Error('full');storage.set(k,v)}},
   requestAnimationFrame:fn=>{const id=++nextFrame;frames.set(id,fn);return id},cancelAnimationFrame:id=>frames.delete(id),
   setTimeout:fn=>timers.push(fn),MutationObserver:class{constructor(callback){this.callback=callback;observers.push(this)}observe(){}},
-  ResizeObserver:class{constructor(callback){this.callback=callback}observe(){}},
+  ResizeObserver:class{constructor(callback){this.callback=callback;sizeObservers.push(this)}observe(){}},
   getComputedStyle:()=>({borderRadius:'50%'}),URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(){}},
   getPhoto:async()=>({}),toast:msg=>messages.push(msg),renderCollection(){},console:{warn(){}},Element:class{}};
  scope.window.storePhoto=async()=>true;
  vm.createContext(scope);vm.runInContext(source.replace(/\}\)\(\);\s*$/,'window.__test={metrics,place,state,openEditor};})();'),scope);
  scope.document.querySelectorAll=()=>[card];
- return {scope,nodes,modal,stage,img,box,card,storage,messages,observers,frames,timers,element,flush(){const callbacks=[...frames.values()];frames.clear();callbacks.forEach(fn=>fn())}};
+ return {scope,nodes,modal,stage,img,box,card,storage,messages,observers,sizeObservers,frames,timers,element,flush(){const callbacks=[...frames.values()];frames.clear();callbacks.forEach(fn=>fn())}};
 }
 test('editor uses square profile geometry',()=>{assert.match(source,/aspect-ratio:1\/1;border-radius:16px/)});
 test('saved zoom applies equally to square profile and circular thumbnail',()=>{
@@ -66,4 +66,16 @@ test('card and profile loaders directly apply the saved view on insertion and lo
   vm.createContext(scope);vm.runInContext(code,scope);await scope[name]({id:'p1',name:'Plant'});
   assert.equal(applied,1);image.onload();assert.equal(applied,2,name);
  }
+});
+test('photo scales again when its frame grows, preserving saved zoom',()=>{
+ const s=setup({saved:{p1:{x:0,y:0,scale:.5,fit:true}}});s.scope.window.PLANT_PHOTO_TOOLS.applyAll();
+ assert.equal(s.card.style.width,'45px');s.box.getBoundingClientRect=()=>({width:180,height:180});
+ s.sizeObservers[0].callback();s.flush();assert.equal(s.card.style.width,'67.5px');assert.equal(s.card.style.height,'90px');
+});
+test('profile frame fills a fluid column and keeps square rounded styling',()=>{
+ const code=fs.readFileSync(path.join(__dirname,'../profile-identity.js'),'utf8');
+ assert.match(code,/grid-template-columns:minmax\(0,1fr\) minmax\(0,1\.15fr\)/);
+ assert.match(code,/profile-photo-wrap\{width:100%;min-width:0\}/);
+ assert.match(code,/hero-photo\{width:100%!important;height:auto!important;aspect-ratio:1\/1!important;border-radius:16px!important/);
+ assert.doesNotMatch(code,/(?:width|height|flex-basis):(?:120|104)px/);
 });
