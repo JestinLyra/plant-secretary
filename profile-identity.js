@@ -19,11 +19,52 @@ function openEditMenu(id){
   const title=document.createElement('h3');title.textContent='Edit plant';
   const hint=document.createElement('p');hint.textContent=p.name||'Plant';
   const editBtn=document.createElement('button');editBtn.type='button';editBtn.className='plant-edit-action';editBtn.textContent='Edit common name, display name & location';editBtn.addEventListener('click',()=>editFields(id));
+  const intervalBtn=document.createElement('button');intervalBtn.type='button';intervalBtn.className='plant-edit-action';intervalBtn.textContent='Edit watering check interval';intervalBtn.addEventListener('click',()=>editWateringInterval(id));
   const deleteBtn=document.createElement('button');deleteBtn.type='button';deleteBtn.className='plant-edit-action plant-edit-delete';deleteBtn.textContent='Delete plant';deleteBtn.addEventListener('click',()=>requestDeletePlant(id));
   const cancel=document.createElement('button');cancel.type='button';cancel.className='plant-edit-cancel';cancel.textContent='Cancel';cancel.addEventListener('click',closeEditMenu);
-  sheet.append(title,hint,editBtn,deleteBtn,cancel);overlay.appendChild(sheet);
+  sheet.append(title,hint,editBtn,intervalBtn,deleteBtn,cancel);overlay.appendChild(sheet);
   overlay.addEventListener('click',e=>{if(e.target===overlay)closeEditMenu()});
   document.body.appendChild(overlay);editMenu=overlay;
+}
+function editWateringInterval(id){
+  const p=plantsList().find(x=>String(x.id)===String(id));if(!p)return;
+  closeEditMenu();
+  const overlay=document.createElement('div');overlay.className='plant-edit-menu-overlay';
+  const sheet=document.createElement('form');sheet.className='plant-edit-menu-sheet';
+  const title=document.createElement('h3');title.textContent='Watering check interval';
+  const hint=document.createElement('p');hint.textContent=p.name||'Plant';
+  const label=document.createElement('label');label.htmlFor='wateringCheckDays';label.textContent='Check every (days)';
+  const input=document.createElement('input');input.id='wateringCheckDays';input.name='wateringCheckDays';input.type='number';input.inputMode='numeric';input.min='1';input.max='365';input.step='1';input.placeholder='No personal interval';input.value=window.PLANT_WATERING_AUDIT?.customInterval(p)??'';input.setAttribute('aria-describedby','wateringCheckHelp');
+  const help=document.createElement('p');help.id='wateringCheckHelp';help.textContent='Enter 1–365 whole days. This is a soil-check reminder; water only when needed. Leave blank to remove your personal interval and use the app’s existing guidance.';
+  const error=document.createElement('p');error.className='watering-check-error';error.setAttribute('role','alert');
+  const submit=document.createElement('button');submit.type='submit';submit.className='plant-edit-action';submit.textContent='Save interval';
+  const cancel=document.createElement('button');cancel.type='button';cancel.className='plant-edit-cancel';cancel.textContent='Cancel';cancel.addEventListener('click',()=>{if(!submit.disabled)closeEditMenu()});
+  sheet.append(title,hint,label,input,help,error,submit,cancel);overlay.appendChild(sheet);
+  overlay.addEventListener('click',e=>{if(e.target===overlay&&!submit.disabled)closeEditMenu()});
+  sheet.addEventListener('submit',async event=>{
+    event.preventDefault();if(submit.disabled)return;
+    const raw=input.value.trim(),days=raw===''?null:Number(raw);
+    if(days!==null&&!window.PLANT_WATERING_AUDIT?.validCheckDays(days)){error.textContent='Enter a whole number from 1 to 365 days.';return;}
+    submit.disabled=true;cancel.disabled=true;input.disabled=true;error.textContent='';
+    let plant,previousDays,hadDays,previousInterval;
+    try{
+      await window.PLANT_STORAGE_READY;
+      plant=plantsList().find(x=>String(x.id)===String(id));if(!plant)throw new Error('This plant is no longer available.');
+      hadDays=Object.prototype.hasOwnProperty.call(plant,'wateringCheckDays');previousDays=plant.wateringCheckDays;previousInterval=plant.interval;
+      if(days===null)delete plant.wateringCheckDays;else plant.wateringCheckDays=days;
+      if(window.PLANT_BOTANICAL_CARE)window.PLANT_BOTANICAL_CARE.applyToPlant(plant);
+      if(typeof save!=='function')throw new Error('Plant storage is unavailable.');
+      await save();
+    }catch(failure){
+      if(plant){if(hadDays)plant.wateringCheckDays=previousDays;else delete plant.wateringCheckDays;plant.interval=previousInterval;}
+      error.textContent=`Interval was not saved: ${failure?.message||'Storage error'}`;submit.disabled=false;cancel.disabled=false;input.disabled=false;return;
+    }
+    closeEditMenu();
+    if(typeof renderAll==='function')renderAll();
+    if(typeof window.openModal==='function')window.openModal(id);
+    notify(days===null?'Personal interval removed':`Watering check interval saved: ${days} ${days===1?'day':'days'}`);
+  });
+  document.body.appendChild(overlay);editMenu=overlay;input.focus();
 }
 function clearPhotoView(id){try{const key='plant-secretary-photo-view-v1';const views=JSON.parse(localStorage.getItem(key)||'{}');if(Object.prototype.hasOwnProperty.call(views,id)){delete views[id];localStorage.setItem(key,JSON.stringify(views))}}catch(_){}}
 function finalizePendingDelete(){
@@ -107,6 +148,8 @@ const style=document.createElement('style');style.textContent=`
 .plant-edit-menu-sheet h3{font-family:Georgia,serif;font-size:27px;margin:0}
 .plant-edit-menu-sheet p{margin:4px 0 14px;color:#68758f}
 .plant-edit-action,.plant-edit-cancel{width:100%;border:1px solid #d9e5e1;background:#fff;color:var(--ink);border-radius:15px;padding:13px 16px;font:inherit;font-weight:750;text-align:left;margin-top:8px}
+.plant-edit-menu-sheet #wateringCheckDays{display:block;width:100%;box-sizing:border-box;margin:8px 0;padding:12px;border:1px solid #d9e5e1;border-radius:12px;background:#fff;color:var(--ink);font:inherit}
+.plant-edit-menu-sheet .watering-check-error{color:#b43f4d}
 .plant-edit-delete{color:#b43f4d;border-color:#efd2d6;background:#fff8f8}
 .plant-edit-cancel{text-align:center;background:#f3f7f5;margin-top:12px}
 .plant-delete-undo-bar{position:fixed;z-index:110;left:50%;bottom:calc(var(--navh) + env(safe-area-inset-bottom) + 12px);transform:translateX(-50%);width:min(430px,calc(100% - 24px));min-height:64px;background:rgba(255,255,255,.98);border:1px solid #dce8e4;border-radius:18px;box-shadow:0 10px 28px rgba(17,63,53,.16);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 9px 7px 16px}
@@ -125,5 +168,5 @@ const style=document.createElement('style');style.textContent=`
 #plantProfile .profile-identity-edit img{width:28px;height:28px}
 }`;document.head.appendChild(style);
 const previousOpen=window.openModal;if(typeof previousOpen==='function')window.openModal=function(id){const result=previousOpen.apply(this,arguments);decorate(id);return result};
-window.PLANT_PROFILE_IDENTITY={apply:decorate,edit:openEditMenu,deletePlant:requestDeletePlant,undoDelete:undoDeletePlant};
+window.PLANT_PROFILE_IDENTITY={apply:decorate,edit:openEditMenu,editWateringInterval,deletePlant:requestDeletePlant,undoDelete:undoDeletePlant};
 })();

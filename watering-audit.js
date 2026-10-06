@@ -6,42 +6,42 @@ const ABC_POTS={label:'ABC Gardening Australia — Potted Produce',url:'https://
 const BOM={label:'BOM — Laverton RAAF climate averages',url:'https://www.bom.gov.au/climate/averages/tables/cw_087031.shtml',scope:'Nearby regional climate context for Altona, not a live forecast or a formula for inspection intervals.'};
 const nc=slug=>'https://plants.ces.ncsu.edu/plants/'+slug+'/';
 const rows=[
-['Adiantum capillus-veneris',null,'Keep the root zone moist, not saturated; do not wait for prolonged drying.',nc('adiantum-capillus-veneris')],
-['Begonia maculata',null,'Water moderately during growth; avoid waterlogging.', 'https://www.rhs.org.uk/plants/112222/begonia-maculata-c/details'],
-["Philodendron 'Birkin'",null,'Maintain moist but well-drained medium; do not water a saturated pot.',nc('philodendron-birkin')],
-['Sedum morganianum',null,'Let the medium dry between waterings; reduce water in winter.',nc('sedum-morganianum')],
-['Coriandrum sativum',null,'Maintain just-moist, freely draining medium; avoid drought and saturation.',nc('coriandrum-sativum')],
-['Phalaenopsis cultivar',null,'Inspect airy orchid medium and roots; water when almost dry and drain freely. Soil rules do not apply.', 'https://www.rhs.org.uk/plants/phalaenopsis'],
-['Phalaenopsis amabilis',null,'Inspect orchid bark; water when almost dry and drain freely.', 'https://www.rhs.org.uk/plants/119644/phalaenopsis-amabilis/details'],
-['Spathiphyllum wallisii',null,'Maintain moisture during active growth without leaving the roots waterlogged.', 'https://www.rhs.org.uk/plants/17623/spathiphyllum-wallisii/details'],
-['Pilea involucrata',null,'Water moderately during growth; reduce water in cooler conditions.',nc('pilea-involucrata')],
-['Gardenia jasminoides',null,'Maintain moist but well-drained medium; avoid waterlogging.',nc('gardenia-jasminoides')],
-['Philodendron hederaceum',null,'Inspect the upper mix before watering; never leave standing in water.', 'https://www.abc.net.au/gardening/watering-pot-plants/102997550'],
-["Peperomia caperata 'Milano'",null,'Let the upper mix dry before watering; avoid persistent wetness. Species guidance, not a cultivar-specific numerical interval.',nc('peperomia-caperata')],
-['Peperomia argyraea',null,'Inspect the upper mix before watering; avoid persistent wetness.',nc('peperomia-argyraea')],
-['Epipremnum aureum',null,'Inspect the upper mix; let it dry somewhat before watering, then drain freely.',nc('epipremnum-aureum')],
-["Epipremnum aureum 'Marble Queen'",null,'Inspect the upper mix; let it dry somewhat before watering, then drain freely. Species guidance, not a cultivar-specific numerical interval.',nc('epipremnum-aureum')],
-['Monstera deliciosa',null,'Allow the top quarter to third of the medium to dry between waterings.',nc('monstera-deliciosa')],
-['Callisia repens',null,'Inspect moisture before watering; retain free drainage and reduce water in cool periods.',nc('callisia-repens')],
-['Dracaena trifasciata',null,'Let the medium dry between waterings; winter watering is much less frequent than inspections.',nc('dracaena-trifasciata')],
-['Curio rowleyanus',null,'Avoid persistent wetness and prolonged drought; inspect the medium and fleshy leaves before watering.',nc('curio-rowleyanus')],
-['Haworthia cymbiformis',null,'Avoid persistent wetness in freely draining succulent medium. Exact species check frequency remains unestablished.', 'https://www.abc.net.au/gardening/watering-pot-plants/102997550'],
-['Zamioculcas zamiifolia',null,'Keep drier: allow drying between waterings and avoid prolonged wetness. Water-storing rhizomes mean it can go weeks without water; that is not a published soil-check interval.',nc('zamioculcas-zamiifolia')],
-['Citrus × microcarpa',null,'Maintain moist but well-drained medium during growth; avoid drought and saturation.',nc('citrus-x-microcarpa')],
-['Capsicum annuum',null,'Maintain reliable moisture while growing and fruiting; avoid repeated wilting and waterlogging.',nc('capsicum-annuum')],
-['Capsicum chinense',null,'Maintain reliable moisture while growing and fruiting; avoid drought swings and waterlogging.',nc('capsicum-chinense')],
-["Citrus × limon 'Meyer'",null,'Keep consistently moist during active growth and fruit development, never waterlogged. If sufficiently moist, do nothing; if drying and the root zone needs moisture, water thoroughly and allow excess water to drain. Reduce watering in winter.', 'https://www.yates.com.au/garden-hub/meyer-lemon/'],
-["Citrus × meyeri 'Lemonicious'",null,'Keep consistently moist during active growth and fruit development, never waterlogged. If sufficiently moist, do nothing; if drying and the root zone needs moisture, water thoroughly and allow excess water to drain. Reduce watering in winter.', 'https://www.evergreentrees.com.au/products/citrus-meyeri-lemonicious-pbr-lemonicious-meyer-lemon'],
-['Citrus limon',null,'Inspect moisture during growth; reduce water in winter without allowing damaging drought.',nc('citrus-x-limon')],
-['Petroselinum crispum',null,'Keep actively growing plants evenly moist with free drainage.',nc('petroselinum-crispum')],
-['Salvia rosmarinus',null,'Allow some drying between waterings; established plants tolerate drought, but avoid winter wet.',nc('salvia-rosmarinus')],
-['Eucalyptus cinerea',null,'Check establishment and container moisture; established ground trees tolerate drier conditions.',nc('eucalyptus-cinerea')],
-['Hypoestes phyllostachya',null,'Let the surface begin drying before watering; avoid damaging drought during active growth.',nc('hypoestes-phyllostachya')],
-['Curio herreanus',null,'Avoid excess water, especially in winter; adjust watering to growth and actual medium moisture.', 'https://www.rhs.org.uk/plants/537170/curio-herreanus/details'],
-['Cheiridopsis pillansii',null,'Summer dormancy: use minimal water only when needed; autumn–spring growth requires closer attention. Avoid splitting from excess water.', 'https://www.llifle.com/Encyclopedia/SUCCULENTS/Family/Aizoaceae/14664/Cheiridopsis_pillansii'],
-['Origanum vulgare subsp. hirtum',null,'Let container medium dry before watering; avoid persistent wetness. Established ground plants need much less additional water.',nc('origanum-vulgare-subsp-hirtum')]
+['Adiantum capillus-veneris','Keep the root zone moist, not saturated; do not wait for prolonged drying.',nc('adiantum-capillus-veneris')],
+['Begonia maculata','Water moderately during growth; avoid waterlogging.', 'https://www.rhs.org.uk/plants/112222/begonia-maculata-c/details'],
+["Philodendron 'Birkin'",'Maintain moist but well-drained medium; do not water a saturated pot.',nc('philodendron-birkin')],
+['Sedum morganianum','Let the medium dry between waterings; reduce water in winter.',nc('sedum-morganianum')],
+['Coriandrum sativum','Maintain just-moist, freely draining medium; avoid drought and saturation.',nc('coriandrum-sativum')],
+['Phalaenopsis cultivar','Inspect airy orchid medium and roots; water when almost dry and drain freely. Soil rules do not apply.', 'https://www.rhs.org.uk/plants/phalaenopsis'],
+['Phalaenopsis amabilis','Inspect orchid bark; water when almost dry and drain freely.', 'https://www.rhs.org.uk/plants/119644/phalaenopsis-amabilis/details'],
+['Spathiphyllum wallisii','Maintain moisture during active growth without leaving the roots waterlogged.', 'https://www.rhs.org.uk/plants/17623/spathiphyllum-wallisii/details'],
+['Pilea involucrata','Water moderately during growth; reduce water in cooler conditions.',nc('pilea-involucrata')],
+['Gardenia jasminoides','Maintain moist but well-drained medium; avoid waterlogging.',nc('gardenia-jasminoides')],
+['Philodendron hederaceum','Inspect the upper mix before watering; never leave standing in water.', 'https://www.abc.net.au/gardening/watering-pot-plants/102997550'],
+["Peperomia caperata 'Milano'",'Let the upper mix dry before watering; avoid persistent wetness. Species guidance, not a cultivar-specific numerical interval.',nc('peperomia-caperata')],
+['Peperomia argyraea','Inspect the upper mix before watering; avoid persistent wetness.',nc('peperomia-argyraea')],
+['Epipremnum aureum','Inspect the upper mix; let it dry somewhat before watering, then drain freely.',nc('epipremnum-aureum')],
+["Epipremnum aureum 'Marble Queen'",'Inspect the upper mix; let it dry somewhat before watering, then drain freely. Species guidance, not a cultivar-specific numerical interval.',nc('epipremnum-aureum')],
+['Monstera deliciosa','Allow the top quarter to third of the medium to dry between waterings.',nc('monstera-deliciosa')],
+['Callisia repens','Inspect moisture before watering; retain free drainage and reduce water in cool periods.',nc('callisia-repens')],
+['Dracaena trifasciata','Let the medium dry between waterings; winter watering is much less frequent than inspections.',nc('dracaena-trifasciata')],
+['Curio rowleyanus','Avoid persistent wetness and prolonged drought; inspect the medium and fleshy leaves before watering.',nc('curio-rowleyanus')],
+['Haworthia cymbiformis','Avoid persistent wetness in freely draining succulent medium. Exact species check frequency remains unestablished.', 'https://www.abc.net.au/gardening/watering-pot-plants/102997550'],
+['Zamioculcas zamiifolia','Keep drier: allow drying between waterings and avoid prolonged wetness. Water-storing rhizomes mean it can go weeks without water; that is not a published soil-check interval.',nc('zamioculcas-zamiifolia')],
+['Citrus × microcarpa','Maintain moist but well-drained medium during growth; avoid drought and saturation.',nc('citrus-x-microcarpa')],
+['Capsicum annuum','Maintain reliable moisture while growing and fruiting; avoid repeated wilting and waterlogging.',nc('capsicum-annuum')],
+['Capsicum chinense','Maintain reliable moisture while growing and fruiting; avoid drought swings and waterlogging.',nc('capsicum-chinense')],
+["Citrus × limon 'Meyer'",'Keep consistently moist during active growth and fruit development, never waterlogged. If sufficiently moist, do nothing; if drying and the root zone needs moisture, water thoroughly and allow excess water to drain. Reduce watering in winter.', 'https://www.yates.com.au/garden-hub/meyer-lemon/'],
+["Citrus × meyeri 'Lemonicious'",'Keep consistently moist during active growth and fruit development, never waterlogged. If sufficiently moist, do nothing; if drying and the root zone needs moisture, water thoroughly and allow excess water to drain. Reduce watering in winter.', 'https://www.evergreentrees.com.au/products/citrus-meyeri-lemonicious-pbr-lemonicious-meyer-lemon'],
+['Citrus limon','Inspect moisture during growth; reduce water in winter without allowing damaging drought.',nc('citrus-x-limon')],
+['Petroselinum crispum','Keep actively growing plants evenly moist with free drainage.',nc('petroselinum-crispum')],
+['Salvia rosmarinus','Allow some drying between waterings; established plants tolerate drought, but avoid winter wet.',nc('salvia-rosmarinus')],
+['Eucalyptus cinerea','Check establishment and container moisture; established ground trees tolerate drier conditions.',nc('eucalyptus-cinerea')],
+['Hypoestes phyllostachya','Let the surface begin drying before watering; avoid damaging drought during active growth.',nc('hypoestes-phyllostachya')],
+['Curio herreanus','Avoid excess water, especially in winter; adjust watering to growth and actual medium moisture.', 'https://www.rhs.org.uk/plants/537170/curio-herreanus/details'],
+['Cheiridopsis pillansii','Summer dormancy: use minimal water only when needed; autumn–spring growth requires closer attention. Avoid splitting from excess water.', 'https://www.llifle.com/Encyclopedia/SUCCULENTS/Family/Aizoaceae/14664/Cheiridopsis_pillansii'],
+['Origanum vulgare subsp. hirtum','Let container medium dry before watering; avoid persistent wetness. Established ground plants need much less additional water.',nc('origanum-vulgare-subsp-hirtum')]
 ];
-const entries=Object.fromEntries(rows.map(([botanical,indoor,trigger,url])=>[botanical,{botanical,indoor,trigger,url}]));
+const entries=Object.fromEntries(rows.map(([botanical,trigger,url])=>[botanical,{botanical,trigger,url}]));
 function entry(p){const c=window.PLANT_BOTANICAL_CARE?.get(p?.botanical);return c?entries[c.botanical]||null:null}
 function season(date=new Date()){const month=Number(new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',month:'numeric'}).format(date));return month===12||month<=2?'summer':month<=5?'autumn':month<=8?'winter':'spring'}
 const edible=new Set(['Coriandrum sativum','Citrus × microcarpa','Capsicum annuum','Capsicum chinense',"Citrus × limon 'Meyer'","Citrus × meyeri 'Lemonicious'",'Citrus limon','Petroselinum crispum','Salvia rosmarinus','Origanum vulgare subsp. hirtum']);
@@ -55,7 +55,10 @@ function primary(e){
  if(e.botanical.startsWith('Phalaenopsis'))return article('Orchid Revival','how-to/orchid-revival/12096898','Phalaenopsis genus/hybrids: airy bark, inspect roots, drain freely; no fixed inspection interval.');
  return edible.has(e.botanical)?ABC_POTS:ABC_INDOOR;
 }
+function validCheckDays(value){return typeof value==='number'&&Number.isInteger(value)&&value>=1&&value<=365}
+function customInterval(p){return validCheckDays(p?.wateringCheckDays)?p.wateringCheckDays:null}
 function interval(p,date=new Date()){
+ const custom=customInterval(p);if(custom!==null)return custom;
  const e=entry(p);if(!e)return null;
  const location=String(p.location||'').trim().toLowerCase();if(!['outdoor','indoor'].includes(location))return null;
  // Existing records do not distinguish pots from ground planting. This app's
@@ -73,12 +76,12 @@ function weatherContext(p,date=new Date()){
  return forecast+' '+(outdoors?'Practical interpretation: wind and warmer conditions can accelerate drying, so inspect exposed pots earlier. Forecast rain does not establish that this pot received enough water.':'Outdoor rainfall cannot determine moisture in an indoor pot; indoor light, heating, airflow and actual medium moisture govern the check.')+' Altona regional season: '+season(date)+'. No live BOM weather adjustment is connected; weather does not generate an unsupported numerical interval.';
 }
 function describe(p,date=new Date()){
- const e=entry(p),days=interval(p,date);if(!e)return 'Manual moisture checks required. Botanical identity needs review; no numerical default has been assigned. '+weatherContext(p,date);
+ const e=entry(p),days=interval(p,date),custom=customInterval(p);if(!e&&custom===null)return 'Manual moisture checks required. Botanical identity needs review; no numerical default has been assigned. '+weatherContext(p,date);
  const preference=window.PLANT_BOTANICAL_CARE?.get(p.botanical)?.inspectionPreference;
- const basis=days===1?'Gardening Australia recommends at least daily summer checks for edible containers. This is group-level monitoring advice, not daily watering or an exact species requirement.':days!==null&&preference?'Five-day baseline selected by the owner: a practical app choice, not a published cultivar requirement. Check earlier if this pot is drying faster.':'Manual moisture checks: no supported numerical inspection interval was established for this botanical record in these conditions. The previous blanket daily/three-day countdown has been removed. Learn this pot’s drying pattern rather than use a fabricated number. Moisture-sensitive plants need close observation; drought-tolerant plants should not be kept constantly wet.';
- return (days===null?'Check actual moisture — no fixed countdown.':`Inspect every ${days} ${days===1?'day':'days'} — not an automatic watering schedule.`)+' '+e.trigger+' '+basis+' Evidence gap: no exact botanical check interval established. Assume a suitable, freely draining medium and correctly sized pot. '+weatherContext(p,date)+' If sufficiently moist, do nothing; the droplet records actual watering only, not an inspection.';
+ const basis=custom!==null?'This interval was set by you for this individual plant. It overrides automatic inspection reminders and is not a published botanical requirement. Check earlier if the pot dries faster.':days===1?'Gardening Australia recommends at least daily summer checks for edible containers. This is group-level monitoring advice, not daily watering or an exact species requirement.':days!==null&&preference?'Five-day baseline selected by the owner: a practical app choice, not a published cultivar requirement. Check earlier if this pot is drying faster.':'Manual moisture checks: no supported numerical inspection interval was established for this botanical record in these conditions. The previous blanket daily/three-day countdown has been removed. Learn this pot’s drying pattern rather than use a fabricated number. Moisture-sensitive plants need close observation; drought-tolerant plants should not be kept constantly wet.';
+ return (days===null?'Check actual moisture — no fixed countdown.':`Inspect every ${days} ${days===1?'day':'days'} — not an automatic watering schedule.`)+' '+(e?.trigger||'Botanical identity needs review for species-specific moisture guidance; inspect the actual growing medium before watering.')+' '+basis+' Evidence gap: no exact botanical check interval established. Assume a suitable, freely draining medium and correctly sized pot. '+weatherContext(p,date)+' If sufficiently moist, do nothing; the droplet records actual watering only, not an inspection.';
 }
-function summary(p,date=new Date()){const e=entry(p),days=interval(p,date);return !e?'Manual moisture checks · botanical identity needs review. No numerical default.':(days===null?'Moisture checks · no source-supported fixed interval.':`Inspect every ${days} ${days===1?'day':'days'} · ${days===1?'ABC summer edible-container guidance':'owner-selected reminder'}.`)+` ${e.trigger} Water only if needed.`}
+function summary(p,date=new Date()){const e=entry(p),days=interval(p,date),custom=customInterval(p);return !e&&custom===null?'Manual moisture checks · botanical identity needs review. No numerical default.':(days===null?'Moisture checks · no source-supported fixed interval.':`Inspect every ${days} ${days===1?'day':'days'} · ${custom!==null?'set by you':days===1?'ABC summer edible-container guidance':'owner-selected reminder'}.`)+` ${e?.trigger||'Botanical identity needs review for species-specific moisture guidance.'} Water only if needed.`}
 function sources(p){const e=entry(p),c=window.PLANT_BOTANICAL_CARE?.get(p?.botanical);if(!e)return[];const specific=(c?.sources||[]).filter(s=>c.fieldSources?.water?.includes(s.id));const fallback={label:e.url.includes('ncsu')?'NC State Extension — '+e.botanical:e.url.includes('rhs')?'RHS — '+e.botanical:e.url.includes('llifle')?'LLIFLE — '+e.botanical:'Cultivation reference — '+e.botanical,url:e.url,scope:'Supplementary moisture/cultivation evidence fills the species/cultivar detail gap; it does not establish a numerical soil-check interval.'};return [primary(e),BOM,{label:'BOM — Altona forecast',url:weatherSnapshot.url,scope:'Dated snapshot, issued 6 October 2026; expires after 24 hours. No live feed or pot-moisture formula.'},...(specific.length?specific:[fallback])];}
-window.PLANT_WATERING_AUDIT={entries,entry,interval,describe,summary,sources,season,weatherContext,weatherSnapshot,reviewedAt:'2026-10-06'};
+window.PLANT_WATERING_AUDIT={entries,entry,validCheckDays,customInterval,interval,describe,summary,sources,season,weatherContext,weatherSnapshot,reviewedAt:'2026-10-06'};
 })();
