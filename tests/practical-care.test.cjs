@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.126/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.127/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.123/);
 });
 const requested=[
@@ -109,6 +109,28 @@ const requested=[
  ['Bougainvillea White Stripe','Bougainvillea spectabilis x glabra'],
  ['Ice Plant','Delosperma lehmannii']
 ];
+test('Greek oregano Bunnings practical details retain field attribution and subspecies scope',()=>{
+ const {detail,hooks,care}=setup(),name='Origanum vulgare subsp. hirtum';
+ const p={name:'Greek oregano',botanical:name,location:'Outdoor',wateringCheckDays:5};
+ for(const field of ['sunlight','water','soil','feed','prune','repotting','propagation','problems'])assert.ok(detail.fieldSources(name,field).some(s=>s.id==='bunnings-oregano'),field);
+ assert.match(hooks.topicHtml('Feeding',p),/Routine fertiliser is usually unnecessary/);
+ assert.match(hooks.topicHtml('Propagation',p),/6–8 weeks/);
+ assert.match(hooks.topicHtml('Propagation',p),/not a subspecies hirtum trial/);
+ assert.match(hooks.topicHtml('Propagation',p),/How to grow and harvest oregano/);
+ assert.doesNotMatch(hooks.topicHtml('Propagation',p),/<details[^>]*\bopen\b/);
+ assert.equal(detail.products(name).length,care.get(name).products.length);
+ assert.ok(detail.fieldSources(name,'soil').some(s=>s.id==='abc-pizza'));
+ assert.match(detail.get(name).gap,/fixed inspection days/);
+ assert.equal(detail.get('Greek oregano'),null);
+});
+test('Greek oregano rendering keeps reminders, photos, history and profile summaries intact',()=>{
+ const {ctx,care,hooks}=setup();
+ const p={name:'Greek oregano',botanical:'Origanum vulgare subsp. hirtum',location:'Outdoor',wateringCheckDays:5,lastWatered:'2026-10-03',photoScale:1.3,history:[{type:'Watered',date:'2026-10-03'}]};
+ const before=JSON.stringify(p),profile=JSON.stringify(care.get(p.botanical)),interval=ctx.window.PLANT_WATERING_AUDIT.interval(p);
+ for(const topic of hooks.GUIDE_TOPICS)hooks.topicHtml(topic,p);
+ assert.equal(JSON.stringify(p),before);assert.equal(JSON.stringify(care.get(p.botanical)),profile);
+ assert.equal(ctx.window.PLANT_WATERING_AUDIT.interval(p),interval);
+});
 test('Watermelon Peperomia uses Bunnings details with field-linked sources and label-specific products',()=>{
  const {detail,hooks}=setup();
  const p={name:'Renamed plant',botanical:'Peperomia argyreia',location:'Indoor',wateringCheckDays:14};

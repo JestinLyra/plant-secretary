@@ -241,6 +241,20 @@ for(const name of ['Origanum vulgare subsp. hirtum',"Citrus × limon 'Meyer'","C
  records[name].existingSources=true;
 }
 // Product matches are composition/label matches, not botanical-source endorsements.
+source('bunnings-oregano','Bunnings — How to grow and harvest oregano','https://www.bunnings.com.au/diy-advice/garden/planting-and-growing/how-to-grow-oregano','Origanum vulgare / general oregano guidance, including Greek oregano by common name; not a subspecies hirtum trial. No numerical moisture-check interval, pH optimum or fertiliser dose.');
+const greekDetail=records['Origanum vulgare subsp. hirtum'];
+greekDetail.extraSources=[sources['bunnings-oregano']];
+greekDetail.reviewedAt='2026-10-07';
+const oreganoStep=text=>step(text,['bunnings-oregano'],'Bunnings general oregano guidance; not subspecies-tested');
+greekDetail.entries.sunlight=[oreganoStep('Prefer full sun for stronger flavour; partial shade is tolerated.')];
+greekDetail.entries.water=[oreganoStep('Check actual moisture; water after soil or mix dries, avoiding overwatering. No fixed number of check days is supplied.')];
+greekDetail.entries.soil.push(oreganoStep('Use premium herb/vegetable potting mix. For damp garden soil, raise the planting area or choose a better-drained site.'));
+greekDetail.entries.feed=[oreganoStep('Routine fertiliser is usually unnecessary. Existing optional container feed is not a mandatory schedule; account for nutrients already in fresh mix.')];
+greekDetail.entries.prune.push(oreganoStep('Trim wayward stems and harvest regularly. Cut above a leaf node; collect after morning dew dries.'));
+greekDetail.entries.repotting=[oreganoStep('Water before transplanting and retain the previous planting depth; water in afterwards.')];
+greekDetail.entries.propagation=[oreganoStep('Take spring tip cuttings about 6 cm long, remove the lower 2 cm of leaves, and insert into propagation mix. Bunnings estimates rooting in 6–8 weeks. Alternatively peg a stem against soil, then separate it after rooting.')];
+greekDetail.entries.problems=[oreganoStep('Check young growth for slugs, snails and aphids. A water jet can dislodge aphids.'),step('No pesticide product is prescribed. Any edible-herb treatment must have an approved label use and applicable harvest restrictions.',['apvma'],'Australian treatment requirement')];
+greekDetail.gap+=' Bunnings supplements practical general oregano advice, not exact-subspecies evidence. Its propagation times are estimates; fixed inspection days, measured soil recipes and hirtum-tested nutrient doses remain gaps.';
 const productCatalog={};
 function product(id,field,name,retailer,manufacturer,basis){
  const ref='product-'+id;
@@ -353,7 +367,7 @@ orchidEntries.problems=[step('Protect from cold window glass and draughts; avoid
 function getCare(botanical){const base=care()?.get(botanical);if(base)return base;const k=botanicalKey(botanical);return extendedCare[extendedAliases[k]||k]||null}
 function get(botanical){const c=getCare(botanical);return c?records[c.botanical]||null:null}
 function steps(botanical,field){const d=get(botanical);if(!d)return[];const own=d.entries[field]||[];if(d.existingSources)return own;const extra=field==='water'?(['indoor','peat-free'].includes(d.group)?common.water:[]):field==='repotting'?(!['herb','chilli','mineral','native','orchid'].includes(d.group)?common.repotting:[]):common[field]||[];return [...own,...extra]}
-function fieldSources(botanical,field){const c=getCare(botanical),d=get(botanical);if(!c||!d)return[];const catalogue=d.existingSources?Object.fromEntries((c.sources||[]).map(s=>[s.id,s])):sources;return [...new Set(steps(botanical,field).flatMap(s=>s.refs))].map(id=>catalogue[id]).filter(Boolean)}
+function fieldSources(botanical,field){const c=getCare(botanical),d=get(botanical);if(!c||!d)return[];const catalogue=d.existingSources?Object.fromEntries([...(c.sources||[]),...(d.extraSources||[])].map(s=>[s.id,s])):sources;return [...new Set(steps(botanical,field).flatMap(s=>s.refs))].map(id=>catalogue[id]).filter(Boolean)}
 function identityReview(plants){return (plants||[]).map(p=>{
  const botanical=String(p.botanical||'').trim(),issue=care()?.identificationIssue(botanical);
  if(!botanical)return {id:p.id,name:p.name,botanical,kind:'identity',reason:'Botanical name is not set.'};
