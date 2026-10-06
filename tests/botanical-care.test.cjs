@@ -10,6 +10,7 @@ function setup(){
  const plants=[{id:'wrong',name:'Same name',botanical:'Coriandrum sativum'},{id:'oregano',name:'Same name',botanical:identity}];
  const document={querySelector:s=>s==='#plantModal'?modal:null,createElement:()=>({}),head:{appendChild(){}},addEventListener(){}};
  const ctx=vm.createContext({window:{},plants,document});
+ vm.runInContext(fs.readFileSync(path.join(root,'watering-audit.js'),'utf8'),ctx);
  vm.runInContext(fs.readFileSync(path.join(root,'botanical-care.js'),'utf8'),ctx);
  let code=fs.readFileSync(path.join(root,'app-actions.js'),'utf8');
  code=code.replace(/\}\)\(\);\s*$/, 'window.testCare={currentPlant,botanicalCare,topicHtml,sourcePanel};})();');
@@ -44,7 +45,7 @@ test('every guide care field has valid source attribution',()=>{
   for(const id of c.fieldSources[key])assert.ok(c.sources.some(s=>s.id===id),id);
  }
  assert.match(c.evidenceGaps,/ANBG/);
- assert.match(c.water,/app check default/);
+ assert.doesNotMatch(c.water,/7.day|app check default/);
  assert.match(c.seasonal,/interpretation/);
  assert.match(c.feed.join(' '),/group.level/);
 });
@@ -75,12 +76,14 @@ test('profile opening records ID before rendering guide, summary has no name loo
 test('water topic describes soil checks and conditional watering',()=>{
  const {hooks,plants,care}=setup();
  const c=care.get(identity);
- assert.equal(c.interval,7);
+ assert.equal(c.interval,null);
  const html=hooks.topicHtml('Watering checks',plants[1]);
- assert.match(html,/Soil-moisture checks: every 7 days/);
- assert.match(html,/not an automatic watering schedule/);
- assert.match(html,/mix is still moist/);
- assert.match(html,/Only water when/);
+ plants[1].location='Outdoor';
+ const revised=hooks.topicHtml('Watering checks',plants[1]);
+ assert.match(revised,/Inspect every 1 day/);
+ assert.match(revised,/not an automatic watering schedule/);
+ assert.match(revised,/If still moist/);
+ assert.match(revised,/Let container medium dry/);
 });
 test('soil, feeding and products render the appropriate Bunnings links',()=>{
  const {hooks,plants}=setup();

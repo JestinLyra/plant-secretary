@@ -12,7 +12,7 @@ function apply(p){
  const map=Object.fromEntries(cards.map(c=>[c.dataset.profileTile,c]));const care=byBotanical(p.botanical);const issue=careIssue(p.botanical);
  const val=(v,fallback)=>v||fallback;
  const unavailable=`Identification required · ${issue}`;
- map.water.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="water" aria-hidden="true"></span>Water</b><span>${care?val(care.water,'Not established in selected sources'):unavailable}</span>`;
+ map.water.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="water" aria-hidden="true"></span>Water checks</b><span>${window.PLANT_WATERING_AUDIT?.summary(p)||unavailable}</span>`;
  map.light.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="light" aria-hidden="true"></span>Sunlight</b><span>${care?val(care.sunlight,'Not established in selected sources'):unavailable}</span>`;
  map.ph.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="ph" aria-hidden="true"></span>pH</b><span>${care?val(care.ph,'Not established in selected sources'):unavailable}</span>`;
  map.soil.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="soil" aria-hidden="true"></span>Soil</b><span>${care?care.soil[0]:unavailable}</span><small>${care?(care.soil[1]||''):''}</small>`;
