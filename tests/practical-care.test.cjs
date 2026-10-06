@@ -98,7 +98,7 @@ test('new practical script loads before guide actions and is available offline w
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
  assert.match(index,/practical-care.js\?v=1.0.128/);assert.match(sw,/'\.\/practical-care.js'/);
- assert.match(index,/watering-audit.js\?v=1.0.128/);
+ assert.match(index,/watering-audit.js\?v=1.0.129/);
 });
 const requested=[
  ['Maidenhair Fern','Adiantum aethiopicum'],
