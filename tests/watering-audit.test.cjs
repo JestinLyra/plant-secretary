@@ -5,8 +5,8 @@ const vm=require('node:vm');
 const path=require('node:path');
 const root=path.join(__dirname,'..');
 function setup(plants=[]){const ctx=vm.createContext({window:{},plants});for(const file of ['watering-audit.js','botanical-care.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx);return {ctx,audit:ctx.window.PLANT_WATERING_AUDIT,care:ctx.window.PLANT_BOTANICAL_CARE,plants}}
-test('all 32 botanical care identities have an inspection audit; no seven-day default',()=>{
- const {audit,care}=setup();assert.equal(Object.keys(care.records).length,32);
+test('all 34 botanical care identities have an inspection audit; no seven-day default',()=>{
+ const {audit,care}=setup();assert.equal(Object.keys(care.records).length,34);
  for(const c of Object.values(care.records)){
   assert.ok(audit.entries[c.botanical],c.botanical);
   for(const location of ['Indoor','Outdoor']){

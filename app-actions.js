@@ -26,7 +26,7 @@ function productHtml(c,field){
 function topicHtml(name,p){
  const c=botanicalCare(p);if(!c)return unavailable(p);
  let body='';
- if(name==='Plant features')body=`<p><b>${esc(c.botanical)}</b></p><p>${esc(c.habit)}</p>`;
+ if(name==='Plant features')body=`<p><b>${esc(c.botanical)}</b></p><p>${esc(c.habit)}</p>${c.identityNote?`<p class="hint">${esc(c.identityNote)}</p>`:''}`;
  else if(name==='Recommended products')body=c.products?.length?productHtml(c):`<p><b>No generic product has been substituted.</b></p><p>Choose a product only when its label and composition match this species-specific requirement:</p><p>${esc(fieldText(c,'soil'))}</p><p>${esc(fieldText(c,'feed'))}</p>`;
  else {const field=FIELD[name];body=`<p>${esc(fieldText(c,field))}</p>${['soil','feed'].includes(field)?productHtml(c,field):''}`}
  if(FIELD[name]==='water')return `<div class="panel"><h3>Watering checks</h3><p>${esc(window.PLANT_WATERING_AUDIT.describe(p))}</p>${window.PLANT_WATERING_AUDIT.sources(p).map(s=>`<p><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)}</a><br><span class="hint">${esc(s.scope)}</span></p>`).join('')}</div>`;
