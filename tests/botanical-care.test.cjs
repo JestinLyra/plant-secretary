@@ -80,9 +80,9 @@ test('water topic describes soil checks and conditional watering',()=>{
  const html=hooks.topicHtml('Watering checks',plants[1]);
  plants[1].location='Outdoor';
  const revised=hooks.topicHtml('Watering checks',plants[1]);
- assert.match(revised,/Inspect every 1 day/);
- assert.match(revised,/not an automatic watering schedule/);
- assert.match(revised,/If still moist/);
+ assert.match(revised,/Check actual moisture/);
+ assert.match(revised,/no supported numerical inspection interval/);
+ assert.match(revised,/If sufficiently moist/);
  assert.match(revised,/Let container medium dry/);
 });
 test('soil, feeding and products render the appropriate Bunnings links',()=>{

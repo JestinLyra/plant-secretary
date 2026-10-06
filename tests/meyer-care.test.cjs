@@ -58,7 +58,7 @@ test('plant features explain trade selection without falsely making all Meyer le
 test('owner-identified factory dwarf lemon migrates by stable ID and generic lemon remains generic',()=>{
  const {care,audit}=setup();const history=[{type:'Watered',date:'2026-10-01'}];const dwarf={id:'p29',name:'Renamed by owner',botanical:'Citrus limon',location:'Outdoor',history,photoId:'keep'};
  care.applyToPlant(dwarf);assert.equal(dwarf.botanical,meyer);assert.equal(dwarf.interval,5);assert.equal(dwarf.history,history);assert.equal(dwarf.photoId,'keep');
- const generic={id:'p28',name:'Lemon — Dwarf',botanical:'Citrus limon',location:'Outdoor'};care.applyToPlant(generic);assert.equal(generic.botanical,'Citrus limon');assert.equal(audit.interval(generic),1);
+ const generic={id:'p28',name:'Lemon — Dwarf',botanical:'Citrus limon',location:'Outdoor'};care.applyToPlant(generic);assert.equal(generic.botanical,'Citrus limon');assert.equal(audit.interval(generic,new Date("2026-10-06T12:00:00Z")),null);
  const other={id:'p29',name:'Lemon — Dwarf',botanical:'Capsicum annuum',location:'Outdoor'};care.applyToPlant(other);assert.equal(other.botanical,'Capsicum annuum');
  const unknown={id:'custom',name:'Lemon — Dwarf',botanical:'Unknown',location:'Outdoor'};care.applyToPlant(unknown);assert.equal(audit.interval(unknown),null);
 });
@@ -67,5 +67,5 @@ test('five-day reminder reaches scheduling and owner-preferred care wording reac
  ctx.p={...plants[0],history:[],lastWatered:new Date().toISOString(),interval:7};assert.equal(vm.runInContext('daysUntil(p)',ctx),5);assert.equal(vm.runInContext('dueLabel(p)',ctx),'In 5 days');
  const c=care.get(meyer);assert.match(c.ph,/Slightly acidic/);assert.match(c.soil[0],/humus-rich/);assert.match(c.feed[0],/according to its label/);assert.match(c.prune,/crossing/);assert.match(c.seasonal,/warm, sunny, sheltered/);assert.match(c.problems,/aphids/);assert.match(c.problems,/mealybugs/);
  assert.match(hooks.topicHtml('pH',plants[0]),/plant-finder\/citrus\/9441782/);
- const water=hooks.topicHtml('Watering checks',plants[0]);assert.match(water,/Check earlier in hot or windy weather/);assert.match(water,/not a published cultivar requirement/);
+ const water=hooks.topicHtml('Watering checks',plants[0]);assert.match(water,/Check earlier if this pot is drying faster/);assert.match(water,/not a published cultivar requirement/);
 });
