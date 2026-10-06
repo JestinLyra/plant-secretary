@@ -82,8 +82,7 @@ function decorate(id){
   const info=document.createElement('div');info.className='profile-identity-info';const top=document.createElement('div');top.className='profile-identity-top';
   const common=document.createElement('div');common.className='profile-common-name';common.textContent=text(detail.common,'Common name not available for this botanical name');
   const edit=document.createElement('button');edit.type='button';edit.className='profile-identity-edit';edit.innerHTML='<img src="assets/edit-control.svg" alt="">';edit.setAttribute('aria-label','Edit plant');edit.addEventListener('click',()=>openEditMenu(id));
-  top.append(common,edit);info.appendChild(top);addField(info,'Botanical name',p.botanical||'',true);addField(info,'Growing habit',detail.habit);row.appendChild(info);
-  const actions=row.nextElementSibling;const legacyName=actions?.nextElementSibling;const legacyMeta=legacyName?.nextElementSibling;if(legacyName?.tagName==='H2')legacyName.classList.add('profile-identity-legacy-hidden');if(legacyMeta?.classList?.contains('hint'))legacyMeta.classList.add('profile-identity-legacy-hidden');
+  top.append(common,edit);info.appendChild(top);addField(info,'Botanical name',p.botanical||'',true);addField(info,'Location',p.location||'Not set');addField(info,'Growing habit',detail.habit);row.appendChild(info);
   requestAnimationFrame(()=>window.PLANT_PHOTO_TOOLS?.syncDeleteButtons(row))
 }
 const style=document.createElement('style');style.textContent=`
