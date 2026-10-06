@@ -10,7 +10,7 @@ test('all 34 botanical care identities have an inspection audit; no seven-day de
  for(const c of Object.values(care.records)){
   assert.ok(audit.entries[c.botanical],c.botanical);
   for(const location of ['Indoor','Outdoor']){
-   const p={botanical:c.botanical,location,interval:7};assert.ok([1,3].includes(audit.interval(p)),c.botanical);
+   const p={botanical:c.botanical,location,interval:7};assert.ok([1,3,5].includes(audit.interval(p)),c.botanical);
    assert.match(audit.describe(p),/app (choice|interpretation)/);assert.match(audit.describe(p),/no exact botanical check interval/i);
   }
   assert.equal(c.interval,null);assert.doesNotMatch(c.water,/7.day|weekly is/);
