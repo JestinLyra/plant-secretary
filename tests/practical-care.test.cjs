@@ -17,7 +17,7 @@ function setup(){
  return {ctx,plants,before,care:ctx.window.PLANT_BOTANICAL_CARE,detail:ctx.window.PLANT_PRACTICAL_CARE,hooks:ctx.window.testCare};
 }
 test('all resolved records have practical guidance and complete valid references',()=>{
- const {care,detail}=setup();assert.equal(Object.keys(detail.records).length,38);
+ const {care,detail}=setup();assert.equal(Object.keys(detail.records).length,39);
  for(const d of Object.values(detail.records)){
   assert.equal(detail.getCare(d.botanical).botanical,d.botanical);
   assert.ok(Object.values(d.entries).flat().length>0,d.botanical);
@@ -93,12 +93,12 @@ test('product matches preserve exclusions, scoped manufacturer references and ex
  const name="Citrus × limon 'Meyer'";assert.equal(detail.products(name).length,care.get(name).products.length);
  const html=hooks.topicHtml('Recommended products',{name:'Meyer',botanical:name});assert.match(html,/do not|Do not/);
 });
-test('new practical script loads before guide actions and is available offline without changing the audit asset',()=>{
+test('new practical script loads before guide actions and is available offline with the manual-only audit asset',()=>{
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.127/);assert.match(sw,/'\.\/practical-care.js'/);
- assert.match(index,/watering-audit.js\?v=1.0.123/);
+ assert.match(index,/practical-care.js\?v=1.0.128/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/watering-audit.js\?v=1.0.128/);
 });
 const requested=[
  ['Maidenhair Fern','Adiantum aethiopicum'],

@@ -1,5 +1,5 @@
 (()=>{
-const norm=s=>String(s||'').trim().toLowerCase().replace(/[×]/g,'x').replace(/[‘’]/g,"'").replace(/\s+/g,' ');
+const norm=s=>String(s||'').trim().replace(/\.+$/,'').toLowerCase().replace(/[×]/g,'x').replace(/[‘’]/g,"'").replace(/\s+/g,' ');
 const SOURCE_POLICY='For every plant and care field: consult ABC Gardening Australia first for practical Australian cultivation; Royal Botanic Gardens Victoria and ANBG for botanical identity, taxonomy and cultivation; BOM for Altona/Melbourne/Victoria climate context; and APVMA whenever regulated treatment products are involved. Identify evidence gaps, supplement only those gaps with authoritative/reputable horticultural references, and retain actual source attribution and scope. Climate interpretation and app scheduling choices are labelled separately from source recommendations.';
 const R=(botanical,interval,light,ph,demand,soil,feed,prune,water,sunlight,habit,propagation,problems,seasonal,repotting,pinching,source)=>({botanical,interval:null,light,ph,demand,soil,feed,prune,water,sunlight,habit,propagation,problems,seasonal,repotting,pinching,source,sourcePolicy:SOURCE_POLICY,status:'verified'});
 const records={
@@ -97,7 +97,6 @@ const meyer=R("Citrus × limon 'Meyer'",null,'sun','Slightly acidic; numerical c
  'No mandatory pinching height or frequency established. Shape with light pruning rather than repeatedly removing flowering or fruiting tips.',
  'Primary ABC Gardening Australia lemon/citrus guidance; RBG Victoria HortFlora Citrus classification; BOM regional climate context; APVMA label constraints. Supplementary Yates Meyer guide and Australian nursery Lemonicious-specific evidence fill cultivar/container gaps. GardensOnline requested reference retained, but its full text was blocked by a security check.');
 meyer.reviewedAt='2026-10-06';
-meyer.inspectionPreference={days:5,basis:'Owner-selected five-day baseline from the supplied recording; not a published cultivar interval.'};
 meyer.identityNote="Saved identity: Citrus × limon 'Meyer'. RBG Victoria includes Meyer under C. ×limon; ABC also uses Citrus ×meyeri for Meyer. Citrus Meyer Dwarf Lemonicious® is a named compact Meyer selection sold by nurseries as Citrus ×meyeri 'Lemonicious', not every Meyer plant. The two records are kept distinct.";
 meyer.evidenceGaps='No exact cultivar soil-check interval, numerical pH optimum, tested cultivar fertiliser dose or mandatory pinching regimen established. ANBG searches did not locate a useful Meyer/Lemonicious cultivation profile; its finger-lime guidance was not substituted. GardensOnline full page and Warners full page could not be read (security check/403); accessible Diaco’s and Evergreen Trees Direct cultivar pages supplement those gaps. Nursery size estimates vary and do not establish the size of every grafted Meyer. BOM is regional context only; live weather is not connected.';
 meyer.sources=[

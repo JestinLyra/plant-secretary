@@ -364,7 +364,21 @@ peaceEntries.propagation.unshift(step('ABC demonstrates cutting a large healthy 
 orchidEntries.feed=[step('Use orchid-labelled food after pruning or repotting, with current pack directions controlling dilution; reduce feed in cool conditions. A controlled-release product is not applied on a liquid-feed timetable.',['orchid','product-orchid-feed'])];
 orchidEntries.problems=[step('Protect from cold window glass and draughts; avoid routine misting of flowers or foliage that can encourage damage or disease. Root crowding alone is not proof of root rot.',['orchid'])];
 
-function getCare(botanical){const base=care()?.get(botanical);if(base)return base;const k=botanicalKey(botanical);return extendedCare[extendedAliases[k]||k]||null}
+// Explicit botanical cultivar links: species guidance, not a display-name lookup.
+const scopedCultivars={
+ [botanicalKey("Epipremnum aureum 'Goldilocks'")]:{species:'Epipremnum aureum',note:'Goldilocks: species-level soil/moisture guidance. No distinct cultivar-specific seasonal check frequency or tested soil formula verified.'},
+ [botanicalKey("Philodendron hederaceum 'Brasil'")]:{species:'Philodendron hederaceum',note:'Brasil: species-level guidance, with ABC’s Brasil example. No distinct cultivar-specific seasonal check frequency or tested soil formula verified.'}
+};
+abc('thyme-australia','Herb Your Enthusiasm','how-to/herb-your-enthusiasm/103592354','Australian potted-herb maintenance includes common thyme; not a species-specific watering calendar or recipe.');
+source('thyme-identity','RBG Victoria — HortFlora: Thymus vulgaris','https://hortflora.rbg.vic.gov.au/taxon/ada1ef4e-5340-11e7-b82b-005056b0018f','Botanical identification and cultivated variation; not a numerical moisture-check schedule.');
+nc('thyme-specific','Thymus vulgaris','thymus-vulgaris','Supplementary species drainage, dry sandy/rocky soil and drought tolerance. Fills detail absent from the consulted Australian guidance; US dates are not copied to Altona.');
+comprehensive('Thymus vulgaris','rosemary',{
+ soil:[step('Provide a freely draining sandy or rocky medium; avoid a dense mix that stays wet. A rich vegetable mix is not automatically a match for thyme.',['thyme-specific'])],
+ water:[step('Established thyme tolerates drying. Check the root zone before watering; young or newly potted plants still need establishment moisture. No exact soil-check interval was verified.',['thyme-specific','water'])],
+ seasonal:[step('In Altona’s cool season, inspect drainage and avoid prolonged wetness. During growth or drying heat, inspect the pot sooner; frost tolerance is not tolerance of cold saturated roots.',['thyme-specific','bom'],'Species evidence with app climate interpretation')],
+ repotting:[step('Refresh exhausted potting medium while maintaining drainage; ABC’s mixed-herb example includes common thyme but does not give an exact thyme recipe.',['thyme-australia'])]
+},'No species-specific numerical check frequency, exact amendment ratio or locally tested product formula established. ANBG did not supply additional cultivated-thyme detail in this review. APVMA treatment selection is not involved.','Saved species identity is supported by RBG Victoria; this does not independently identify the specimen.');
+function getCare(botanical){const scoped=scopedCultivars[botanicalKey(botanical)];if(scoped){const base=care()?.get(scoped.species);return base?{...base,identityNote:scoped.note,careScope:'Species-level guidance for the saved cultivar'}:null}const base=care()?.get(botanical);if(base)return base;const k=botanicalKey(botanical);return extendedCare[extendedAliases[k]||k]||null}
 function get(botanical){const c=getCare(botanical);return c?records[c.botanical]||null:null}
 function steps(botanical,field){const d=get(botanical);if(!d)return[];const own=d.entries[field]||[];if(d.existingSources)return own;const extra=field==='water'?(['indoor','peat-free'].includes(d.group)?common.water:[]):field==='repotting'?(!['herb','chilli','mineral','native','orchid'].includes(d.group)?common.repotting:[]):common[field]||[];return [...own,...extra]}
 function fieldSources(botanical,field){const c=getCare(botanical),d=get(botanical);if(!c||!d)return[];const catalogue=d.existingSources?Object.fromEntries([...(c.sources||[]),...(d.extraSources||[])].map(s=>[s.id,s])):sources;return [...new Set(steps(botanical,field).flatMap(s=>s.refs))].map(id=>catalogue[id]).filter(Boolean)}

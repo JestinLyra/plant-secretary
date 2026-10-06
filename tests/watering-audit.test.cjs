@@ -48,17 +48,17 @@ test('offline asset and seed contain the audit and no fixed seed intervals',()=>
  assert.match(fs.readFileSync(path.join(root,'sw.js'),'utf8'),/watering-audit.js/);
 });
 
-test('daily edible-container checks are limited to Melbourne summer and exclude ground plants',()=>{
+test('no seasonal or species fallback creates an automatic interval',()=>{
  const {audit}=setup();const summer=new Date('2026-12-15T00:00:00Z'),winter=new Date('2026-07-15T00:00:00Z');
  for(const botanical of ['Coriandrum sativum','Capsicum annuum','Origanum vulgare subsp. hirtum']){
-  assert.equal(audit.interval({botanical,location:'Outdoor'},summer),1);
+  assert.equal(audit.interval({botanical,location:'Outdoor'},summer),null);
   assert.equal(audit.interval({botanical,location:'Outdoor'},winter),null);
   assert.equal(audit.interval({botanical,location:'Indoor'},summer),null);
   assert.equal(audit.interval({botanical,location:'Outdoor',growingIn:'ground'},summer),null);
  }
  assert.equal(audit.interval({botanical:'Zamioculcas zamiifolia',location:'Outdoor'},summer),null);
- assert.equal(audit.interval({botanical:"Citrus × limon 'Meyer'",location:'Outdoor'},summer),1);
- assert.equal(audit.interval({botanical:"Citrus × limon 'Meyer'",location:'Outdoor'},winter),5);
+ assert.equal(audit.interval({botanical:"Citrus × limon 'Meyer'",location:'Outdoor'},summer),null);
+ assert.equal(audit.interval({botanical:"Citrus × limon 'Meyer'",location:'Outdoor'},winter),null);
 });
 test('weather snapshot expires and outdoor rainfall does not affect indoor countdowns',()=>{
  const {audit}=setup(),p={botanical:'Zamioculcas zamiifolia',location:'Indoor'};

@@ -42,7 +42,7 @@ const rows=[
 ['Origanum vulgare subsp. hirtum','Let container medium dry before watering; avoid persistent wetness. Established ground plants need much less additional water.',nc('origanum-vulgare-subsp-hirtum')]
 ];
 const entries=Object.fromEntries(rows.map(([botanical,trigger,url])=>[botanical,{botanical,trigger,url}]));
-function entry(p){const c=window.PLANT_BOTANICAL_CARE?.get(p?.botanical);return c?entries[c.botanical]||null:null}
+function entry(p){const c=window.PLANT_PRACTICAL_CARE?.getCare(p?.botanical)||window.PLANT_BOTANICAL_CARE?.get(p?.botanical);return c?entries[c.botanical]||null:null}
 function season(date=new Date()){const month=Number(new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',month:'numeric'}).format(date));return month===12||month<=2?'summer':month<=5?'autumn':month<=8?'winter':'spring'}
 const edible=new Set(['Coriandrum sativum','Citrus × microcarpa','Capsicum annuum','Capsicum chinense',"Citrus × limon 'Meyer'","Citrus × meyeri 'Lemonicious'",'Citrus limon','Petroselinum crispum','Salvia rosmarinus','Origanum vulgare subsp. hirtum']);
 const succulents=new Set(['Sedum morganianum','Dracaena trifasciata','Curio rowleyanus','Haworthia cymbiformis','Curio herreanus','Cheiridopsis pillansii']);
@@ -57,17 +57,8 @@ function primary(e){
 }
 function validCheckDays(value){return typeof value==='number'&&Number.isInteger(value)&&value>=1&&value<=365}
 function customInterval(p){return validCheckDays(p?.wateringCheckDays)?p.wateringCheckDays:null}
-function interval(p,date=new Date()){
- const custom=customInterval(p);if(custom!==null)return custom;
- const e=entry(p);if(!e)return null;
- const location=String(p.location||'').trim().toLowerCase();if(!['outdoor','indoor'].includes(location))return null;
- // Existing records do not distinguish pots from ground planting. This app's
- // policy assumes a correctly sized container; explicitly ground-grown records
- // cannot receive the container-only summer rule.
- if(location==='outdoor'&&p.growingIn!=='ground'&&season(date)==='summer'&&edible.has(e.botanical))return 1;
- const preference=window.PLANT_BOTANICAL_CARE?.get(p.botanical)?.inspectionPreference;
- return preference?.days||null;
-}
+// Only an explicitly saved personal setting can create a countdown.
+function interval(p){return customInterval(p)}
 const weatherSnapshot={issuedAt:'2026-10-06T09:48:00Z',expiresAt:'2026-10-07T09:48:00Z',label:'BOM Altona forecast, issued 8:48 pm AEDT 6 October 2026',url:'https://www.bom.gov.au/places/vic/altona/forecast/',text:'7 October: 10–16°C, 0 mm forecast rain; 8 October: 7–22°C, 0 mm; 9 October: 12–25°C, 0 mm, Melbourne-area northerly winds up to 40 km/h. 10 October: 15–20°C, 0–4 mm possible rain.'};
 function weatherContext(p,date=new Date()){
  const current=+date>=Date.parse(weatherSnapshot.issuedAt)&&+date<Date.parse(weatherSnapshot.expiresAt);
@@ -77,11 +68,10 @@ function weatherContext(p,date=new Date()){
 }
 function describe(p,date=new Date()){
  const e=entry(p),days=interval(p,date),custom=customInterval(p);if(!e&&custom===null)return 'Manual moisture checks required. Botanical identity needs review; no numerical default has been assigned. '+weatherContext(p,date);
- const preference=window.PLANT_BOTANICAL_CARE?.get(p.botanical)?.inspectionPreference;
- const basis=custom!==null?'This interval was set by you for this individual plant. It overrides automatic inspection reminders and is not a published botanical requirement. Check earlier if the pot dries faster.':days===1?'Gardening Australia recommends at least daily summer checks for edible containers. This is group-level monitoring advice, not daily watering or an exact species requirement.':days!==null&&preference?'Five-day baseline selected by the owner: a practical app choice, not a published cultivar requirement. Check earlier if this pot is drying faster.':'Manual moisture checks: no supported numerical inspection interval was established for this botanical record in these conditions. The previous blanket daily/three-day countdown has been removed. Learn this pot’s drying pattern rather than use a fabricated number. Moisture-sensitive plants need close observation; drought-tolerant plants should not be kept constantly wet.';
+ const basis=custom!==null?'This interval was set by you for this individual plant; it is not a published botanical requirement. Check earlier if this pot is drying faster.':'Manual moisture checks: no supported numerical inspection interval has been assigned. Observe this pot’s moisture and growth rather than watering by calendar.';
  return (days===null?'Check actual moisture — no fixed countdown.':`Inspect every ${days} ${days===1?'day':'days'} — not an automatic watering schedule.`)+' '+(e?.trigger||'Botanical identity needs review for species-specific moisture guidance; inspect the actual growing medium before watering.')+' '+basis+' Evidence gap: no exact botanical check interval established. Assume a suitable, freely draining medium and correctly sized pot. '+weatherContext(p,date)+' If sufficiently moist, do nothing; the droplet records actual watering only, not an inspection.';
 }
-function summary(p,date=new Date()){const e=entry(p),days=interval(p,date),custom=customInterval(p);return !e&&custom===null?'Manual moisture checks · botanical identity needs review. No numerical default.':(days===null?'Moisture checks · no source-supported fixed interval.':`Inspect every ${days} ${days===1?'day':'days'} · ${custom!==null?'set by you':days===1?'ABC summer edible-container guidance':'owner-selected reminder'}.`)+` ${e?.trigger||'Botanical identity needs review for species-specific moisture guidance.'} Water only if needed.`}
-function sources(p){const e=entry(p),c=window.PLANT_BOTANICAL_CARE?.get(p?.botanical);if(!e)return[];const specific=(c?.sources||[]).filter(s=>c.fieldSources?.water?.includes(s.id));const fallback={label:e.url.includes('ncsu')?'NC State Extension — '+e.botanical:e.url.includes('rhs')?'RHS — '+e.botanical:e.url.includes('llifle')?'LLIFLE — '+e.botanical:'Cultivation reference — '+e.botanical,url:e.url,scope:'Supplementary moisture/cultivation evidence fills the species/cultivar detail gap; it does not establish a numerical soil-check interval.'};return [primary(e),BOM,{label:'BOM — Altona forecast',url:weatherSnapshot.url,scope:'Dated snapshot, issued 6 October 2026; expires after 24 hours. No live feed or pot-moisture formula.'},...(specific.length?specific:[fallback])];}
+function summary(p){const days=customInterval(p);return days===null?'':`Check every ${days} days.`}
+function sources(p){const e=entry(p),c=window.PLANT_PRACTICAL_CARE?.getCare(p?.botanical)||window.PLANT_BOTANICAL_CARE?.get(p?.botanical);if(!e)return[];const specific=(c?.sources||[]).filter(s=>c.fieldSources?.water?.includes(s.id));const fallback={label:e.url.includes('ncsu')?'NC State Extension — '+e.botanical:e.url.includes('rhs')?'RHS — '+e.botanical:e.url.includes('llifle')?'LLIFLE — '+e.botanical:'Cultivation reference — '+e.botanical,url:e.url,scope:'Supplementary moisture/cultivation evidence fills the species/cultivar detail gap; it does not establish a numerical soil-check interval.'};return [primary(e),BOM,{label:'BOM — Altona forecast',url:weatherSnapshot.url,scope:'Dated snapshot, issued 6 October 2026; expires after 24 hours. No live feed or pot-moisture formula.'},...(specific.length?specific:[fallback])];}
 window.PLANT_WATERING_AUDIT={entries,entry,validCheckDays,customInterval,interval,describe,summary,sources,season,weatherContext,weatherSnapshot,reviewedAt:'2026-10-06'};
 })();

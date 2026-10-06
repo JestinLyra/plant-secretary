@@ -11,12 +11,14 @@ function apply(p){
  const modal=$('#plantModal');if(!modal||!p)return;const q=modal.querySelector('.quick');if(!q)return;const cards=markTiles(q);if(!cards)return;
  const map=Object.fromEntries(cards.map(c=>[c.dataset.profileTile,c]));const care=byBotanical(p.botanical);const issue=careIssue(p.botanical);
  const val=(v,fallback)=>v||fallback;
+ const escape=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const soil=window.PLANT_CARE_PRESENTATION?.soilInfo(p);
  const unavailable=`Identification required · ${issue}`;
- map.water.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="water" aria-hidden="true"></span>Water checks</b><span>${window.PLANT_WATERING_AUDIT?.summary(p)||unavailable}</span>`;
+ map.water.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="water" aria-hidden="true"></span>Water checks</b><span>${window.PLANT_WATERING_AUDIT?.summary(p)||''}</span>`;
  map.light.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="light" aria-hidden="true"></span>Sunlight</b><span>${care?val(care.sunlight,'Not established in selected sources'):unavailable}</span>`;
  map.ph.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="ph" aria-hidden="true"></span>pH</b><span>${care?val(care.ph,'Not established in selected sources'):unavailable}</span>`;
- map.soil.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="soil" aria-hidden="true"></span>Soil</b><span>${care?care.soil[0]:unavailable}</span><small>${care?(care.soil[1]||''):''}</small>`;
- map.feed.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="feed" aria-hidden="true"></span>Feed</b><span>${care?care.feed[0]:unavailable}</span><small>${care?(care.feed[1]||''):''}</small>`;
+ map.soil.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="soil" aria-hidden="true"></span>Soil</b><span>${escape(soil?.description||care?.soil?.[0]||unavailable)}</span><small>${soil?soil.products.map(x=>escape((x.unverified?'Unverified match: ':'Requirement match: ')+x.name+(/perlite/i.test(x.name)?' — amendment only; not complete soil':''))).join('<br>'):''}</small>`;
+ map.feed.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="feed" aria-hidden="true"></span>Feed</b><span>${care?val(care.feed?.[0],'Not established in selected sources'):unavailable}</span><small>${care?(care.feed?.[1]||''):''}</small>`;
  map.prune.innerHTML=`<b><span class="profile-tile-icon-slot" data-icon="prune" aria-hidden="true"></span>Prune / Pinch</b><span>${care?val(care.prune,'Not established in selected sources'):unavailable}</span>`;
  Object.values(map).forEach(removeEmoji);TILE_ORDER.forEach(key=>{if(map[key])q.appendChild(map[key])});
  ['soil','feed','prune'].forEach(key=>{const card=map[key];card.style.cursor='default';card.style.pointerEvents='none';card.removeAttribute('role');card.removeAttribute('tabindex');card.removeAttribute('onclick')});

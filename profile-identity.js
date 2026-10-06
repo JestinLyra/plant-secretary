@@ -35,7 +35,7 @@ function editWateringInterval(id){
   const hint=document.createElement('p');hint.textContent=p.name||'Plant';
   const label=document.createElement('label');label.htmlFor='wateringCheckDays';label.textContent='Check every (days)';
   const input=document.createElement('input');input.id='wateringCheckDays';input.name='wateringCheckDays';input.type='number';input.inputMode='numeric';input.min='1';input.max='365';input.step='1';input.placeholder='No personal interval';input.value=window.PLANT_WATERING_AUDIT?.customInterval(p)??'';input.setAttribute('aria-describedby','wateringCheckHelp');
-  const help=document.createElement('p');help.id='wateringCheckHelp';help.textContent='Enter 1–365 whole days. This is a soil-check reminder; water only when needed. Leave blank to remove your personal interval and use the app’s existing guidance.';
+  const help=document.createElement('p');help.id='wateringCheckHelp';help.textContent='Enter 1–365 whole days. This is a soil-check reminder; water only when needed. Leave blank to remove your personal interval. No automatic interval will be assigned.';
   const error=document.createElement('p');error.className='watering-check-error';error.setAttribute('role','alert');
   const submit=document.createElement('button');submit.type='submit';submit.className='plant-edit-action';submit.textContent='Save interval';
   const cancel=document.createElement('button');cancel.type='button';cancel.className='plant-edit-cancel';cancel.textContent='Cancel';cancel.addEventListener('click',()=>{if(!submit.disabled)closeEditMenu()});
