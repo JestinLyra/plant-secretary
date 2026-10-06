@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.125/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.126/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.123/);
 });
 const requested=[
@@ -109,6 +109,33 @@ const requested=[
  ['Bougainvillea White Stripe','Bougainvillea spectabilis x glabra'],
  ['Ice Plant','Delosperma lehmannii']
 ];
+test('Watermelon Peperomia uses Bunnings details with field-linked sources and label-specific products',()=>{
+ const {detail,hooks}=setup();
+ const p={name:'Renamed plant',botanical:'Peperomia argyreia',location:'Indoor',wateringCheckDays:14};
+ const water=hooks.topicHtml('Watering checks',p);
+ assert.match(water,/2.5–5 cm/);assert.match(water,/No fixed check days/);
+ assert.match(water,/Inspect every 14 days/);assert.match(water,/Bunnings — How to grow and propagate peperomias/);
+ assert.doesNotMatch(water,/<details[^>]*\bopen\b/);
+ for(const field of ['habit','water','sunlight','soil','feed','prune','repotting','propagation','problems'])assert.ok(detail.fieldSources(p.botanical,field).some(s=>s.id==='bunnings-peperomia'),field);
+ assert.match(hooks.topicHtml('Propagation',p),/5–7 cm/);
+ assert.match(hooks.topicHtml('Repotting',p),/1–2 years/);
+ const products=detail.products(p.botanical);
+ assert.equal(products.length,3);assert.ok(products.some(x=>x.name==='Brunnings 5L Perlite'));
+ assert.ok(products.some(x=>x.name==='Scotts Osmocote 1L Pour+Feed Indoor Plants'));
+ assert.match(hooks.topicHtml('Feeding',p),/ready to use/);
+ assert.match(detail.get(p.botanical).gap,/numerical pH|perlite ratio/);
+ assert.equal(detail.get('Watermelon Peperomia'),null);
+ assert.equal(detail.products("Peperomia caperata 'Milano'",'feed')[0].name,'Yates 500mL Thrive Indoor Plants & Ferns Liquid Plant Food');
+});
+test('Watermelon Bunnings rendering preserves existing profile record and device data',()=>{
+ const {care,detail,hooks,ctx}=setup();
+ const p={id:'melon',name:'Watermelon',botanical:'Peperomia argyreia',location:'Indoor',wateringCheckDays:8,lastWatered:'2026-10-01',photoScale:1.5,photo:'existing-photo',history:[{type:'Watered',date:'2026-10-01'}]};
+ const saved=JSON.stringify(p),profile=JSON.stringify(care.get(p.botanical)),interval=ctx.window.PLANT_WATERING_AUDIT.interval(p);
+ for(const topic of hooks.GUIDE_TOPICS)hooks.topicHtml(topic,p);
+ assert.equal(JSON.stringify(p),saved);assert.equal(JSON.stringify(care.get(p.botanical)),profile);
+ assert.equal(ctx.window.PLANT_WATERING_AUDIT.interval(p),interval);
+ assert.equal(detail.get('Peperomia argyreia'),detail.get('Peperomia argyraea'));
+});
 test('all seven owner-supplied botanical identities open practical comprehensive guides',()=>{
  const {detail,hooks}=setup();
  for(const [name,botanical]of requested){

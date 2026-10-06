@@ -236,3 +236,21 @@ All seven inputs now open practical comprehensive topics with collapsed Sources 
 Product matches retain label/composition scope. The fern has the previously checked indoor/fern product options, orchids retain orchid-specific options, peace lily retains its peat-free exclusion, and Ice Plant has the general draining succulent-medium option. Peppermint exact feeding rates and a peat-free bougainvillea loam recipe remain product-match gaps. Manufacturer labels govern rates; no automatic feed stacking or numerical reminder changes are introduced.
 
 Validation: 69 automated tests pass. New tests exercise all fourteen topics for all seven supplied identities, botanical spelling/× aliases, honest supported-group identity results, sources/evidence gaps, and unchanged profile registry, saved records and reminder outputs. Other practical records, photo uploads/view settings, interval persistence and history behavior retain their regression tests. Live deployment verification is performed separately; these tests do not claim testing on the owner's physical iPhone.
+
+## Watermelon Peperomia — v1.0.126, reviewed 7 October 2026 (Melbourne)
+
+Updated the comprehensive practical-care record selected by botanical identity. Existing alias `Peperomia argyreia` resolves to `Peperomia argyraea`; no display-name lookup, botanical-name migration or profile-summary edit is introduced.
+
+Australian-first review: ABC Gardening Australia’s *Plant Profile | Peperomias* (Jane Edmanson, 23 May 2025) supports genus-level cultivation. It features other peperomias, so it is not labelled exact Watermelon Peperomia evidence. RBG Victoria and ANBG searches did not establish an exact-species cultivation record. Existing BOM regional context and APVMA label constraints remain scoped appropriately. The owner specifically requested Bunnings; its *How to grow and propagate peperomias* article includes the supplied botanical spelling and provides the new practical steps. General care is labelled genus-level, and the propagation passage naming watermelon is distinguished from that general advice. Retained NC State species guidance complements the pot-size advice; the different repotting scope is explicit rather than replacing it silently.
+
+Sources:
+- ABC: https://www.abc.net.au/gardening/how-to/plant-profile-peperomias/105327900
+- Bunnings practical guide: https://www.bunnings.com.au/diy-advice/garden/planting-and-growing/how-to-grow-and-propagate-peperomias
+- Bunnings perlite listing: https://www.bunnings.com.au/brunnings-5l-perlite_p3010203
+- Manufacturer perlite composition: https://brunnings.com.au/product/perlite-5l/
+- Bunnings feed listing: https://www.bunnings.com.au/scotts-osmocote-1l-pour-feed-indoor-plants_p0162252
+- Manufacturer feed directions and explicit Peperomia suitability: https://www.lovethegarden.com/au-en/product/scotts-osmocote-pourfeed-indoor-plants
+
+The existing draining indoor mix is retained as a composition match; it already includes perlite and fertiliser. Extra amendment/feeding is conditional, and local stock is unverified. Pour+Feed is ready to use; the current pack controls its pot-width dose. Product feeding frequency never becomes a soil-check reminder. No pesticide or rooting-hormone product is prescribed. Numerical pH, measured mix ratio, species-tested feed dose and mandatory pinching remain explicit gaps.
+
+Only this practical-care record and its product selection change. Guide presentation uses the existing expandable Sources and Evidence gaps. Profile registry, watering audit, saved records, photos, history and manual intervals are unchanged. Version is v1.0.126; cache is plant-secretary-v162. All 71 Node tests pass, including field-level attribution, aliases, product application distinctions and rendering without plant/profile/reminder mutation. Physical iPhone cache and interaction have not been independently verified.

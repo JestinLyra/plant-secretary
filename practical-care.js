@@ -31,6 +31,8 @@ nc('monstera','Monstera deliciosa','monstera-deliciosa');
 nc('pothos','Epipremnum aureum','epipremnum-aureum');
 nc('ripple','Peperomia caperata','peperomia-caperata','Supplementary species evidence for Milano: filtered light, porous medium and cuttings. No cultivar-specific protocol found in this review.');
 nc('watermelon','Peperomia argyraea','peperomia-argyraea');
+abc('peperomia-au','Plant Profile | Peperomias','how-to/plant-profile-peperomias/105327900','Australian genus-level drainage, frost sensitivity, indoor light and leaf-cutting guidance; featured plants are not Watermelon Peperomia.');
+source('bunnings-peperomia','Bunnings — How to grow and propagate peperomias','https://www.bunnings.com.au/diy-advice/garden/planting-and-growing/how-to-grow-and-propagate-peperomias','Includes Watermelon Peperomia as Peperomia argyreia. Most cultivation advice is genus-level; the water-propagation section specifically includes watermelon. No fixed soil-check interval or exact perlite ratio.');
 nc('hypoestes','Hypoestes phyllostachya','hypoestes-phyllostachya');
 nc('sedum','Sedum morganianum','sedum-morganianum');
 nc('zz-specific','Zamioculcas zamiifolia','zamioculcas-zamiifolia','Supplementary ZZ drying, light, sparse feeding and division/leaf cuttings. Its conditional watering examples are not automatic inspection intervals.');
@@ -120,10 +122,18 @@ add("Peperomia caperata 'Milano'",'indoor',{
  propagation:[step('Species guidance supports leaf or stem-tip cuttings in spring; a separate Milano protocol was not found.',['ripple'])]
 },'Milano-specific practical protocols were not located in this review. The additions are labelled Peperomia caperata species guidance, not cultivar trials.');
 add('Peperomia argyraea','indoor',{
- water:[step('Feel the top of the medium: let it become dry to the touch before watering. Both severe dryness and persistent wetness can cause decline.',['watermelon'])],
- sunlight:[step('Use bright indirect light and protect from cold draughts.',['watermelon'])],
- repotting:[step('This species tolerates a snug pot and does not need frequent repotting. Check the root mass before increasing pot size.',['watermelon'])]
-});
+ habit:[step('Watermelon-like silver and green leaf markings identify the form described by Bunnings.',['bunnings-peperomia'],'Bunnings Watermelon Peperomia description')],
+ water:[step('Test the upper 2.5–5 cm; water when dry there, without drying the entire root ball. Leaf loss can follow either excess water or drought. No fixed check days are specified.',['bunnings-peperomia'],'Bunnings genus-level moisture guidance')],
+ sunlight:[step('Choose bright indirect light in a warm indoor position.',['bunnings-peperomia','peperomia-au'],'Australian genus-level guidance'),step('Protect from cold draughts.',['watermelon'])],
+ soil:[step('Blend premium potting mix with perlite and use drainage holes.',['bunnings-peperomia','peperomia-au'],'Bunnings mix guidance; ABC drainage guidance')],
+ feed:[step('Choose growing-season indoor liquid feed OR spring–autumn slow-release feed; reduce liquid feeding in winter.',['bunnings-peperomia'],'Bunnings genus-level feeding guidance'),step('Count fertiliser already in fresh mix. Pour+Feed is ready to use on moist mix; follow its pot-width dose on the current pack. Its two-week feed direction is not a watering-check interval.',['product-indoor-mix','product-watermelon-feed'],'Product-label application, not a species trial')],
+ prune:[step('Remove browning leaves and finished flower spikes.',['bunnings-peperomia'],'Bunnings genus-level cleanup guidance')],
+ repotting:[step('Bunnings suggests refreshing mix every 1–2 years. Inspect roots first: snug pots suit this species; avoid unnecessary upsizing.',['bunnings-peperomia','watermelon'],'Bunnings genus recommendation; supplementary species pot guidance')],
+ propagation:[step('Bunnings’ watermelon method uses a healthy 10 cm cutting in water, renewed weekly; pot the new plant when roots reach 5–7 cm. Leaf cuttings are another option.',['bunnings-peperomia','peperomia-au'],'Bunnings watermelon method; ABC genus leaf-cutting support')],
+ problems:[step('Check for mites, mealybugs and scale.',['bunnings-peperomia'],'Bunnings genus-level pest guidance')],
+ seasonal:[step('In cooler Altona conditions, protect indoors from frost and judge actual room light and moisture. ABC supports indoor growing in cooler climates; BOM provides regional context, not a check-day formula.',['peperomia-au','bom'],'Australian genus guidance with app climate interpretation')]
+},'Bunnings explicitly includes Watermelon Peperomia, but most advice applies to the genus. ABC supports genus-level cultivation; RBG Victoria/ANBG searches did not yield an exact-species care record. No fixed soil-check days, numerical pH optimum, measured perlite ratio, species-tested fertiliser dose or mandatory pinching method established. NC State supplies complementary species guidance, including snug pots.');
+records['Peperomia argyraea'].reviewedAt='2026-10-07';
 const pothosEntries={
  habit:[step('Use a support for climbing or let vines trail. Adequate light and support can produce larger mature leaves.',['pothos'])],
  prune:[step('Shorten bare or over-long vines to encourage a bushier plant; wipe dust from remaining leaves.',['pothos'])],
@@ -239,6 +249,10 @@ function product(id,field,name,retailer,manufacturer,basis){
 }
 product('indoor-mix','soil','Scotts Osmocote 10L Indoor Plants Premium Potting Mix','https://www.bunnings.com.au/scotts-osmocote-10l-indoor-plants-premium-potting-mix_p0164627','https://www.lovethegarden.com/au-en/product/scotts-osmocote-premium-potting-mix-indoor-plants','Container option for a draining houseplant medium. Contains peat, coir and perlite; not a peat-free match. Includes controlled-release fertiliser: account for it before adding feed.');
 product('indoor-feed','feed','Yates 500mL Thrive Indoor Plants & Ferns Liquid Plant Food','https://www.bunnings.com.au/yates-500ml-thrive-indoor-plants-and-ferns-liquid-plant-food_p0273523','https://www.yates.com.au/yates-thrive-indoor-plants-ferns-liquid-plant-food/','Liquid houseplant/fern feed option when feeding is warranted. Dilute according to the current pack; this is not a universal monthly schedule. ZZ guidance remains sparse, not monthly.');
+product('watermelon-perlite','soil','Brunnings 5L Perlite','https://www.bunnings.com.au/brunnings-5l-perlite_p3010203','https://brunnings.com.au/product/perlite-5l/','Drainage/aeration amendment suggested by the Bunnings peperomia article. No tested Watermelon Peperomia proportion established; not a complete potting medium.');
+product('watermelon-feed','feed','Scotts Osmocote 1L Pour+Feed Indoor Plants','https://www.bunnings.com.au/scotts-osmocote-1l-pour-feed-indoor-plants_p0162252','https://www.lovethegarden.com/au-en/product/scotts-osmocote-pourfeed-indoor-plants','Suggested by the Bunnings peperomia article; manufacturer explicitly includes Peperomia. Ready to use, not a concentrate to dilute. Follow current pot-width dose on moist mix; account for existing fertiliser and reduced winter growth.');
+records['Peperomia argyraea'].products=['indoor-mix','watermelon-perlite','watermelon-feed'].map(id=>productCatalog[id]);
+records['Peperomia argyraea'].productGap='The indoor mix already includes perlite and fertiliser. Extra perlite is conditional on drainage; no exact species ratio is verified. Feed is optional when needed, not an instruction to stack fertilisers. Store stock is unverified.';
 product('succulent-mix','soil','Scotts Osmocote 25L Cacti and Succulent Premium Potting Mix','https://www.bunnings.com.au/scotts-osmocote-25l-cacti-and-succulent-premium-potting-mix_p2961490','https://www.lovethegarden.com/au-en/product/scotts-osmocote-cacti-succulent-potting-mix','Commercial draining succulent-medium option. Includes fertiliser; not proof of an exact mineral recipe or suitability for a potassium-sensitive mesemb.');
 product('orchid-mix','soil','Scotts Osmocote 10L Orchid Coarse Potting Mix','https://www.bunnings.com.au/scotts-osmocote-10l-orchid-coarse-potting-mix_p0168581','https://www.lovethegarden.com/au-en/product/scotts-osmocote-orchid-coarse-mix','Bark-based epiphytic orchid option matching ABC’s open-medium requirement. Confirm suitability and bark condition for the plant on the current pack; not ordinary potting soil.');
 product('orchid-feed','feed','Yates 500mL Thrive Orchid Liquid Plant Food','https://www.bunnings.com.au/yates-500ml-thrive-orchid-liquid-plant-food_p2961896','https://www.yates.com.au/yates-thrive-orchid-liquid-plant-food/','Manufacturer explicitly includes Phalaenopsis. Use its orchid-feed dilution and directions; do not apply a general houseplant dose or translate liquid-feed timing into a granular dose.');
@@ -257,8 +271,8 @@ const productGaps={
  rosemary:'No new product is substituted for the distinction between unfed established ground plants and occasional granular feed for older container plants.',
  citrus:'No additional species/rootstock product match was verified. The existing Meyer-specific product matches are retained for the identified Meyer records only.'
 };
-function products(botanical,field){const c=getCare(botanical),d=get(botanical);if(!c||!d)return[];return (c.products?.length?c.products:(groupProducts[d.group]||[]).map(id=>productCatalog[id])).filter(p=>!field||p.field===field)}
-function productGap(botanical){const d=get(botanical);return d?productGaps[d.group]||'':''}
+function products(botanical,field){const c=getCare(botanical),d=get(botanical);if(!c||!d)return[];return (d.products|| (c.products?.length?c.products:(groupProducts[d.group]||[]).map(id=>productCatalog[id]))).filter(p=>!field||p.field===field)}
+function productGap(botanical){const d=get(botanical);return d?d.productGap||productGaps[d.group]||'':''}
 const common={
  water:[step('For a soil-grown indoor container, inspect the medium before watering and empty collected water from its saucer after drainage. This does not describe a plant kept in water.',['water'],'Australian container guidance')],
  repotting:[step('Inspect the root mass and whether water bypasses the roots. Increase container size gradually, retain planting depth and give the plant shelter while it settles. An oversized pot can remain cold and wet.',['pot'],'Australian container guidance')],
