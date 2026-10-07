@@ -17,7 +17,7 @@ function setup(){
  return {ctx,plants,before,care:ctx.window.PLANT_BOTANICAL_CARE,detail:ctx.window.PLANT_PRACTICAL_CARE,hooks:ctx.window.testCare};
 }
 test('all resolved records have practical guidance and complete valid references',()=>{
- const {care,detail}=setup();assert.equal(Object.keys(detail.records).length,40);
+ const {care,detail}=setup();assert.equal(Object.keys(detail.records).length,41);
  for(const d of Object.values(detail.records)){
   assert.equal(detail.getCare(d.botanical).botanical,d.botanical);
   assert.ok(Object.values(d.entries).flat().length>0,d.botanical);
@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.131/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.132/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.129/);
 });
 const requested=[
@@ -251,4 +251,23 @@ test('targeted practical details retain primary Australian guidance, supplementa
  const ice=hooks.topicHtml('Watering checks',{name:'Ice Plant',botanical:'Delosperma lehmannii'});
  assert.match(ice,/leaf firmness/);assert.match(ice,/SANBI/);assert.match(ice,/full cultivation text unavailable/);
  assert.match(detail.getCare('Delosperma lehmannii').evidenceGaps,/fixed inspection interval remain gaps/);
+});
+
+test('Brasil habit uses Australian cultivar evidence without changing other care or saved records',()=>{
+ const {ctx,detail,hooks,care,before}=setup(),botanical="Philodendron hederaceum ‘Brasil’";
+ const p={id:'brasil',name:'Brasil Philodendron',botanical,wateringCheckDays:7,photoScale:1.4,history:[{type:'Watered',date:'2026-10-01'}]};
+ const saved=JSON.stringify(p);
+ for(const field of detail.fields.filter(x=>x!=='habit')){
+  assert.equal(JSON.stringify(detail.steps(botanical,field)),JSON.stringify(detail.steps('Philodendron hederaceum',field)),field);
+  assert.equal(JSON.stringify(detail.fieldSources(botanical,field)),JSON.stringify(detail.fieldSources('Philodendron hederaceum',field)),field);
+ }
+ const html=hooks.topicHtml('Growth habit',p);
+ assert.match(html,/Evergreen vine; climbing with support or trailing from pots/);
+ assert.match(html,/Florafolia/);assert.match(html,/Plant Nest/);assert.match(html,/Bunnings/);
+ assert.match(html,/A Brasil-specific growing-habit statement was not verified/);
+ assert.equal(detail.get('Brasil Philodendron'),null);
+ assert.deepEqual(Array.from(detail.steps('Philodendron hederaceum','habit')[0].refs),['heartleaf']);
+ for(const topic of hooks.GUIDE_TOPICS)assert.doesNotMatch(hooks.topicHtml(topic,p),/undefined|\[object Object\]/);
+ assert.equal(JSON.stringify(p),saved);assert.equal(JSON.stringify(care),before);
+ assert.equal(ctx.window.PLANT_WATERING_AUDIT.interval(p),7);
 });

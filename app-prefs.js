@@ -1,5 +1,5 @@
 (()=>{
-  const VERSION='v1.0.131';
+  const VERSION='v1.0.132';
   window.PLANT_SECRETARY_VERSION=VERSION;
 
   function applyHomeHeader(){
