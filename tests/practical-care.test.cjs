@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.133/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.134/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.129/);
 });
 const requested=[
@@ -109,6 +109,24 @@ const requested=[
  ['Bougainvillea White Stripe','Bougainvillea spectabilis x glabra'],
  ['Ice Plant','Delosperma lehmannii']
 ];
+test('Haworthia repotting labels root-based pot sizing as synthesis without changing saved settings',()=>{
+ const {ctx,detail,hooks,care,before}=setup();
+ const p={id:'p20',name:'Window Boat',botanical:'Haworthia cymbiformis',location:'Indoor',wateringCheckDays:15,lastWatered:'2026-10-03',photo:'saved',photoScale:1.2,history:[{type:'Watered',date:'2026-10-03'}]},saved=JSON.stringify(p);
+ const html=hooks.topicHtml('Repotting',p);
+ assert.match(html,/only slightly larger with drainage holes/);
+ assert.match(html,/actual root system with a little growing room/);
+ assert.match(html,/Size it from the roots, rather than the leaf rosette alone/);
+ assert.match(html,/Practical synthesis — not a published exact-species formula/);
+ assert.match(html,/no controlled comparison/);
+ assert.match(html,/Happy Succas/);assert.match(html,/Overpotting/);assert.match(html,/Container \(Pot\)/);
+ assert.match(html,/<details class="panel care-sources"><summary>Sources/);
+ assert.doesNotMatch(html,/<details[^>]*\bopen\b|undefined|\[object Object\]/);
+ const refs=detail.fieldSources(p.botanical,'repotting').map(s=>s.id);
+ for(const ref of ['display','pot','haworthia-pot-au','haworthia-overpotting','haworthia-root-room'])assert.ok(refs.includes(ref),ref);
+ assert.equal(detail.get('Window Boat'),null);assert.equal(ctx.window.PLANT_WATERING_AUDIT.summary(p),'Check every 15 days.');
+ assert.equal(ctx.window.PLANT_WATERING_AUDIT.summary({...p,wateringCheckDays:null}),'');
+ assert.equal(JSON.stringify(p),saved);assert.equal(JSON.stringify(care),before);
+});
 test('Haworthia common problems uses scoped sources and leaves owner data and reminders unchanged',()=>{
  const {ctx,detail,hooks,care,before}=setup();
  const p={id:'p20',name:'Window Boat',botanical:'Haworthia cymbiformis',location:'Indoor',wateringCheckDays:15,lastWatered:'2026-10-01',photo:'saved',photoScale:1.4,history:[{type:'Watered',date:'2026-10-01'}]};
