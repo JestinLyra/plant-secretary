@@ -163,10 +163,21 @@ add('Curio rowleyanus','succulent',{
  propagation:[step('Use healthy trailing stem cuttings to renew a sparse plant.',['curio'])],
  water:[step('In cooler conditions use much less water; inspect both the medium and leaves rather than following a universal monthly calendar.',['curio','display'])]
 },'Sources differ in the extent of drying advised: NC State cautions against complete desiccation, while the ABC mixed display dries fully. The guide avoids importing the display calendar as a species interval.');
+abc('haworthia-small','Small Space Succulent','how-to/small-space-succulent/103472632','Australian Haworthia-group guidance: poor drainage and drying-related shrivelling. Featured species are not H. cymbiformis; no species-specific problem-frequency ranking.');
+abc('haworthia-water-diagnosis','Overwatered plants','how-to/over-watered-plants/12317474','General indoor-plant diagnostic warning: overwatering and underwatering symptoms can overlap. Its generic watering depth is not adopted as a Haworthia interval.');
+nc('haworthia-problems','Haworthia','haworthia','Supplementary genus-level root rot, mealybugs and frost sensitivity; H. cymbiformis is included among the species described. Not a measured species-specific prevalence ranking; overseas pesticide uses are not adopted.');
 add('Haworthia cymbiformis','succulent',{
  sunlight:[step('Use filtered indoor light and protect from harsh hot exposure; this addition uses Haworthia-group guidance.',['display'])],
  soil:[step('Use a gritty, freely draining succulent medium in a pot with drainage.',['display'])],
- repotting:[step('Inspect overcrowding and remove dead leaves; do not repot solely to give a slow-growing rosette a very large pot.',['display'])]
+ repotting:[step('Inspect overcrowding and remove dead leaves; do not repot solely to give a slow-growing rosette a very large pot.',['display'])],
+ problems:[
+  step('Overwatering / root rot: soft, brown or rotting leaves while the mix stays wet are warning signs. Stop adding water, check drainage and inspect roots. Use a freely draining succulent medium; appearance alone does not confirm the cause.',['display','haworthia-problems'],'Australian group advice; supplementary genus evidence'),
+  step('Dehydration: leaves may shrivel and the rosette contract when too dry. Check the medium before watering. Shrivelling alone does not prove thirst: watering problems can look similar, so assess roots if symptoms persist despite wet mix.',['haworthia-small','haworthia-water-diagnosis'],'Australian group evidence with diagnostic interpretation'),
+  step('Light or water stress: reddening can indicate low water or light stress, but is not necessarily disease. Check both moisture and exposure; use bright filtered light rather than automatically adding water.',['display'],'Australian Haworthia-group guidance'),
+  step('Mealybugs: inspect leaf bases and crowded rosettes for insects or white cottony deposits. Isolate an affected plant before considering treatment. Mealybugs are a reported Haworthia pest, not evidence that this plant is infested.',['haworthia-problems'],'Supplementary genus pest evidence; inspection and isolation are practical precautions'),
+  step('Cold / frost: protect from frost and cold, persistently wet conditions, particularly outdoors in Altona. Haworthias are frost-sensitive; do not assume a succulent tolerates local winter exposure.',['haworthia-problems'],'Supplementary genus evidence with Altona interpretation'),
+  step('Evidence scope: these are supported Haworthia-group problems applicable to the saved H. cymbiformis identity, not a measured ranking of species-specific frequency. No chemical treatment or automatic watering interval is prescribed.',['display','haworthia-small','haworthia-problems'],'Evidence limitation — reviewed 8 October 2026')
+ ]
 },'RHS species page does not supply a detailed cultivation protocol. Practical additions use the Australian Haworthia group guidance; no exact species frequency, mineral percentage or dose established.');
 add('Zamioculcas zamiifolia','indoor',{
  water:[step('Confirm that the medium has dried before watering; stored water in rhizomes makes a wet pot unnecessary. A personal check reminder is not permission to water.',['zz','zz-specific'])],

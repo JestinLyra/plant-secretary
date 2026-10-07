@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.132/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.133/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.129/);
 });
 const requested=[
@@ -109,6 +109,20 @@ const requested=[
  ['Bougainvillea White Stripe','Bougainvillea spectabilis x glabra'],
  ['Ice Plant','Delosperma lehmannii']
 ];
+test('Haworthia common problems uses scoped sources and leaves owner data and reminders unchanged',()=>{
+ const {ctx,detail,hooks,care,before}=setup();
+ const p={id:'p20',name:'Window Boat',botanical:'Haworthia cymbiformis',location:'Indoor',wateringCheckDays:15,lastWatered:'2026-10-01',photo:'saved',photoScale:1.4,history:[{type:'Watered',date:'2026-10-01'}]};
+ const saved=JSON.stringify(p),html=hooks.topicHtml('Common problems',p),a=ctx.window.PLANT_WATERING_AUDIT;
+ for(const text of ['Overwatering / root rot','Dehydration','Light or water stress','Mealybugs','Cold / frost','not a measured ranking'])assert.ok(html.includes(text),text);
+ for(const id of ['display','haworthia-small','haworthia-water-diagnosis','haworthia-problems','apvma'])assert.ok(detail.fieldSources(p.botanical,'problems').some(s=>s.id===id),id);
+ assert.match(html,/<details class="panel care-sources"><summary>Sources/);
+ assert.match(html,/<details class="care-limitations"><summary>Evidence gaps/);
+ assert.doesNotMatch(html,/<details[^>]*\bopen\b|undefined|\[object Object\]/);
+ assert.equal(detail.get('Window Boat'),null);
+ assert.equal(a.interval(p),15);assert.equal(a.summary(p),'Check every 15 days.');
+ assert.equal(a.summary({...p,wateringCheckDays:null}),'');
+ assert.equal(JSON.stringify(p),saved);assert.equal(JSON.stringify(care),before);
+});
 test('bougainvillea Australian update retains identity scope, field sources and all saved data',()=>{
  const {ctx,detail,hooks,care,before}=setup(),botanical='Bougainvillea spectabilis x glabra';
  const p={id:'boug',name:'White Stripe',botanical,location:'Outdoor',wateringCheckDays:9,lastWatered:'2026-10-01',photo:'saved',photoScale:1.5,history:[{type:'Watered',date:'2026-10-01'}]};
