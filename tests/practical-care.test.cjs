@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.130/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.131/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.129/);
 });
 const requested=[
@@ -109,6 +109,28 @@ const requested=[
  ['Bougainvillea White Stripe','Bougainvillea spectabilis x glabra'],
  ['Ice Plant','Delosperma lehmannii']
 ];
+test('bougainvillea Australian update retains identity scope, field sources and all saved data',()=>{
+ const {ctx,detail,hooks,care,before}=setup(),botanical='Bougainvillea spectabilis x glabra';
+ const p={id:'boug',name:'White Stripe',botanical,location:'Outdoor',wateringCheckDays:9,lastWatered:'2026-10-01',photo:'saved',photoScale:1.5,history:[{type:'Watered',date:'2026-10-01'}]};
+ const saved=JSON.stringify(p),a=ctx.window.PLANT_WATERING_AUDIT;
+ assert.equal(detail.getCare(botanical).botanical,'Bougainvillea spectabilis × glabra');
+ assert.equal(detail.getCare('Bougainvillea × spectoglabra').botanical,detail.getCare(botanical).botanical);
+ assert.equal(detail.get('White Stripe'),null);
+ for(const field of ['sunlight','water','soil','feed','prune','repotting','propagation','seasonal'])assert.ok(detail.fieldSources(botanical,field).some(s=>s.id==='bunnings-bougainvillea'),field);
+ assert.match(hooks.topicHtml('Sunlight',p),/full sun/);
+ assert.match(hooks.topicHtml('Watering checks',p),/Inspect every 9 days/);
+ assert.match(hooks.topicHtml('Watering checks',p),/neither source supplies a fixed checking interval/);
+ assert.match(hooks.topicHtml('Pruning',p),/after the flowering flush/);
+ assert.match(hooks.topicHtml('Repotting',p),/move up one pot size/);
+ assert.match(hooks.topicHtml('Feeding',p),/low-nitrogen, higher-potassium/);
+ assert.match(hooks.topicHtml('Feeding',p),/Yates 1kg Thrive Flower and Fruit/);
+ assert.match(hooks.topicHtml('Feeding',p),/not a hybrid-tested requirement/);
+ assert.match(hooks.topicHtml('Plant features',p),/not verify a particular named cultivar/);
+ for(const topic of hooks.GUIDE_TOPICS){const html=hooks.topicHtml(topic,p);assert.doesNotMatch(html,/<details[^>]*\bopen\b|undefined|\[object Object\]/)}
+ assert.equal(a.interval(p),9);assert.equal(a.summary(p),'Check every 9 days.');
+ assert.equal(a.summary({...p,wateringCheckDays:null}),'');
+ assert.equal(JSON.stringify(p),saved);assert.equal(JSON.stringify(care),before);
+});
 test('Goldilocks gets named evidence and scoped supplementary care without changing plant data or reminders',()=>{
  const {ctx,detail,hooks,care,before}=setup(),botanical="Epipremnum aureum ‘Goldilocks’";
  vm.runInContext(fs.readFileSync(path.join(root,'care-presentation.js'),'utf8'),ctx);
