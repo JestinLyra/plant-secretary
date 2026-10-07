@@ -9,6 +9,7 @@ const descriptions={
  'Pilea involucrata':'Moisture-retentive houseplant medium with good drainage.',
  'Gardenia jasminoides':'Acidic, lime-free, moisture-retentive medium with free drainage; selected guidance prefers peat-free.',
  'Epipremnum aureum':'Airy indoor medium that retains some moisture and drains freely.',
+ "Epipremnum aureum 'Goldilocks'":'Fertile, airy medium that retains some moisture and drains freely; RHS species guidance specifies peat-free, loam-based compost.',
  'Delosperma lehmannii':'Freely draining succulent medium; avoid prolonged root-zone wetness.',
  'Adiantum aethiopicum':'Organically rich, moisture-retentive medium with drainage; prevent prolonged drying.',
  "Epipremnum aureum 'Marble Queen'":'Houseplant medium that retains some moisture but drains freely.',

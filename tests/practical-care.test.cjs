@@ -17,7 +17,7 @@ function setup(){
  return {ctx,plants,before,care:ctx.window.PLANT_BOTANICAL_CARE,detail:ctx.window.PLANT_PRACTICAL_CARE,hooks:ctx.window.testCare};
 }
 test('all resolved records have practical guidance and complete valid references',()=>{
- const {care,detail}=setup();assert.equal(Object.keys(detail.records).length,39);
+ const {care,detail}=setup();assert.equal(Object.keys(detail.records).length,40);
  for(const d of Object.values(detail.records)){
   assert.equal(detail.getCare(d.botanical).botanical,d.botanical);
   assert.ok(Object.values(d.entries).flat().length>0,d.botanical);
@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.128/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.130/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.129/);
 });
 const requested=[
@@ -109,6 +109,29 @@ const requested=[
  ['Bougainvillea White Stripe','Bougainvillea spectabilis x glabra'],
  ['Ice Plant','Delosperma lehmannii']
 ];
+test('Goldilocks gets named evidence and scoped supplementary care without changing plant data or reminders',()=>{
+ const {ctx,detail,hooks,care,before}=setup(),botanical="Epipremnum aureum ‘Goldilocks’";
+ vm.runInContext(fs.readFileSync(path.join(root,'care-presentation.js'),'utf8'),ctx);
+ const p={id:'gold',name:'ZZ Plant',botanical,location:'Indoor',wateringCheckDays:8,lastWatered:'2026-10-03',photo:'saved',photoScale:1.4,history:[{type:'Watered',date:'2026-10-03'}]};
+ const saved=JSON.stringify(p),a=ctx.window.PLANT_WATERING_AUDIT;
+ assert.equal(detail.getCare(botanical).botanical,"Epipremnum aureum 'Goldilocks'");
+ assert.equal(detail.get('Goldilocks Gold'),null);
+ const water=hooks.topicHtml('Watering checks',p);
+ assert.match(water,/upper 2 cm/);assert.match(water,/No fixed checking days/);
+ assert.match(water,/Inspect every 8 days/);assert.match(water,/Bunnings — Goldilocks Pothos/);
+ assert.match(water,/<details class="panel care-sources"><summary>Sources/);
+ assert.match(water,/<details class="care-watering-notes"><summary>Weather/);
+ assert.doesNotMatch(water,/<details[^>]*\bopen\b/);
+ assert.match(hooks.topicHtml('Feeding',p),/UK April–October/);
+ assert.match(hooks.topicHtml('Pruning',p),/Indoor First Aid/);
+ const soil=ctx.window.PLANT_CARE_PRESENTATION.soilInfo(p);
+ assert.match(soil.description,/peat-free, loam-based/);
+ assert.ok(soil.products.every(x=>x.unverified));
+ for(const topic of hooks.GUIDE_TOPICS)assert.doesNotMatch(hooks.topicHtml(topic,p),/undefined|\[object Object\]/);
+ assert.equal(a.interval(p),8);assert.equal(a.summary(p),'Check every 8 days.');
+ assert.equal(JSON.stringify(p),saved);assert.equal(JSON.stringify(care),before);
+ assert.equal(a.summary({...p,wateringCheckDays:null}),'');
+});
 test('Greek oregano Bunnings practical details retain field attribution and subspecies scope',()=>{
  const {detail,hooks,care}=setup(),name='Origanum vulgare subsp. hirtum';
  const p={name:'Greek oregano',botanical:name,location:'Outdoor',wateringCheckDays:5};
