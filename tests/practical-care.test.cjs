@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.135/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.137/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.129/);
 });
 const requested=[
@@ -171,7 +171,7 @@ test('Goldilocks gets named evidence and scoped supplementary care without chang
  assert.equal(detail.getCare(botanical).botanical,"Epipremnum aureum 'Goldilocks'");
  assert.equal(detail.get('Goldilocks Gold'),null);
  const water=hooks.topicHtml('Watering checks',p);
- assert.match(water,/upper 2 cm/);assert.match(water,/No fixed checking days/);
+ assert.doesNotMatch(water,/upper 2 cm/);assert.match(water,/No fixed checking days/);
  assert.match(water,/Inspect every 8 days/);assert.match(water,/Bunnings — Goldilocks Pothos/);
  assert.match(water,/<details class="panel care-sources"><summary>Sources/);
  assert.match(water,/<details class="care-watering-notes"><summary>Weather/);
@@ -185,6 +185,22 @@ test('Goldilocks gets named evidence and scoped supplementary care without chang
  assert.equal(a.interval(p),8);assert.equal(a.summary(p),'Check every 8 days.');
  assert.equal(JSON.stringify(p),saved);assert.equal(JSON.stringify(care),before);
  assert.equal(a.summary({...p,wateringCheckDays:null}),'');
+});
+test('Goldilocks refreshed guide and profile remain botanical, sourced and read-only',()=>{
+ const {ctx,detail,hooks,care,before}=setup(),p={id:'gold',name:'Maidenhair Fern',botanical:'Epipremnum aureum ‘Goldilocks’',location:'Indoor',wateringCheckDays:8,lastWatered:'2026-10-19',photoId:'saved',history:[{type:'Watered',date:'2026-10-19'},{type:'Treatment',treatment:'Rinsed leaves',date:'2026-10-18'}]},saved=JSON.stringify(p);
+ vm.runInContext(fs.readFileSync(path.join(root,'care-presentation.js'),'utf8'),ctx);
+ const profile=detail.getProfileCare(p.botanical);assert.match(profile.habit,/lime-green/);assert.match(profile.sunlight,/Bright indirect/);assert.match(profile.ph,/no Goldilocks-specific optimum/);assert.ok(profile.prune);assert.ok(profile.feed[0]);
+ assert.equal(detail.getProfileCare('Goldilocks Gold'),null);assert.equal(care.get(p.botanical),null);
+ assert.match(hooks.topicHtml('Repotting',p),/slightly larger/);assert.match(hooks.topicHtml('Propagation',p),/Prop &#39;Til You Drop/);
+ assert.match(hooks.topicHtml('Common problems',p),/spider mites/);assert.match(hooks.topicHtml('Common problems',p),/normal colour/);
+ assert.ok(detail.fieldSources(p.botanical,'soil').some(s=>s.id==='goldilocks-bunnings-care'));
+ assert.ok(detail.fieldSources(p.botanical,'propagation').some(s=>s.id==='goldilocks-cuttings'));
+ assert.doesNotMatch(hooks.topicHtml('Watering checks',p),/upper 2 cm|once a week/);
+ assert.match(hooks.topicHtml('Watering checks',p),/Inspect every 8 days/);
+ assert.match(hooks.topicHtml('Watering checks',p),/<table>/);
+ for(const topic of hooks.GUIDE_TOPICS)assert.doesNotMatch(hooks.topicHtml(topic,p),/undefined|\[object Object\]|<details[^>]*\bopen\b/);
+ assert.equal(ctx.window.PLANT_WATERING_AUDIT.summary({...p,wateringCheckDays:null}),'');
+ assert.equal(JSON.stringify(p),saved);assert.equal(JSON.stringify(care),before);
 });
 test('Greek oregano Bunnings practical details retain field attribution and subspecies scope',()=>{
  const {detail,hooks,care}=setup(),name='Origanum vulgare subsp. hirtum';

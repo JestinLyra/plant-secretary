@@ -43,9 +43,17 @@ test('fern bridge uses botanical identity, keeps blank intervals blank and leave
  const blank={...p,wateringCheckDays:null};api.apply(blank);assert.equal(ctx.window.PLANT_WATERING_AUDIT.summary(blank),'');
  assert.equal(api.get('Adiantum aethiopicum').botanical,'Adiantum aethiopicum');
 });
+test('Goldilocks uses its guide in actual profile tiles and growing habit without touching saved records',()=>{
+ const {ctx,p,cards,profile}=setup();p.botanical='Epipremnum aureum ‘Goldilocks’';p.name='Goldilocks Gold';const saved=JSON.stringify(p);
+ ctx.window.PLANT_PROFILE_CARE.apply(p);ctx.window.PLANT_PROFILE_IDENTITY.apply(p.id);
+ const tiles=Object.fromEntries(cards.map(c=>[c.dataset.profileTile,c.innerHTML]));
+ assert.match(tiles.light,/Bright indirect/);assert.match(tiles.prune,/Tip-prune/);assert.match(tiles.feed,/houseplant fertiliser/);assert.match(tiles.ph,/species tolerance/);assert.match(tiles.water,/Check every 2 days/);
+ for(const html of Object.values(tiles))assert.doesNotMatch(html,/Identification required|Species-specific care is not yet available/);
+ function text(e){return e.textContent+' '+e.children.map(text).join(' ');}assert.match(text(profile),/lime-green/);assert.equal(JSON.stringify(p),saved);
+});
 test('fixed profile assets have fresh offline cache and load before identity rendering',()=>{
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
- for(const f of ['practical-care.js','profile-care-summary-v2.js','profile-identity.js'])assert.ok(index.includes(f+'?v=1.0.135'));
+ assert.ok(index.includes('practical-care.js?v=1.0.137'));for(const f of ['profile-care-summary-v2.js','profile-identity.js'])assert.ok(index.includes(f+'?v=1.0.135'));
  assert.ok(index.indexOf('profile-care-summary-v2.js?')<index.indexOf('profile-identity.js?'));
- assert.match(fs.readFileSync(path.join(root,'sw.js'),'utf8'),/plant-secretary-v172/);
+ assert.match(fs.readFileSync(path.join(root,'sw.js'),'utf8'),/plant-secretary-v173/);
 });
