@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s);
 const TILE_ORDER=['water','light','prune','ph','feed','soil'];
 function plantsList(){try{return typeof plants!=='undefined'?plants:(window.plants||[])}catch(_){return window.plants||[]}}
-function byBotanical(botanical){return window.PLANT_BOTANICAL_CARE?.get(botanical)||null}
+function byBotanical(botanical){return window.PLANT_PRACTICAL_CARE?.getProfileCare?.(botanical)||window.PLANT_BOTANICAL_CARE?.get(botanical)||null}
 function careIssue(botanical){return window.PLANT_BOTANICAL_CARE?.identificationIssue(botanical)||'Species-specific care is not yet available for this botanical identity.'}
 function currentPlant(){const id=$('#plantModal')?.dataset.plantId;return id?plantsList().find(p=>String(p.id)===String(id))||null:null}
 function markTiles(q){const cards=[...q.children];if(cards.length<6)return null;const original=['water','light','soil','ph','feed','prune'];cards.forEach((card,i)=>{if(!card.dataset.profileTile)card.dataset.profileTile=original[i]});return cards}

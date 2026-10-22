@@ -441,6 +441,17 @@ records[brasil]={...records['Philodendron hederaceum'],botanical:brasil,reviewed
  step('Bunnings provides a general philodendron guide. A Brasil-specific growing-habit statement was not verified there; the cultivar-specific habit above is supported by Florafolia and Plant Nest.',['brasil-bunnings'],'Source scope')
 ]}};
 function getCare(botanical){const scoped=scopedCultivars[botanicalKey(botanical)];if(scoped){const base=care()?.get(scoped.species);return base?{...base,botanical:scoped.botanical||base.botanical,habit:scoped.habit||base.habit,identityNote:scoped.note,careScope:'Species-level guidance for the saved cultivar'}:null}const base=care()?.get(botanical);if(base)return base;const k=botanicalKey(botanical);return extendedCare[extendedAliases[k]||k]||null}
+// Read-only profile bridge for the owner-confirmed Australian maidenhair.
+// Do not register it in the hydrating base registry or change other profiles.
+function getProfileCare(botanical){
+ const base=care()?.get(botanical);if(base)return base;
+ const c=getCare(botanical);if(c?.botanical!=='Adiantum aethiopicum')return null;
+ return {...c,habit:'Creeping, clump-forming fern.',
+  sunlight:'Good filtered light; shelter from hot direct sun, heating and air-conditioning outlets.',
+  prune:'Cut browned, dead fronds down; maintain moisture while new shoots emerge.',
+  ph:'Not established in the selected sources.',
+  feed:['Feed only when warranted, using a fern-labelled product at its current pack dilution.','No species-specific fertiliser dose established.']};
+}
 function get(botanical){const c=getCare(botanical);return c?records[c.botanical]||null:null}
 function steps(botanical,field){const d=get(botanical);if(!d)return[];const own=d.entries[field]||[];if(d.existingSources)return own;const extra=field==='water'?(['indoor','peat-free'].includes(d.group)?common.water:[]):field==='repotting'?(!['herb','chilli','mineral','native','orchid'].includes(d.group)?common.repotting:[]):common[field]||[];return [...own,...extra]}
 function fieldSources(botanical,field){const c=getCare(botanical),d=get(botanical);if(!c||!d)return[];const catalogue=d.existingSources?Object.fromEntries([...(c.sources||[]),...(d.extraSources||[])].map(s=>[s.id,s])):sources;return [...new Set(steps(botanical,field).flatMap(s=>s.refs))].map(id=>catalogue[id]).filter(Boolean)}
@@ -453,5 +464,5 @@ function identityReview(plants){return (plants||[]).map(p=>{
  if(getCare(botanical).botanical==='Bougainvillea spectabilis × glabra')return {id:p.id,name:p.name,botanical,kind:'group',reason:'Supplied spectoglabra hybrid group is supported; named White Stripe cultivar and specimen parentage are not independently verified. Group guidance remains available.'};
  return null;
  }).filter(Boolean)}
-window.PLANT_PRACTICAL_CARE={records,sources,fields,get,getCare,steps,fieldSources,products,productGap,identityReview,reviewedAt};
+window.PLANT_PRACTICAL_CARE={records,sources,fields,get,getCare,getProfileCare,steps,fieldSources,products,productGap,identityReview,reviewedAt};
 })();

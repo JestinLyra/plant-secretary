@@ -97,7 +97,7 @@ test('new practical script loads before guide actions and is available offline w
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  assert.ok(index.indexOf('botanical-care.js')<index.indexOf('practical-care.js'));
  assert.ok(index.indexOf('practical-care.js')<index.indexOf('app-actions.js'));
- assert.match(index,/practical-care.js\?v=1.0.134/);assert.match(sw,/'\.\/practical-care.js'/);
+ assert.match(index,/practical-care.js\?v=1.0.135/);assert.match(sw,/'\.\/practical-care.js'/);
  assert.match(index,/watering-audit.js\?v=1.0.129/);
 });
 const requested=[
