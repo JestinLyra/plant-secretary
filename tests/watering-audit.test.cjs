@@ -6,8 +6,9 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 function setup(plants=[]){const ctx=vm.createContext({window:{},plants});for(const file of ['watering-audit.js','botanical-care.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx);return {ctx,audit:ctx.window.PLANT_WATERING_AUDIT,care:ctx.window.PLANT_BOTANICAL_CARE,plants}}
 test('all 34 botanical care identities have an inspection audit; no seven-day default',()=>{
- const {audit,care}=setup();assert.equal(Object.keys(care.records).length,34);
- for(const c of Object.values(care.records)){
+ const {audit,care}=setup();const added=["Peperomia 'Hope'","Epipremnum aureum 'N'Joy'"];const original=Object.values(care.records).filter(c=>!added.includes(c.botanical));assert.equal(original.length,34);
+ for(const name of added){const p={botanical:name,location:'Indoor'};assert.ok(care.get(name));assert.equal(audit.interval(p),null);assert.equal(audit.summary(p),'');p.wateringCheckDays=9;assert.equal(audit.interval(p),9);}
+ for(const c of original){
   assert.ok(audit.entries[c.botanical],c.botanical);
   for(const location of ['Indoor','Outdoor']){
    const p={botanical:c.botanical,location,interval:7};assert.ok([null,5].includes(audit.interval(p,new Date("2026-10-06T12:00:00Z"))),c.botanical);

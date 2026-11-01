@@ -55,5 +55,5 @@ test('fixed profile assets have fresh offline cache and load before identity ren
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.ok(index.includes('practical-care.js?v=1.0.137'));for(const f of ['profile-care-summary-v2.js','profile-identity.js'])assert.ok(index.includes(f+'?v=1.0.135'));
  assert.ok(index.indexOf('profile-care-summary-v2.js?')<index.indexOf('profile-identity.js?'));
- assert.match(fs.readFileSync(path.join(root,'sw.js'),'utf8'),/plant-secretary-v173/);
+ assert.match(fs.readFileSync(path.join(root,'sw.js'),'utf8'),/plant-secretary-v174/);
 });
